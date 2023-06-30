@@ -1,0 +1,9 @@
+services:
+  postgres_local:
+    image: postgres:15.3
+    environment:
+      POSTGRES_PASSWORD: password1234
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data:/var/lib/postgresql/data
