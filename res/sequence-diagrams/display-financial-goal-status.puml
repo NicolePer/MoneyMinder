@@ -1,0 +1,26 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Financial Accounts Overview" as overview
+participant ":GUI Fin. Acc. Details View" as details
+participant ":Server" as server
+database ":Database" as database
+
+group sd Display Financial Goal Status
+user -> overview : select a financial account
+        activate overview
+        overview -> details :open
+        deactivate overview
+        activate details
+            details -> server++ : get all data of \nfinancial account (id)
+            server -> database++ : select all data of \nfinancial account (id)
+            return full data of \nfinancial account
+        return full data of \nfinancial account
+    ALT financial goal has been set before
+    details --> user : display financial goal status
+    ELSE financial goal has not been set
+    details --> user : don't display financial goal status
+    end
+end
+
+@enduml

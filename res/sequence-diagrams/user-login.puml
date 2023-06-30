@@ -1,0 +1,29 @@
+@startuml
+
+actor "Registered User" as user
+participant ":GUI Welcome Screen" as welcomeScreen
+participant ":GUI Current User Store" as userStore
+participant ":Server" as server
+database ":Database" as database
+
+group sd User Login
+    activate user
+        user -> welcomeScreen++ : start program
+            welcomeScreen -> welcomeScreen : enter email, password
+                welcomeScreen -> server++ : login user (email, password)
+                    server -> database++ : get user data \n(email)
+                       return user data
+                    server -> server : verify\n(password, \npassword-hash)
+                    alt authentication successful
+                        server --> welcomeScreen : user data
+                        welcomeScreen -> userStore++ : store (user data)
+                        return OK
+                        welcomeScreen --> user : redirect to financial \naccounts overview
+                    else authentication failed
+                       server --> welcomeScreen : login failed
+                       welcomeScreen --> user : show error message
+                    end
+    deactivate user
+end
+
+@enduml

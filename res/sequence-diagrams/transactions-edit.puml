@@ -1,0 +1,28 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Transaction Details View" as gui
+participant ":GUI Transaction Edit Form" as create
+participant ":Server" as server
+database ":Database" as database
+
+group sd Edit Transaction
+    activate user
+    user -> gui++ : click on pencil
+        gui -> create++ : open
+            create -> create : enter edits
+            create -> create : categorize transaction
+            group optional
+            create -> create : enter/edit note
+            end
+            create -> server++ : update \n(edited transaction data)
+                server -> database++ : update \n(edited transaction data)
+                return OK
+            return OK
+        return OK
+        gui -> gui : reload transaction details
+    return show reloaded details
+    deactivate user
+end
+
+@enduml

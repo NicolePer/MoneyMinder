@@ -1,0 +1,21 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Financial Accounts Overview" as overview
+participant ":Server" as server
+database ":Database" as database
+
+group sd Display Financial Accounts as List
+    activate user
+    user -> overview : open
+            activate overview
+            overview -> server++ : get overview data \nfor user's financial accounts
+                server -> database++ : select overview data\n for user's financial accounts
+                return overview data \nof financial accounts
+            return overview data \nof financial accounts
+    overview --> user: display overview data \nof financial accounts as list
+    deactivate overview
+    deactivate user
+end
+
+@enduml

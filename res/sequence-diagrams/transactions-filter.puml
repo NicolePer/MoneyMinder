@@ -1,0 +1,15 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Transactions View" as gui
+
+
+group sd Filter Transactions
+    activate user
+    user -> gui++ : select filter
+        gui -> gui : apply filter to list
+    return show filtered list
+    deactivate user
+end
+
+@enduml

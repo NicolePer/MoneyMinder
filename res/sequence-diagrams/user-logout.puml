@@ -1,0 +1,15 @@
+@startuml
+actor "Logged-in User" as user
+participant ":GUI Main Screen" as gui
+participant ":GUI Current User Store" as userStore
+
+
+group sd User Log-out
+    activate user
+        user -> gui++ : click on "log-out"
+            gui -> userStore++: reset current user data
+            return OK
+        return redirect to welcome screen
+    deactivate user
+end
+@enduml

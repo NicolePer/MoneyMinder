@@ -1,0 +1,19 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Financial Account Details View" as gui
+participant ":Server" as server
+database ":Database" as database
+
+group sd Add Collaborators
+    activate user
+    user -> gui++ : under "collaborators" \nclick on + only visible to owner \n(email of collaborator)
+        gui -> server++ : add new collaborator \n(email, financial-account-id)
+           server -> database++ : insert new collaborator \n(email, financial-account-id)
+           return updated financial account data
+        return updated financial account data
+    return display updated \nfinancial account details
+    deactivate user
+end
+
+@enduml

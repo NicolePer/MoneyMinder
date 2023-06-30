@@ -1,0 +1,25 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Financial Accounts Overview" as overview
+participant ":GUI Fin. Acc. Details View" as details
+participant ":Server" as server
+database ":Database" as database
+
+group sd Display Transactions in Charts
+    activate user
+    user -> overview : select a financial account
+        activate overview
+        overview -> details :open
+        deactivate overview
+            activate details
+            details -> server++ : get all data of \nfinancial account (id)
+                server -> database++ : select all data of \nfinancial account (id)
+                return full data of \nfinancial account
+            return full data of \nfinancial account
+    details --> user : display transactions in charts in tab "stats"
+    deactivate details
+    deactivate user
+end
+
+@enduml

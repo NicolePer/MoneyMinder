@@ -1,0 +1,19 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Transactions View" as gui
+participant ":GUI Export Directory Chooser" as directory
+
+
+group sd Export Transactions to CSV-File
+    activate user
+    user -> gui++ : click on \n"export transactions"
+        gui -> directory++ : open
+        directory -> directory : choose directory where \nfile will be saved
+    return directory
+    gui -> gui : create CSV file and\nsave it at directory
+    return show success message
+    deactivate user
+end
+
+@enduml

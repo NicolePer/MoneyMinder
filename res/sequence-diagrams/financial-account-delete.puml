@@ -1,0 +1,19 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Financial Account Edit Form" as gui
+participant ":Server" as server
+database ":Database" as database
+
+group sd Delete Financial Account
+    activate user
+    user -> gui++ : click on "delete \nfinancial account"
+            gui -> server++ : delete \n(financial account id)
+                server -> database++ : delete financial account\n(financial account id)
+                return OK
+            return OK
+    return redirect to financial \naccounts overview
+    deactivate user
+end
+
+@enduml

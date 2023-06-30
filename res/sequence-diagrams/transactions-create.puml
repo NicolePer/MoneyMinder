@@ -1,0 +1,29 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Transactions View" as gui
+participant ":GUI Transactions Create Form" as create
+
+participant ":Server" as server
+database ":Database" as database
+
+group sd Add Transaction
+    activate user
+    user -> gui++ : click on\n"+ new transaction"
+        gui -> create++ : open
+            create -> create : enter transaction details
+            create -> create : categorize transaction
+            group optional
+            create -> create : enter note
+            end
+            create -> server++ : create new transaction\n(all user inputs)
+                server -> database++ : insert new transaction \n(all user inputs)
+                return OK
+            return OK
+        return OK
+        gui -> gui : reload transaction list
+    return show reloaded list
+    deactivate user
+end
+
+@enduml

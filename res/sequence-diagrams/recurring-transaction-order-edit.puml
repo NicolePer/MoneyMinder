@@ -1,0 +1,24 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Recurring Trans. Order Details View" as gui
+participant ":GUI Rec. Tran. Order Edit Form" as edit
+participant ":Server" as server
+database ":Database" as database
+
+group sd Edit Recurring Transaction Order
+    activate user
+    user -> gui++ : click on pencil
+        gui -> edit++ : open
+            edit -> edit : enter edited recurring \ntransaction order details
+            edit -> server++ : update (edited recurring\ntransaction order)
+                server -> database++ : update (edited recurring\ntransaction order)
+                return OK
+            return OK
+        return OK
+        gui -> gui : reload view
+    return show success message
+    deactivate user
+end
+
+@enduml

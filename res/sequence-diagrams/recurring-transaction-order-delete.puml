@@ -1,0 +1,20 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Recurring Transaction Order Details View" as gui
+participant ":Server" as server
+database ":Database" as database
+
+group sd Delete Recurring Transaction Order
+    activate user
+    user -> gui++ : click on garbage bin
+        gui -> server++ : delete \n(recurring transaction order id)
+            server -> database++ : delete \n(recurring transaction order id))
+            return OK
+        return OK
+        gui -> gui : reload view
+    return show success message
+    deactivate user
+end
+
+@enduml

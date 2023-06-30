@@ -1,0 +1,29 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Financial Accounts Overview" as overview
+participant ":GUI Fin. Acc. Create Form" as createForm
+participant ":Server" as server
+database ":Database" as database
+
+group sd Add Financial Account
+    activate user
+    user -> overview++ : click on "create\nnew financial account"
+        overview -> createForm++ : open
+            createForm -> createForm : enter financial \naccount details
+            group optional
+            createForm -> createForm : define financial goal
+            end
+            group optional
+            createForm -> createForm : add collaborator \nemail addresses
+            end
+            createForm -> server++ : createForm new financial \naccount (all user inputs)
+                server -> database++ : insert new financial \naccount (all user inputs)
+                return financial account id
+            return financial account id
+        return financial account id
+    return redirect to financial \naccount details view
+    deactivate user
+end
+
+@enduml

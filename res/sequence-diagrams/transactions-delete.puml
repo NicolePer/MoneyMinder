@@ -1,0 +1,19 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Transaction Details View" as gui
+participant ":Server" as server
+database ":Database" as database
+
+group sd Delete Transaction
+    activate user
+    user -> gui++ : click on garbage bin
+        gui -> server++ : delete (transaction-id)
+            server -> database++ : delete (transaction-id)
+            return OK
+        return OK
+    return redirect to transactions view
+    deactivate user
+end
+
+@enduml

@@ -1,0 +1,24 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Fin. Acc. Details View" as gui
+participant ":GUI Recurring Transaction Order Create Form" as create
+participant ":Server" as server
+database ":Database" as database
+
+group sd Create Recurring Transaction Order
+    activate user
+    user -> gui++ : under "recurring \ntransactions"\nclick on "+ add order"
+        gui -> create++ : open
+            create -> create : enter recurring \ntransaction order details
+            create -> server++ : create new recurring \ntransaction order (all user inputs)
+                server -> database++ : insert new recurring \ntransaction order (all user inputs)
+                return OK
+            return OK
+        return OK
+        gui -> gui : reload view
+    return show success message
+    deactivate user
+end
+
+@enduml

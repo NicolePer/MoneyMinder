@@ -1,0 +1,30 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI User Account Settings" as accountSettings
+participant ":GUI Current User Store" as userStore
+participant ":Server" as server
+database ":Database" as database
+
+group sd Delete Own User
+    activate user
+    user -> accountSettings++ : click on "delete \nuser account"
+        accountSettings -> accountSettings : display warning
+        accountSettings -> server++ : delete (current user)
+            server -> database++ : get information about \nownership of shared \nfinancial accounts \n(current user)
+            return requested information
+            alt user is owner of shared financial account
+        server --> accountSettings : user cannot be deleted
+    accountSettings --> user : show error message
+           else user is not owner of shared financial account
+            server -> database++ : delete user's \nfinancial accounts, \ntheir transactions,\nuser data
+            return OK
+        return OK
+        accountSettings -> userStore++ : reset current \nuser information
+        return OK
+    return redirect to \nwelcome screen
+    end
+    deactivate user
+end
+
+@enduml

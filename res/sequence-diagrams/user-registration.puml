@@ -1,0 +1,24 @@
+@startuml
+
+actor ":Unregistered User" as user
+participant ":GUI Welcome Screen" as welcomeScreen
+participant ":GUI Registration Form" as registrationForm
+participant ":Server" as server
+database ":Database" as database
+
+group sd User Registration
+    activate user
+        user -> welcomeScreen++ : start registration
+            welcomeScreen -> registrationForm++ : open registration form
+                registrationForm -> registrationForm : enter username,\nemail, password
+                registrationForm -> server++ : register new user \n(username, email, password)
+                    server -> server : password-hash = \nencode(password)
+                    server -> database++ : insert user \n(username, email password-hash)
+                    return success
+                return success
+            return success
+        return show success message
+    deactivate user
+end
+
+@enduml

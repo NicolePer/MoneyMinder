@@ -1,0 +1,26 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI User Account Settings" as accountSettings
+participant ":GUI User Data Edit Form" as editForm
+participant ":GUI Current User Store" as userStore
+participant ":Server" as server
+database ":Database" as database
+
+group sd Edit Own User Data
+    activate user
+    user -> accountSettings++ : click on "edit user data"
+        accountSettings -> editForm++ : open
+            editForm -> editForm : enter edits
+            editForm -> server++ : update \n(edited user data)
+                    server -> database++ : update \n(edited user data)
+                    return updated user data
+            return updated user data
+            editForm -> userStore++ : store \n(updated user data)
+            return OK
+        return OK
+    return show confirmation
+    deactivate user
+end
+
+@enduml

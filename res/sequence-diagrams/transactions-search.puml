@@ -1,0 +1,15 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Transactions View" as gui
+
+
+group sd Search in Transactions
+    activate user
+    user -> gui++ : enter search term
+        gui -> gui : search among \ntransactions (search term)
+    return show list of results
+    deactivate user
+end
+
+@enduml

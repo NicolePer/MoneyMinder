@@ -1,0 +1,20 @@
+@startuml
+
+actor "Logged-in User" as user
+participant ":GUI Financial Account Details View" as gui
+participant ":Server" as server
+database ":Database" as database
+
+group sd Delete Financial Goal
+    activate user
+    user -> gui++ : under "financial goal" \nclick on garbage bin \nonly visible to owner
+        gui -> gui : enter amount
+        gui -> server++ : delete \n(financial-goal-id)
+           server -> database++ : delete \n(financial-goal-id)
+           return updated financial \naccount data
+        return updated financial \naccount data
+    return display updated \nfinancial account details
+    deactivate user
+end
+
+@enduml
