@@ -47,12 +47,12 @@
                               <Font name="Source Sans Pro SemiBold" size="26.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="email" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="email">
+                        <TextField fx:id="emailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="email">
                            <font>
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>
                         </TextField>
-                        <PasswordField fx:id="password" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="password">
+                        <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="password">
                            <font>
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>
@@ -65,7 +65,7 @@
                <children>
                   <HBox alignment="CENTER">
                      <children>
-                        <Button fx:id="signIn" alignment="CENTER" cache="true" mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #FFFFFF;" text="Sign In" textAlignment="JUSTIFY">
+                        <Button fx:id="signInButton" alignment="CENTER" cache="true" mnemonicParsing="false" onAction="#loginUser" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #FFFFFF;" text="Sign In" textAlignment="JUSTIFY">
                            <font>
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>

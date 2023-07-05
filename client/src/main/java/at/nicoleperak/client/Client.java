@@ -1,5 +1,6 @@
 package at.nicoleperak.client;
 
+import at.nicoleperak.shared.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,6 +10,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class Client extends Application {
+
+    protected User loggedInUser = new User();
 
     public static void main(String[] args) {
         launch(args);

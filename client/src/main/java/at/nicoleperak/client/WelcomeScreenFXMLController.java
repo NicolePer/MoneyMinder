@@ -13,13 +13,13 @@ import java.io.IOException;
 public class WelcomeScreenFXMLController {
 
     @FXML
-    private TextField email;
+    private TextField emailField;
 
     @FXML
-    private PasswordField password;
+    private PasswordField passwordField;
 
     @FXML
-    private Button signIn;
+    private Button signInButton;
 
     @FXML
     private Hyperlink signUpLink;
@@ -42,6 +42,12 @@ public class WelcomeScreenFXMLController {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
     }
+
+    @FXML
+    protected void loginUser(ActionEvent event) {
+        //TODO Login
+    }
+
 
     public void setSuccessMessageLabelText(String message) {
         successMessageLabel.setText(message);

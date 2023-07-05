@@ -3,6 +3,7 @@ package at.nicoleperak.server;
 import at.nicoleperak.shared.User;
 import com.password4j.*;
 import com.password4j.types.Argon2;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import jakarta.json.bind.Jsonb;
@@ -15,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
 public class Handler implements HttpHandler {
-
+    private final Argon2Function hashingFunction = Argon2Function.getInstance(19456, 2, 1, 128, Argon2.ID, 19);
     private final Jsonb jsonb = JsonbBuilder.create();
 
     @Override
@@ -31,6 +32,7 @@ public class Handler implements HttpHandler {
             String[] paths = path.split("/");
             if (requestMethod.equalsIgnoreCase("POST")) {
                 post(exchange, paths);
+                //TODO add GET
             } else {
                 throw new ServerException(400, "Unsupported HTTP-Method");
             }
@@ -68,9 +70,8 @@ public class Handler implements HttpHandler {
                 if (Database.userExistsByEmail(user.getEmail())) {
                     throw new ServerException(409, "A user with this email address already exists");
                 }
-                Argon2Function argon2 = Argon2Function.getInstance(19456, 2, 1, 128, Argon2.ID, 19);
-                Hash hash = Password.hash(user.getPassword()).addRandomSalt(12).with(argon2);
-                Database.insertUser(user, hash.getResult());
+                String passwordHash = createPasswordHash(user.getPassword());
+                Database.insertUser(user, passwordHash);
             } catch (SQLException e) {
                 throw new ServerException(500, "Database error", e);
             } catch (IOException e) {
@@ -81,4 +82,36 @@ public class Handler implements HttpHandler {
         }
         setResponse(exchange, statusCode, jsonResponse);
     }
+
+    private void get(HttpExchange exchange, String[] paths) {
+        int statusCode = 200;
+        String jsonResponse = "";
+        if (paths.length == 1 && paths[0].equals("users")) {
+            Headers requestHeaders = exchange.getRequestHeaders();
+            String authorization = requestHeaders.getFirst("Authorization");
+            User user = createUserWithAuthorizationData(authorization);
+            //TODO FINISH METHOD
+        }
+
+    }
+
+
+    private String createPasswordHash(String password){
+        Hash hash = Password.hash(password).addRandomSalt(12).with(hashingFunction);
+        return hash.getResult();
+    }
+
+    private void assertPasswordMatchesPasswordHash(String password, String passwordHash) throws ServerException {
+        HashChecker hashChecker = Password.check(password, passwordHash);
+        if(!hashChecker.with(hashingFunction)){
+            throw new ServerException(401, "Password incorrect");
+        }
+    }
+
+    private User createUserWithAuthorizationData(String authorization) {
+        String[] authorizationData =  authorization.substring(6).split(":");
+        User user = new User(null, null, authorizationData[0], authorizationData[1]);
+        return user;
+    }
+
 }
