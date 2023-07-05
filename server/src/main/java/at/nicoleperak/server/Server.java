@@ -20,7 +20,7 @@ public class Server {
 
             server.setExecutor(Executors.newCachedThreadPool());
             server.start();
-            System.out.println("server started - press any key to terminate");
+            System.out.println("server started - press enter to terminate");
             System.in.read();
             System.out.println("server terminated");
             server.stop(0);
