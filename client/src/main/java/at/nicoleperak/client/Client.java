@@ -10,9 +10,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class Client extends Application {
-
-    public static User loggedInUser;
-    public static User userCredentials;
+    private static User loggedInUser;
+    private static User userCredentials;
 
     public static void main(String[] args) {
         launch(args);

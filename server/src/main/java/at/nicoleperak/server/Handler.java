@@ -15,8 +15,6 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Base64;
-import java.util.concurrent.Exchanger;
-
 
 public class Handler implements HttpHandler {
     private final Argon2Function hashingFunction = Argon2Function.getInstance(19456, 2, 1, 128, Argon2.ID, 19);
@@ -24,7 +22,7 @@ public class Handler implements HttpHandler {
 
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
+    public void handle(HttpExchange exchange) {
         try {
             String requestMethod = exchange.getRequestMethod();
             URI uri = exchange.getRequestURI();
@@ -54,12 +52,14 @@ public class Handler implements HttpHandler {
     }
 
     private void setResponse(HttpExchange exchange, int statusCode, String jsonString) {
-        System.out.println("\tstatusCode = " + statusCode + "\treponsebody = '" + jsonString + "‘");
+        System.out.println("\tstatusCode = " + statusCode + "\tresponseBody = '" + jsonString + "‘");
         exchange.getResponseHeaders().set("Content-type", "application/json; charset=UTF-8");
         byte[] bytes = jsonString.getBytes(StandardCharsets.UTF_8);
         try (OutputStream os = exchange.getResponseBody()) {
-            exchange.sendResponseHeaders(statusCode, bytes.length);
-            os.write(bytes);
+            exchange.sendResponseHeaders(statusCode, statusCode != 204 ? bytes.length : 1);
+            if (statusCode != 204) {
+                os.write(bytes);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -127,10 +127,5 @@ public class Handler implements HttpHandler {
         } catch (SQLException e) {
             throw new ServerException(500, "Database error", e);
         }
-    }
-
-    private static String getBasicAuthenticationHeader(String email, String password) {
-        String loginData = email + ":" + password;
-        return "Basic " + Base64.getEncoder().encodeToString(loginData.getBytes());
     }
 }

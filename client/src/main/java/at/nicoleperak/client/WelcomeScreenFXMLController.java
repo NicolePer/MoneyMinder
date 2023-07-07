@@ -26,9 +26,6 @@ public class WelcomeScreenFXMLController {
     private PasswordField passwordField;
 
     @FXML
-    private Button signInButton;
-
-    @FXML
     private Hyperlink signUpLink;
 
     @FXML
