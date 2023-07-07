@@ -1,5 +1,8 @@
 package at.nicoleperak.client;
 
+import at.nicoleperak.shared.User;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +14,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class WelcomeScreenFXMLController {
+    private static final Jsonb jsonb = JsonbBuilder.create();
 
     @FXML
     private TextField emailField;
@@ -25,7 +29,7 @@ public class WelcomeScreenFXMLController {
     private Hyperlink signUpLink;
 
     @FXML
-    private Label successMessageLabel;
+    private Label alertMessageLabel;
 
     @FXML
     protected void redirectToSignUpScreen(ActionEvent event) {
@@ -45,11 +49,20 @@ public class WelcomeScreenFXMLController {
 
     @FXML
     protected void loginUser(ActionEvent event) {
-        //TODO Login
+        try {
+            String jsonResponse = ServiceFunctions.get("users", emailField.getText(), passwordField.getText());
+            User user = jsonb.fromJson(jsonResponse, User.class);
+            Client client = new Client();
+            client.setLoggedInUser(user);
+            alertMessageLabel.setText("Login successful");
+            //TODO User Input Validation
+        } catch (ClientException e) {
+            alertMessageLabel.setText(e.getMessage());
+        }
     }
 
 
-    public void setSuccessMessageLabelText(String message) {
-        successMessageLabel.setText(message);
+    public void setAlertMessageLabelText(String message) {
+        alertMessageLabel.setText(message);
     }
 }

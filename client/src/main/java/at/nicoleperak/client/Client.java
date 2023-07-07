@@ -34,4 +34,12 @@ public class Client extends Application {
             e.printStackTrace();
         }
     }
+
+    public User getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
+    }
 }

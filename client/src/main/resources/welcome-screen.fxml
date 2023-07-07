@@ -92,7 +92,7 @@
             </VBox>
          </children>
       </VBox>
-      <Label fx:id="successMessageLabel" alignment="CENTER" textFill="#1ed731" GridPane.halignment="CENTER" GridPane.valignment="TOP">
+      <Label fx:id="alertMessageLabel" alignment="CENTER" textFill="#1ed731" GridPane.halignment="CENTER" GridPane.valignment="TOP">
          <font>
             <Font name="Source Sans Pro SemiBold" size="14.0" />
          </font>

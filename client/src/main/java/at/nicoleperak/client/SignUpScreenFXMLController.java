@@ -109,7 +109,7 @@ public class SignUpScreenFXMLController {
         try {
             Parent root = loader.load();
             WelcomeScreenFXMLController controller = loader.getController();
-            controller.setSuccessMessageLabelText(successMessage);
+            controller.setAlertMessageLabelText(successMessage);
             Stage stage = (Stage) goBackButton.getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);

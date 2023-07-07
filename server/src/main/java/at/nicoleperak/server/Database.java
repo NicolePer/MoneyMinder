@@ -51,18 +51,59 @@ public class Database {
     public static boolean userExistsByEmail(String email) throws SQLException {
         Connection conn = null;
         PreparedStatement pstmt = null;
+        ResultSet rs = null;
         String select = "SELECT " + USER_EMAIL + " FROM " + USER_TABLE
                 + " WHERE " + USER_EMAIL + " = ?";
         try {
             conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
             pstmt = conn.prepareStatement(select);
             pstmt.setString(1, email);
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
             return rs.next();
         } catch (SQLException e) {
             throw e;
         } finally {
             try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw e;
+            }
+        }
+    }
+
+    public static User selectUser(String email) throws SQLException, ServerException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        User user;
+        String select = "SELECT * FROM " + USER_TABLE
+                + " WHERE " + USER_EMAIL + " = ?";
+        try {
+            conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+            pstmt = conn.prepareStatement(select);
+            pstmt.setString(1, email);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                user = new User(rs.getLong(USER_ID), rs.getString(USER_NAME), rs.getString(USER_EMAIL), rs.getString(USER_PASSWORD_HASH));
+                return user;
+            } else {
+                throw new ServerException(404, "User with email " + email + " does not exist");
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
                 if (pstmt != null) {
                     pstmt.close();
                 }
