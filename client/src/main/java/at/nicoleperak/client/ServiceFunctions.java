@@ -1,5 +1,6 @@
 package at.nicoleperak.client;
 
+import at.nicoleperak.shared.User;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 
@@ -35,23 +36,21 @@ public class ServiceFunctions {
         }
     }
 
-    public static String get(String path, String email, String password) throws ClientException {
+    public static String get(String path) throws ClientException {
         String uriS = SERVER_URI + path;
         try {
             URI uri = new URI(uriS);
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder(uri)
                     .GET()
-                    .header("Authorization", getBasicAuthenticationHeader(email, password))
+                    .header("Authorization", getBasicAuthenticationHeader())
                     .build();
-
             HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
             int statusCode = response.statusCode();
             String jsonResponse = new String(response.body());
-            if (statusCode == 200){
+            if (statusCode == 200) {
                 return jsonResponse;
-            }
-            else {
+            } else {
                 String errorMessage = jsonb.fromJson(jsonResponse, String.class);
                 throw new ClientException(errorMessage);
             }
@@ -60,9 +59,10 @@ public class ServiceFunctions {
         }
     }
 
-    private static String getBasicAuthenticationHeader(String email, String password) {
-        String loginData = email + ":" + password;
-        return "Basic " + Base64.getEncoder().encodeToString(loginData.getBytes());
+    private static String getBasicAuthenticationHeader() {
+        User userCredentials = Client.getUserCredentials();
+        String credentials = userCredentials.getEmail() + ":" + userCredentials.getPassword();
+        return "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
     }
 }
 

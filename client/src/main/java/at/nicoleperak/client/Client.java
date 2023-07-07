@@ -11,7 +11,8 @@ import java.io.IOException;
 
 public class Client extends Application {
 
-    protected User loggedInUser = new User();
+    public static User loggedInUser;
+    public static User userCredentials;
 
     public static void main(String[] args) {
         launch(args);
@@ -35,11 +36,19 @@ public class Client extends Application {
         }
     }
 
-    public User getLoggedInUser() {
+    public static User getLoggedInUser() {
         return loggedInUser;
     }
 
-    public void setLoggedInUser(User loggedInUser) {
-        this.loggedInUser = loggedInUser;
+    public static void setLoggedInUser(User loggedInUser) {
+      Client.loggedInUser = loggedInUser;
+    }
+
+    public static User getUserCredentials() {
+        return userCredentials;
+    }
+
+    public static void setUserCredentials(User userCredentials) {
+        Client.userCredentials = userCredentials;
     }
 }

@@ -13,6 +13,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import static at.nicoleperak.client.Validation.assertEmailIsValid;
+import static at.nicoleperak.client.Validation.assertUserInputLengthIsValid;
+
 public class WelcomeScreenFXMLController {
     private static final Jsonb jsonb = JsonbBuilder.create();
 
@@ -50,17 +53,18 @@ public class WelcomeScreenFXMLController {
     @FXML
     protected void loginUser(ActionEvent event) {
         try {
-            String jsonResponse = ServiceFunctions.get("users", emailField.getText(), passwordField.getText());
-            User user = jsonb.fromJson(jsonResponse, User.class);
-            Client client = new Client();
-            client.setLoggedInUser(user);
+            assertUserInputLengthIsValid(emailField.getText(), "email address", 4, 255);
+            assertEmailIsValid(emailField.getText());
+            assertUserInputLengthIsValid(passwordField.getText(), "password", 8, 255);
+            Client.setUserCredentials(new User(null, null, emailField.getText(), passwordField.getText()));
+            String jsonResponse = ServiceFunctions.get("users");
+            User loggedInUser = jsonb.fromJson(jsonResponse, User.class);
+            Client.setLoggedInUser(loggedInUser);
             alertMessageLabel.setText("Login successful");
-            //TODO User Input Validation
         } catch (ClientException e) {
             alertMessageLabel.setText(e.getMessage());
         }
     }
-
 
     public void setAlertMessageLabelText(String message) {
         alertMessageLabel.setText(message);

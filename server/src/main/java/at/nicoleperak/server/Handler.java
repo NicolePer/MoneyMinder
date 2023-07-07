@@ -15,6 +15,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.concurrent.Exchanger;
 
 
 public class Handler implements HttpHandler {
@@ -34,9 +35,9 @@ public class Handler implements HttpHandler {
             }
             String[] paths = path.split("/");
             if (requestMethod.equalsIgnoreCase("POST")) {
-                post(exchange, paths);
+                handlePost(exchange, paths);
             } else if (requestMethod.equalsIgnoreCase("GET")) {
-                get(exchange, paths);
+                handleGet(exchange, paths);
             } else {
                 throw new ServerException(400, "Unsupported HTTP-Method");
             }
@@ -64,7 +65,7 @@ public class Handler implements HttpHandler {
         }
     }
 
-    private void post(HttpExchange exchange, String[] paths) throws ServerException {
+    private void handlePost(HttpExchange exchange, String[] paths) throws ServerException {
         int statusCode = 200;
         String jsonResponse = "";
         if (paths.length == 1 && paths[0].equals("users")) {
@@ -87,27 +88,16 @@ public class Handler implements HttpHandler {
         setResponse(exchange, statusCode, jsonResponse);
     }
 
-    private void get(HttpExchange exchange, String[] paths) throws ServerException {
-        User userRequestingLogin;
-        User userFromDatabase;
+    private void handleGet(HttpExchange exchange, String[] paths) throws ServerException {
+        User currentUser;
         int statusCode = 200;
         String jsonResponse = "";
         if (paths.length == 1 && paths[0].equals("users")) {
-            Headers requestHeaders = exchange.getRequestHeaders();
-            String authorization = requestHeaders.getFirst("Authorization");
-            userRequestingLogin = createUserWithAuthorizationData(authorization);
-            try {
-                userFromDatabase = Database.selectUser(userRequestingLogin.getEmail());
-                assertPasswordMatchesPasswordHash(userRequestingLogin.getPassword(), userFromDatabase.getPassword());
-                userFromDatabase.setPassword(null);
-                jsonResponse = jsonb.toJson(userFromDatabase);
-            } catch (SQLException e) {
-                throw new ServerException(500, "Database error", e);
-            }
+            currentUser = authenticate(exchange);
+            jsonResponse = jsonb.toJson(currentUser);
         }
-            setResponse(exchange, statusCode, jsonResponse);
+        setResponse(exchange, statusCode, jsonResponse);
     }
-
 
     private String createPasswordHash(String password) {
         Hash hash = Password.hash(password).addRandomSalt(12).with(hashingFunction);
@@ -121,13 +111,22 @@ public class Handler implements HttpHandler {
         }
     }
 
-    private User createUserWithAuthorizationData(String authorization) {
-        authorization = authorization.substring(6);
-        String decodedAuthorization = new String(Base64.getDecoder().decode(authorization.getBytes()));
-        String[] authorizationData = decodedAuthorization.split(":");
-        User user = new User(null, null, authorizationData[0], authorizationData[1]);
-        return user;
-        //TODO BEAUTIFY
+    private User authenticate(HttpExchange exchange) throws ServerException {
+        Headers requestHeaders = exchange.getRequestHeaders();
+        String authHeaderValue = requestHeaders.getFirst("Authorization");
+        authHeaderValue = authHeaderValue.substring(6);
+        String decodedCredentials = new String(Base64.getDecoder().decode(authHeaderValue.getBytes()));
+        String[] credentials = decodedCredentials.split(":");
+        String email = credentials[0];
+        String password = credentials[1];
+        try {
+            User currentUser = Database.selectUser(email);
+            assertPasswordMatchesPasswordHash(password, currentUser.getPassword());
+            currentUser.setPassword(null);
+            return currentUser;
+        } catch (SQLException e) {
+            throw new ServerException(500, "Database error", e);
+        }
     }
 
     private static String getBasicAuthenticationHeader(String email, String password) {

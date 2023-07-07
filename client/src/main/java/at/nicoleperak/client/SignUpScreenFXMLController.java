@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static at.nicoleperak.client.Validation.*;
+
 public class SignUpScreenFXMLController {
     private static final Jsonb jsonb = JsonbBuilder.create();
 
@@ -47,9 +49,9 @@ public class SignUpScreenFXMLController {
         try {
             assertUserInputLengthIsValid(usernameField.getText(), "username", 1, 255);
             assertUserInputLengthIsValid(emailField.getText(), "email address", 4, 255);
-            assertEmailIsValid();
+            assertEmailIsValid(emailField.getText());
             assertUserInputLengthIsValid(passwordField.getText(), "password", 8, 255);
-            assertPasswordsMatch();
+            assertPasswordsMatch(passwordField.getText(), retypePasswordField.getText());
             User newUser = new User(null, usernameField.getText(), emailField.getText(), passwordField.getText());
             ServiceFunctions.post("users", jsonb.toJson(newUser));
             redirectToWelcomeScreen("Your account has been successfully created!");
@@ -60,7 +62,7 @@ public class SignUpScreenFXMLController {
 
     @FXML
     protected void showWarningIfPasswordsDiffer(KeyEvent event) {
-        if (passwordsDiffer()) {
+        if (passwordsDiffer(passwordField.getText(), retypePasswordField.getText())) {
             warningLabel.setText("passwords do not match");
         } else {
             warningLabel.setText("");
@@ -72,36 +74,8 @@ public class SignUpScreenFXMLController {
         redirectToWelcomeScreen("");
     }
 
-    private boolean passwordsDiffer() {
-        return !passwordField.getText().equals(retypePasswordField.getText());
-    }
 
-    private void assertPasswordsMatch() throws ClientException {
-        if (passwordsDiffer()) {
-            throw new ClientException("Retyped password must match password.");
-        }
-    }
 
-    private void assertEmailIsValid() throws ClientException {
-        Pattern validEmailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-        String email = emailField.getText();
-        Matcher matcher = validEmailPattern.matcher(email);
-        if (!matcher.find()) {
-            throw new ClientException("Please enter valid email address");
-        }
-    }
-
-    private void assertUserInputLengthIsValid(String input, String fieldName, int charMin, int charMax) throws ClientException {
-        if (input.length() < charMin) {
-            if (input.length() == 0) {
-                throw new ClientException("Please enter " + fieldName);
-            }
-            throw new ClientException(fieldName + " must at least contain " + charMin + " characters");
-        }
-        if (input.length() > charMax) {
-            throw new ClientException(fieldName + "is too long (up to " + charMax + " characters allowed)");
-        }
-    }
 
     private void redirectToWelcomeScreen(String successMessage) {
         FXMLLoader loader = new FXMLLoader();
