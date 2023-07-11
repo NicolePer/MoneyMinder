@@ -15,12 +15,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static at.nicoleperak.client.Validation.*;
 
-public class SignUpScreenFXMLController {
+public class SignUpScreenController {
     private static final Jsonb jsonb = JsonbBuilder.create();
 
     @FXML
@@ -45,7 +43,7 @@ public class SignUpScreenFXMLController {
     private Label warningLabel;
 
     @FXML
-    protected void registerUser(ActionEvent event) {
+    protected void onSignUpButtonClicked(ActionEvent event) {
         try {
             assertUserInputLengthIsValid(usernameField.getText(), "username", 1, 255);
             assertUserInputLengthIsValid(emailField.getText(), "email address", 4, 255);
@@ -61,7 +59,7 @@ public class SignUpScreenFXMLController {
     }
 
     @FXML
-    protected void showWarningIfPasswordsDiffer(KeyEvent event) {
+    protected void onKeyPressedInRetypedPasswordField(KeyEvent event) {
         if (passwordsDiffer(passwordField.getText(), retypePasswordField.getText())) {
             warningLabel.setText("passwords do not match");
         } else {
@@ -74,15 +72,12 @@ public class SignUpScreenFXMLController {
         redirectToWelcomeScreen("");
     }
 
-
-
-
     private void redirectToWelcomeScreen(String successMessage) {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/welcome-screen.fxml"));
         try {
             Parent root = loader.load();
-            WelcomeScreenFXMLController controller = loader.getController();
+            WelcomeScreenController controller = loader.getController();
             controller.setAlertMessageLabelText(successMessage);
             Stage stage = (Stage) goBackButton.getScene().getWindow();
             Scene scene = new Scene(root);

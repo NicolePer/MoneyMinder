@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: #E5FEFF;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.FinancialAccountsOverviewScreenController">
+  <children>
+      <HBox alignment="CENTER" spacing="2.0" style="-fx-background-color: #00A8D6;">
+         <children>
+            <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@money-minder-icon.png" />
+               </image>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </ImageView>
+            <Label text="MONEYMINDER" textFill="WHITE">
+               <font>
+                  <Font name="Source Sans Pro SemiBold" size="18.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="userLabel" text="User123" textFill="WHITE">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <font>
+                  <Font name="Source Sans Pro SemiBold" size="13.0" />
+               </font>
+            </Label>
+            <MenuButton fx:id="menuButton" mnemonicParsing="false" style="-fx-background-color: #00A8D6;">
+              <items>
+                <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" text="Logout" />
+                <MenuItem fx:id="accountSettingsMenuItem" mnemonicParsing="false" text="Account Settings" />
+                  <MenuItem fx:id="helpMenuItem" mnemonicParsing="false" text="Help" />
+              </items>
+               <graphic>
+                  <ImageView fitHeight="30.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@user-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font name="Source Sans 3 Regular" size="13.0" />
+               </font>
+            </MenuButton>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="9.0" right="7.0" top="5.0" />
+         </padding>
+      </HBox>
+      <HBox alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" text="FINANCIAL ACCOUNTS" textFill="#00a8d6">
+               <font>
+                  <Font name="Source Sans 3 Light" size="36.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Label>
+         </children>
+         <VBox.margin>
+            <Insets bottom="20.0" top="20.0" />
+         </VBox.margin>
+      </HBox>
+      <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+         <content>
+            <TilePane fx:id="financialAccountsTilePane" alignment="TOP_CENTER" hgap="30.0" prefColumns="1" prefTileHeight="240.0" prefTileWidth="240.0" prefWidth="985.0" style="-fx-background-color: transparent;" tileAlignment="TOP_LEFT" vgap="30.0">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets left="40.0" right="40.0" />
+               </padding>
+            </TilePane>
+         </content>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </ScrollPane>
+  </children>
+</VBox>

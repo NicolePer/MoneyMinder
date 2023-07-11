@@ -24,7 +24,7 @@ public class Client extends Application {
         loader.setLocation(getClass().getResource("/welcome-screen.fxml"));
         try {
             Parent root = loader.load();
-            WelcomeScreenFXMLController controller = loader.getController();
+            WelcomeScreenController controller = loader.getController();
             Scene scene = new Scene(root);
             primaryStage.setScene(scene);
             primaryStage.setTitle("MoneyMinder");

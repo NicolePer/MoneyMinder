@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.WelcomeScreenFXMLController">
+<GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.WelcomeScreenController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" percentWidth="65.0" />
     <ColumnConstraints hgrow="SOMETIMES" percentWidth="35.0" />
@@ -31,7 +31,7 @@
          <children>
             <ImageView fitHeight="116.0" fitWidth="163.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@logo-no-background.png" />
+                  <Image url="@money-minder-logo.png" />
                </image>
             </ImageView>
          </children>
@@ -47,12 +47,12 @@
                               <Font name="Source Sans Pro SemiBold" size="26.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="emailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="email">
+                        <TextField fx:id="emailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="email" text="test123@test.com">
                            <font>
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>
                         </TextField>
-                        <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="password">
+                        <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="password" text="test1234">
                            <font>
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>
@@ -65,7 +65,7 @@
                <children>
                   <HBox alignment="CENTER">
                      <children>
-                        <Button fx:id="signInButton" alignment="CENTER" cache="true" mnemonicParsing="false" onAction="#loginUser" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #FFFFFF;" text="Sign In" textAlignment="JUSTIFY">
+                        <Button fx:id="signInButton" alignment="CENTER" cache="true" mnemonicParsing="false" onAction="#onSignInButtonClicked" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #FFFFFF;" text="Sign In" textAlignment="JUSTIFY">
                            <font>
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>
@@ -81,7 +81,7 @@
                   <HBox alignment="CENTER" VBox.vgrow="NEVER">
                      <children>
                         <Label text="Don't have an account?" textFill="WHITE" />
-                        <Hyperlink fx:id="signUpLink" onAction="#redirectToSignUpScreen" text="Sign up" textFill="WHITE" underline="true">
+                        <Hyperlink fx:id="signUpLink" onAction="#onSignUpLinkClicked" text="Sign up" textFill="WHITE" underline="true">
                            <font>
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>

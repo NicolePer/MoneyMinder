@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.SignUpScreenFXMLController">
+<GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.SignUpScreenController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" percentWidth="65.0" />
     <ColumnConstraints hgrow="SOMETIMES" percentWidth="35.0" />
@@ -30,7 +30,7 @@
          <children>
             <ImageView fitHeight="116.0" fitWidth="163.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@logo-no-background.png" />
+                  <Image url="@money-minder-logo.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -64,7 +64,7 @@
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>
                         </PasswordField>
-                        <PasswordField fx:id="retypePasswordField" layoutX="10.0" layoutY="113.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#showWarningIfPasswordsDiffer" prefHeight="28.0" prefWidth="270.0" promptText="retype password">
+                        <PasswordField fx:id="retypePasswordField" layoutX="10.0" layoutY="113.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#onKeyPressedInRetypedPasswordField" prefHeight="28.0" prefWidth="270.0" promptText="retype password">
                            <font>
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>
@@ -92,7 +92,7 @@
                <children>
                   <HBox alignment="CENTER">
                      <children>
-                        <Button fx:id="signUpButton" alignment="CENTER" cache="true" mnemonicParsing="false" onAction="#registerUser" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #FFFFFF;" text="Sign Up" textAlignment="JUSTIFY">
+                        <Button fx:id="signUpButton" alignment="CENTER" cache="true" mnemonicParsing="false" onAction="#onSignUpButtonClicked" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #FFFFFF;" text="Sign Up" textAlignment="JUSTIFY">
                            <font>
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>
@@ -113,7 +113,7 @@
          <children>
             <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="7.0">
                <image>
-                  <Image url="@arrow-left.png" />
+                  <Image url="@arrow-left-icon.png" />
                </image>
             </ImageView>
          </children>
