@@ -59,6 +59,7 @@ public class WelcomeScreenController {
             Scene scene = new Scene(root);
             stage.setScene(scene);
         } catch (IOException e) {
+            e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
     }

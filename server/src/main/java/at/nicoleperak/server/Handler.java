@@ -1,5 +1,7 @@
 package at.nicoleperak.server;
 
+import at.nicoleperak.shared.FinancialAccount;
+import at.nicoleperak.shared.FinancialAccountsList;
 import at.nicoleperak.shared.User;
 import com.password4j.*;
 import com.password4j.types.Argon2;
@@ -11,6 +13,7 @@ import jakarta.json.bind.JsonbBuilder;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
@@ -66,6 +69,7 @@ public class Handler implements HttpHandler {
     }
 
     private void handlePost(HttpExchange exchange, String[] paths) throws ServerException {
+        User currentUser;
         int statusCode = 200;
         String jsonResponse = "";
         if (paths.length == 1 && paths[0].equals("users")) {
@@ -82,7 +86,22 @@ public class Handler implements HttpHandler {
             } catch (IOException e) {
                 throw new ServerException(400, "Could not read response body", e);
             }
-        } else {
+        }
+        else if(paths.length == 1 && paths[0].equals("financial-accounts")) {
+            currentUser = authenticate(exchange);
+            try {
+                String jsonString = new String(exchange.getRequestBody().readAllBytes());
+                FinancialAccount financialAccount = jsonb.fromJson(jsonString, FinancialAccount.class);
+                financialAccount.setOwner(currentUser);
+                //TODO set user as Collaborator
+                financialAccount.setBalance(new BigDecimal(0));
+                Database.insertFinancialAccount(financialAccount);
+            } catch (SQLException e) {
+                throw new ServerException(500, "Database error", e);
+            } catch (IOException e) {
+                throw new ServerException(400, "Could not read response body", e);
+            }
+        }else {
             throw new ServerException(400, "URI not supported");
         }
         setResponse(exchange, statusCode, jsonResponse);
@@ -96,7 +115,20 @@ public class Handler implements HttpHandler {
             currentUser = authenticate(exchange);
             jsonResponse = jsonb.toJson(currentUser);
         }
+        else if (paths.length == 1 && paths[0].equals("financial-accounts")) {
+            currentUser = authenticate(exchange);
+            FinancialAccountsList financialAccountsList = getFinancialAccountsList(currentUser.getId());
+            jsonResponse = jsonb.toJson(financialAccountsList);
+        }
         setResponse(exchange, statusCode, jsonResponse);
+    }
+
+    private FinancialAccountsList getFinancialAccountsList(Long userId) throws ServerException {
+        try {
+            return Database.selectFinancialAccountsOverview(userId);
+        } catch (SQLException e) {
+            throw new ServerException(500, "Database error", e);
+        }
     }
 
     private String createPasswordHash(String password) {

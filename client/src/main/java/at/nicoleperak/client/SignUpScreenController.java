@@ -51,7 +51,7 @@ public class SignUpScreenController {
             assertUserInputLengthIsValid(passwordField.getText(), "password", 8, 255);
             assertPasswordsMatch(passwordField.getText(), retypePasswordField.getText());
             User newUser = new User(null, usernameField.getText(), emailField.getText(), passwordField.getText());
-            ServiceFunctions.post("users", jsonb.toJson(newUser));
+            ServiceFunctions.post("users", jsonb.toJson(newUser), false);
             redirectToWelcomeScreen("Your account has been successfully created!");
         } catch (ClientException clientException) {
             warningLabel.setText(clientException.getMessage());

@@ -1,5 +1,9 @@
 package at.nicoleperak.client;
 
+import at.nicoleperak.shared.FinancialAccount;
+import at.nicoleperak.shared.FinancialAccountsList;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,11 +16,16 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class FinancialAccountsOverviewScreenController implements Initializable {
+
+    private static final Jsonb jsonb = JsonbBuilder.create();
 
     @FXML
     private MenuItem accountSettingsMenuItem;
@@ -50,20 +59,33 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
 
     public void showFinancialAccounts() {
         try {
-            for (String kontoName : List.of("Haushaltskonto", "Sparkonto", "Reservekonto")) {
+            String jsonResponse = ServiceFunctions.get("financial-accounts");
+            FinancialAccountsList financialAccountsList = jsonb.fromJson(jsonResponse, FinancialAccountsList.class);
+            List<FinancialAccount> financialAccounts = financialAccountsList.getFinancialAccounts();
+            for (FinancialAccount financialAccount : financialAccounts) {
                 FXMLLoader accountTileLoader = new FXMLLoader();
                 accountTileLoader.setLocation(getClass().getResource("/financial-account-tile.fxml"));
                 Parent accountTile = accountTileLoader.load();
                 FinancialAccountTileController accountTileController = accountTileLoader.getController();
-                accountTileController.getFinancialAccountBalanceLabel().setText("1.000€");
-                accountTileController.getFinancialAccountTitleLabel().setText(kontoName);
+                accountTileController.getFinancialAccountBalanceLabel().setText(formatBalance(financialAccount.getBalance()));
+                accountTileController.getFinancialAccountTitleLabel().setText(financialAccount.getTitle());
                 financialAccountsTilePane.getChildren().add(accountTile);
             }
             showCreateFinancialAccountTile();
-        } catch (IOException e) {
+        } catch (IOException | ClientException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
     }
+
+    private String formatBalance(BigDecimal balance) {
+        balance = balance.setScale(2, RoundingMode.DOWN);
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        df.setMinimumFractionDigits(2);
+        df.setGroupingSize(3);
+        return df.format(balance) + " €";
+    }
+
 
     public void showCreateFinancialAccountTile() {
         try {
@@ -76,4 +98,5 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
     }
+
 }

@@ -16,14 +16,23 @@ public class ServiceFunctions {
     private static final String SERVER_URI = "http://localhost:4712/";
     private static final Jsonb jsonb = JsonbBuilder.create();
 
-    public static void post(String path, String jsonString) throws ClientException {
+    public static void post(String path, String jsonString, boolean authenticated) throws ClientException {
         String uriS = SERVER_URI + path;
         try {
             URI uri = new URI(uriS);
             HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder(uri)
-                    .POST(HttpRequest.BodyPublishers.ofString(jsonString))
-                    .build();
+            HttpRequest request;
+            if(authenticated){
+                request = HttpRequest.newBuilder(uri)
+                        .POST(HttpRequest.BodyPublishers.ofString(jsonString))
+                        .header("Authorization", getBasicAuthenticationHeader())
+                        .build();
+            }
+            else {
+                request = HttpRequest.newBuilder(uri)
+                        .POST(HttpRequest.BodyPublishers.ofString(jsonString))
+                        .build();
+            }
             HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
             int statusCode = response.statusCode();
             if (statusCode != 200) {
