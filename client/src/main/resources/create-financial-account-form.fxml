@@ -12,10 +12,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<DialogPane expanded="true" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.CreateFinancialAccountDialogController">
+<DialogPane fx:id="dialogPane" expanded="true" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.CreateFinancialAccountDialogController">
    <content>
-      <VBox>
+      <VBox alignment="CENTER" prefHeight="115.0" prefWidth="345.0">
          <children>
             <GridPane hgap="20.0" vgap="20.0">
               <columnConstraints>
@@ -35,7 +34,7 @@
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField fx:id="financialAccountTitleField" prefHeight="26.0" prefWidth="391.0" text="hallo" GridPane.columnIndex="1">
+                  <TextField fx:id="financialAccountTitleField" prefHeight="26.0" prefWidth="391.0" GridPane.columnIndex="1">
                      <font>
                         <Font name="Source Sans 3 Light" size="13.0" />
                      </font>
@@ -48,13 +47,21 @@
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField fx:id="financialAccountDescriptionField" layoutX="91.0" layoutY="12.0" prefHeight="26.0" prefWidth="391.0" text="blablavla" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                  <TextField fx:id="financialAccountDescriptionField" layoutX="91.0" layoutY="12.0" prefHeight="26.0" prefWidth="391.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                      <font>
                         <Font name="Source Sans 3 Light" size="13.0" />
                      </font>
                   </TextField>
                </children>
             </GridPane>
+            <Label fx:id="alertMessageLabel" alignment="CENTER">
+               <VBox.margin>
+                  <Insets bottom="-10.0" top="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="Source Sans 3 Regular" size="13.0" />
+               </font>
+            </Label>
          </children>
       </VBox>
    </content>

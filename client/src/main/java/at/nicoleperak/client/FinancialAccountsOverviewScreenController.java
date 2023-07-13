@@ -8,11 +8,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 
 import java.io.IOException;
@@ -31,6 +29,9 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
     private MenuItem accountSettingsMenuItem;
 
     @FXML
+    private Label alertMessagetLabel;
+
+    @FXML
     private TilePane financialAccountsTilePane;
 
     @FXML
@@ -43,14 +44,8 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
     private MenuButton menuButton;
 
     @FXML
-    private GridPane newFinancialAccountTile;
-
-    @FXML
     private Label userLabel;
 
-    public TilePane getFinancialAccountsTilePane() {
-        return financialAccountsTilePane;
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -73,7 +68,7 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
             }
             showCreateFinancialAccountTile();
         } catch (IOException | ClientException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+            alertMessagetLabel.setText(e.getMessage());
         }
     }
 
@@ -95,8 +90,13 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
             CreateFinancialAccountTileController createAccountTileController = createAccountTileLoader.getController();
             financialAccountsTilePane.getChildren().add(createAccountTile);
         } catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+            alertMessagetLabel.setText(e.getMessage());
         }
     }
 
+    public TilePane getFinancialAccountsTilePane() {
+        return financialAccountsTilePane;
+    }
+
+    public Label getAlertMessagetLabel() { return alertMessagetLabel; }
 }

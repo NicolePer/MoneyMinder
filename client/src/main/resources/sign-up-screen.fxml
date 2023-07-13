@@ -46,7 +46,7 @@
                      <children>
                         <Label text="SIGN UP" textFill="WHITE" textOverrun="CLIP">
                            <font>
-                              <Font name="Source Sans Pro SemiBold" size="26.0" />
+                              <Font name="Source Sans 3 Light" size="26.0" />
                            </font>
                         </Label>
                         <TextField fx:id="usernameField" layoutX="10.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="username">
@@ -75,7 +75,7 @@
             </HBox>
             <VBox alignment="CENTER">
                <children>
-                  <Label fx:id="warningLabel" alignment="CENTER" textFill="WHITE">
+                  <Label fx:id="alertMessageLabel" alignment="CENTER" textFill="WHITE">
                      <font>
                         <Font name="Source Sans 3 Regular" size="13.0" />
                      </font>

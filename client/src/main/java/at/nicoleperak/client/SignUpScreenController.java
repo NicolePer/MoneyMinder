@@ -40,7 +40,7 @@ public class SignUpScreenController {
     private TextField usernameField;
 
     @FXML
-    private Label warningLabel;
+    private Label alertMessageLabel;
 
     @FXML
     protected void onSignUpButtonClicked(ActionEvent event) {
@@ -54,16 +54,16 @@ public class SignUpScreenController {
             ServiceFunctions.post("users", jsonb.toJson(newUser), false);
             redirectToWelcomeScreen("Your account has been successfully created!");
         } catch (ClientException clientException) {
-            warningLabel.setText(clientException.getMessage());
+            alertMessageLabel.setText(clientException.getMessage());
         }
     }
 
     @FXML
     protected void onKeyPressedInRetypedPasswordField(KeyEvent event) {
         if (passwordsDiffer(passwordField.getText(), retypePasswordField.getText())) {
-            warningLabel.setText("passwords do not match");
+            alertMessageLabel.setText("passwords do not match");
         } else {
-            warningLabel.setText("");
+            alertMessageLabel.setText("");
         }
     }
 
@@ -77,13 +77,13 @@ public class SignUpScreenController {
         loader.setLocation(getClass().getResource("/welcome-screen.fxml"));
         try {
             Parent root = loader.load();
-            WelcomeScreenController controller = loader.getController();
-            controller.setAlertMessageLabelText(successMessage);
+            WelcomeScreenController welcomeScreenController = loader.getController();
+            welcomeScreenController.setAlertMessageLabelText(successMessage);
             Stage stage = (Stage) goBackButton.getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
         } catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+            this.alertMessageLabel.setText(e.getMessage());
         }
     }
 }

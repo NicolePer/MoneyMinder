@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: light-grey;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.FinancialAccountDetailsScreenController">
+  <children>
+      <HBox alignment="CENTER" spacing="2.0" style="-fx-background-color: #00A8D6;">
+         <children>
+            <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@money-minder-icon.png" />
+               </image>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </ImageView>
+            <Label text="MONEYMINDER" textFill="WHITE">
+               <font>
+                  <Font name="Source Sans Pro SemiBold" size="18.0" />
+               </font>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </Label>
+            <Region HBox.hgrow="ALWAYS" />
+            <Label fx:id="userLabel" text="User123" textFill="WHITE">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <font>
+                  <Font name="Source Sans Pro SemiBold" size="13.0" />
+               </font>
+            </Label>
+            <MenuButton fx:id="menuButton" mnemonicParsing="false" style="-fx-background-color: transparent;">
+              <items>
+                <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" text="Logout" />
+                <MenuItem fx:id="accountSettingsMenuItem" mnemonicParsing="false" text="Account Settings" />
+                  <MenuItem fx:id="helpMenuItem" mnemonicParsing="false" text="Help" />
+              </items>
+               <graphic>
+                  <ImageView fitHeight="30.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@user-icon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <font>
+                  <Font name="Source Sans 3 Regular" size="13.0" />
+               </font>
+            </MenuButton>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="9.0" right="7.0" top="5.0" />
+         </padding>
+      </HBox>
+      <BorderPane VBox.vgrow="ALWAYS">
+         <center>
+            <TabPane style="-fx-background-color: white;" tabClosingPolicy="UNAVAILABLE" tabMinHeight="30.0" tabMinWidth="100.0" BorderPane.alignment="CENTER">
+              <tabs>
+                <Tab closable="false" text="Transactions">
+                     <content>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <HBox alignment="CENTER" spacing="20.0" style="-fx-background-color: #158a97;">
+                                 <children>
+                                    <TextField promptText="SEARCH..." style="-fx-background-color: white;" HBox.hgrow="ALWAYS">
+                                       <font>
+                                          <Font name="Source Sans 3 Medium" size="14.0" />
+                                       </font>
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                    </TextField>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@search-icon.png" />
+                                       </image>
+                                       <HBox.margin>
+                                          <Insets left="-15.0" />
+                                       </HBox.margin>
+                                    </ImageView>
+                                    <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="1058.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@download-icon.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: #158a97;">
+                                 <children>
+                                    <ChoiceBox style="-fx-background-color: white;" HBox.hgrow="ALWAYS" />
+                                    <ChoiceBox style="-fx-background-color: white;" />
+                                    <DatePicker promptText="DATE FROM" style="-fx-background-color: white;" />
+                                    <DatePicker promptText="DATE TO" style="-fx-background-color: white;" HBox.hgrow="ALWAYS" />
+                                    <Region HBox.hgrow="ALWAYS" />
+                                    <Button mnemonicParsing="false" style="-fx-background-color: #d7b61e;" text="Add new Transaction" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                       <font>
+                                          <Font name="Source Sans 3 Regular" size="14.0" />
+                                       </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <opaqueInsets>
+                                          <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                                       </opaqueInsets>
+                                    </Button>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" />
+                                 </padding>
+                              </HBox>
+                              <ScrollPane fitToWidth="true">
+                                 <content>
+                                    <GridPane alignment="CENTER" style="-fx-border-style: solid; -fx-border-radius: 2; -fx-border-color: #0085A0; -fx-background-color: white;">
+                                      <columnConstraints>
+                                        <ColumnConstraints hgrow="ALWAYS" percentWidth="15.0" />
+                                        <ColumnConstraints hgrow="ALWAYS" percentWidth="35.0" />
+                                          <ColumnConstraints hgrow="ALWAYS" percentWidth="35.0" />
+                                          <ColumnConstraints hgrow="ALWAYS" percentWidth="15.0" />
+                                      </columnConstraints>
+                                      <rowConstraints>
+                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                      </rowConstraints>
+                                       <children>
+                                          <Label text="JUL 21" textFill="#0085a0">
+                                             <font>
+                                                <Font name="Source Sans 3 Light" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="10.0" layoutY="11.0" text="LANDLORD" textFill="#0085a0" GridPane.columnIndex="1">
+                                             <font>
+                                                <Font name="Source Sans 3 Light" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="280.0" layoutY="11.0" text="RENT PAYMENT" textFill="#0085a0" GridPane.columnIndex="2">
+                                             <font>
+                                                <Font name="Source Sans 3 Light" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <Label layoutX="550.0" layoutY="11.0" text="- 831,23€ " textFill="#0085a0" GridPane.columnIndex="3">
+                                             <font>
+                                                <Font name="Source Sans 3 Light" size="20.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                       <padding>
+                                          <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                       </padding>
+                                       <opaqueInsets>
+                                          <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                                       </opaqueInsets>
+                                    </GridPane>
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </VBox>
+                     </content>
+                </Tab>
+                <Tab closable="false" text="Stats">
+                     <content>
+                        <HBox>
+                           <children>
+                              <PieChart fx:id="pieCHart" HBox.hgrow="ALWAYS" />
+                              <BarChart fx:id="barChart" HBox.hgrow="ALWAYS">
+                                <xAxis>
+                                  <CategoryAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis side="LEFT" />
+                                </yAxis>
+                              </BarChart>
+                           </children>
+                        </HBox>
+                     </content></Tab>
+              </tabs>
+            </TabPane>
+         </center>
+         <top>
+            <GridPane style="-fx-background-color: #158a97;">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="59.0" minWidth="50.0" prefWidth="50.0" />
+                  <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+               <children>
+                  <Label text="FINANCIAL ACCOUNT TEST 123" textFill="WHITE" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                     <font>
+                        <Font name="Source Sans 3 Light" size="30.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label alignment="CENTER" text="€ 1.780,32" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Source Sans 3 SemiBold" size="30.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets right="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+                     <image>
+                        <Image url="@coins-icon-white.png" />
+                     </image>
+                     <GridPane.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </GridPane.margin>
+                  </ImageView>
+                  <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <image>
+                        <Image url="@goal-icon.png" />
+                     </image>
+                     <GridPane.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </GridPane.margin>
+                  </ImageView>
+                  <HBox alignment="CENTER" spacing="30.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" text="Monthly Goal" textFill="WHITE" HBox.hgrow="ALWAYS">
+                           <font>
+                              <Font name="Source Sans 3 Light" size="24.0" />
+                           </font>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </Label>
+                        <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                           <children>
+                              <ProgressBar prefWidth="828.0" progress="0.53" style="-fx-accent: #d7b61e;" VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="50%" textFill="WHITE" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <font>
+                        <Font name="Source Sans 3 SemiBold" size="24.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets right="10.0" />
+                     </GridPane.margin>
+                  </Label>
+               </children>
+            </GridPane>
+         </top>
+         <right>
+            <Accordion BorderPane.alignment="CENTER">
+              <panes>
+                <TitledPane animated="false" text="Recurring Transactions">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                     <font>
+                        <Font name="Source Sans 3 Regular" size="15.0" />
+                     </font>
+                </TitledPane>
+                <TitledPane animated="false" text="Collaborators">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                     <font>
+                        <Font name="Source Sans 3 Regular" size="15.0" />
+                     </font>
+                </TitledPane>
+                <TitledPane animated="false" text="Monthly Goal">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                     <font>
+                        <Font name="Source Sans 3 Regular" size="15.0" />
+                     </font>
+                </TitledPane>
+              </panes>
+            </Accordion>
+         </right>
+      </BorderPane>
+  </children>
+</VBox>

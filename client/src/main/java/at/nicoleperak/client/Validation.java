@@ -23,6 +23,7 @@ public class Validation {
             throw new ClientException("Please enter valid email address");
         }
     }
+
     public static boolean passwordsDiffer(String password, String retypedPassword) {
         return !password.equals(retypedPassword);
     }
@@ -32,4 +33,5 @@ public class Validation {
             throw new ClientException("Retyped password must match password.");
         }
     }
+
 }
