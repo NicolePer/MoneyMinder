@@ -1,5 +1,8 @@
-package at.nicoleperak.client;
+package at.nicoleperak.client.controllers;
 
+import at.nicoleperak.client.Client;
+import at.nicoleperak.client.ClientException;
+import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.shared.User;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -38,7 +41,7 @@ public class WelcomeScreenController {
     @FXML
     protected void onSignUpLinkClicked(ActionEvent event) {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/sign-up-screen.fxml"));
+        loader.setLocation(getClass().getResource("/fxml/sign-up-screen.fxml"));
         try {
             Parent root = loader.load();
             Stage stage = (Stage) signUpLink.getScene().getWindow();
@@ -52,7 +55,7 @@ public class WelcomeScreenController {
 
     private void redirectToFinancialAccountsOverviewScreen() {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/financial-accounts-overview-screen.fxml"));
+        loader.setLocation(getClass().getResource("/fxml/financial-accounts-overview-screen.fxml"));
         try {
             Parent root = loader.load();
             Stage stage = (Stage) signInButton.getScene().getWindow();

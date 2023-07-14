@@ -13,19 +13,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: #158a97;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.FinancialAccountsOverviewScreenController">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: #749AC1;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.controllers.FinancialAccountsOverviewScreenController">
   <children>
-      <HBox alignment="CENTER" spacing="2.0" style="-fx-background-color: white;">
+      <HBox alignment="CENTER" spacing="2.0" style="-fx-background-color: #3A6A95;">
          <children>
             <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@money-minder-icon-color.png" />
+                  <Image url="@../icons/money-minder-icon.png" />
                </image>
                <HBox.margin>
                   <Insets />
                </HBox.margin>
             </ImageView>
-            <Label text="MONEYMINDER" textFill="#00a8d6">
+            <Label text="MONEYMINDER" textFill="#fbf9f8">
                <font>
                   <Font name="Source Sans Pro SemiBold" size="18.0" />
                </font>
@@ -34,7 +34,7 @@
                </HBox.margin>
             </Label>
             <Region HBox.hgrow="ALWAYS" />
-            <Label fx:id="userLabel" text="User123" textFill="#00a8d6">
+            <Label fx:id="userLabel" text="User123" textFill="#fbf9f8">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
@@ -51,7 +51,7 @@
                <graphic>
                   <ImageView fitHeight="30.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@user-icon-color.png" />
+                        <Image url="@../icons/user-icon.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -66,9 +66,9 @@
       </HBox>
       <HBox alignment="CENTER">
          <children>
-            <Label alignment="CENTER" text="FINANCIAL ACCOUNTS" textFill="WHITE">
+            <Label alignment="CENTER" text="FINANCIAL ACCOUNTS" textFill="#fbf9f8">
                <font>
-                  <Font name="Source Sans 3 Light" size="36.0" />
+                  <Font name="Source Sans 3 Light" size="30.0" />
                </font>
                <HBox.margin>
                   <Insets />
@@ -78,6 +78,9 @@
          <VBox.margin>
             <Insets bottom="20.0" top="20.0" />
          </VBox.margin>
+         <padding>
+            <Insets bottom="5.0" />
+         </padding>
       </HBox>
       <Label fx:id="alertMessagetLabel" alignment="TOP_CENTER" textFill="RED" VBox.vgrow="NEVER">
          <font>

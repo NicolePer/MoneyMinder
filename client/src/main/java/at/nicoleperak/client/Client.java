@@ -1,5 +1,6 @@
 package at.nicoleperak.client;
 
+import at.nicoleperak.client.controllers.WelcomeScreenController;
 import at.nicoleperak.shared.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +22,7 @@ public class Client extends Application {
     public void start(Stage primaryStage) {
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/welcome-screen.fxml"));
+        loader.setLocation(getClass().getResource("/fxml/welcome-screen.fxml"));
         try {
             Parent root = loader.load();
             WelcomeScreenController controller = loader.getController();

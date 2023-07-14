@@ -1,5 +1,7 @@
-package at.nicoleperak.client;
+package at.nicoleperak.client.controllers;
 
+import at.nicoleperak.client.ClientException;
+import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.shared.User;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -74,7 +76,7 @@ public class SignUpScreenController {
 
     private void redirectToWelcomeScreen(String successMessage) {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/welcome-screen.fxml"));
+        loader.setLocation(getClass().getResource("/fxml/welcome-screen.fxml"));
         try {
             Parent root = loader.load();
             WelcomeScreenController welcomeScreenController = loader.getController();

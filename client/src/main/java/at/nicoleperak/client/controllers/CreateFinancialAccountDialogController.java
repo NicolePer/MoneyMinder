@@ -1,5 +1,6 @@
-package at.nicoleperak.client;
+package at.nicoleperak.client.controllers;
 
+import at.nicoleperak.client.ClientException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

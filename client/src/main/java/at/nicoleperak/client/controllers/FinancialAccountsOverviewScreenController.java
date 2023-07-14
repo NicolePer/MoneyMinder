@@ -1,5 +1,7 @@
-package at.nicoleperak.client;
+package at.nicoleperak.client.controllers;
 
+import at.nicoleperak.client.ClientException;
+import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.shared.FinancialAccount;
 import at.nicoleperak.shared.FinancialAccountsList;
 import jakarta.json.bind.Jsonb;
@@ -59,7 +61,7 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
             List<FinancialAccount> financialAccounts = financialAccountsList.getFinancialAccounts();
             for (FinancialAccount financialAccount : financialAccounts) {
                 FXMLLoader accountTileLoader = new FXMLLoader();
-                accountTileLoader.setLocation(getClass().getResource("/financial-account-tile.fxml"));
+                accountTileLoader.setLocation(getClass().getResource("/fxml/financial-account-tile.fxml"));
                 Parent accountTile = accountTileLoader.load();
                 FinancialAccountTileController accountTileController = accountTileLoader.getController();
                 accountTileController.getFinancialAccountBalanceLabel().setText(formatBalance(financialAccount.getBalance()));
@@ -85,7 +87,7 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
     public void showCreateFinancialAccountTile() {
         try {
             FXMLLoader createAccountTileLoader = new FXMLLoader();
-            createAccountTileLoader.setLocation(getClass().getResource("/create-financial-account-tile.fxml"));
+            createAccountTileLoader.setLocation(getClass().getResource("/fxml/create-financial-account-tile.fxml"));
             Parent createAccountTile = createAccountTileLoader.load();
             CreateFinancialAccountTileController createAccountTileController = createAccountTileLoader.getController();
             financialAccountsTilePane.getChildren().add(createAccountTile);

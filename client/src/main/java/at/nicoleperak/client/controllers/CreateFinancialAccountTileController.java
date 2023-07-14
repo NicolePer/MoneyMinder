@@ -1,5 +1,7 @@
-package at.nicoleperak.client;
+package at.nicoleperak.client.controllers;
 
+import at.nicoleperak.client.ClientException;
+import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.shared.FinancialAccount;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -26,7 +28,7 @@ public class CreateFinancialAccountTileController {
     protected void onCreateFinancialAccountTileClicked(MouseEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/create-financial-account-form.fxml"));
+            loader.setLocation(getClass().getResource("/fxml/create-financial-account-form.fxml"));
             DialogPane createFinancialAccountDialogPane = loader.load();
             CreateFinancialAccountDialogController formController = loader.getController();
             Dialog<ButtonType> dialog = new Dialog<>();
@@ -52,7 +54,7 @@ public class CreateFinancialAccountTileController {
 
     private void reloadFinancialAccountsOverviewScreen() {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/financial-accounts-overview-screen.fxml"));
+        loader.setLocation(getClass().getResource("/fxml/financial-accounts-overview-screen.fxml"));
         FinancialAccountsOverviewScreenController overviewController = loader.getController();
         try {
             Parent root = loader.load();

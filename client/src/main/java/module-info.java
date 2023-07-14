@@ -7,4 +7,6 @@ module client {
     requires java.net.http;
     exports at.nicoleperak.client;
     opens at.nicoleperak.client to javafx.fxml;
+    exports at.nicoleperak.client.controllers;
+    opens at.nicoleperak.client.controllers to javafx.fxml;
 }

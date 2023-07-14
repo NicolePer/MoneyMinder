@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.SignUpScreenController">
+<GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #FBF9F8;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.controllers.SignUpScreenController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" percentWidth="65.0" />
     <ColumnConstraints hgrow="SOMETIMES" percentWidth="35.0" />
@@ -30,7 +30,7 @@
          <children>
             <ImageView fitHeight="116.0" fitWidth="163.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@money-minder-logo.png" />
+                  <Image url="@../icons/money-minder-logo.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -38,33 +38,33 @@
             </ImageView>
          </children>
       </VBox>
-      <VBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #158a97;" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+      <VBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #3A6A95;" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
          <children>
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                <children>
                   <VBox fillWidth="false" spacing="20.0">
                      <children>
-                        <Label text="SIGN UP" textFill="WHITE" textOverrun="CLIP">
+                        <Label text="SIGN UP" textFill="#fbf9f8" textOverrun="CLIP">
                            <font>
                               <Font name="Source Sans 3 Light" size="26.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="usernameField" layoutX="10.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="username">
+                        <TextField fx:id="usernameField" layoutX="10.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="username" style="-fx-background-color: #FBF9F8;">
                            <font>
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>
                         </TextField>
-                        <TextField fx:id="emailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="email">
+                        <TextField fx:id="emailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="email" style="-fx-background-color: #FBF9F8;">
                            <font>
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>
                         </TextField>
-                        <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="password">
+                        <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="password" style="-fx-background-color: #FBF9F8;">
                            <font>
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>
                         </PasswordField>
-                        <PasswordField fx:id="retypePasswordField" layoutX="10.0" layoutY="113.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#onKeyPressedInRetypedPasswordField" prefHeight="28.0" prefWidth="270.0" promptText="retype password">
+                        <PasswordField fx:id="retypePasswordField" layoutX="10.0" layoutY="113.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#onKeyPressedInRetypedPasswordField" prefHeight="28.0" prefWidth="270.0" promptText="retype password" style="-fx-background-color: #FBF9F8;">
                            <font>
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>
@@ -92,7 +92,7 @@
                <children>
                   <HBox alignment="CENTER">
                      <children>
-                        <Button fx:id="signUpButton" alignment="CENTER" cache="true" mnemonicParsing="false" onAction="#onSignUpButtonClicked" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #FFFFFF;" text="Sign Up" textAlignment="JUSTIFY">
+                        <Button fx:id="signUpButton" alignment="CENTER" cache="true" mnemonicParsing="false" onAction="#onSignUpButtonClicked" style="-fx-background-color: #FBF9F8;" text="Sign Up" textAlignment="JUSTIFY" textFill="#3a6a95">
                            <font>
                               <Font name="Source Sans 3 Regular" size="13.0" />
                            </font>
@@ -102,6 +102,9 @@
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>
+                           <padding>
+                              <Insets bottom="5.0" left="40.0" right="40.0" top="5.0" />
+                           </padding>
                         </Button>
                      </children>
                   </HBox>
@@ -111,9 +114,9 @@
       </VBox>
       <AnchorPane fx:id="goBackButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onGoBackButtonClicked" prefHeight="37.0" prefWidth="37.0" GridPane.halignment="LEFT" GridPane.valignment="TOP">
          <children>
-            <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="7.0">
+            <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="7.0">
                <image>
-                  <Image url="@arrow-left-icon.png" />
+                  <Image url="@../icons/arrow-left-icon.png" />
                </image>
             </ImageView>
          </children>

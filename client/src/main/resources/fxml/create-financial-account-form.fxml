@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<DialogPane fx:id="dialogPane" expanded="true" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.CreateFinancialAccountDialogController">
+<DialogPane fx:id="dialogPane" expanded="true" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.controllers.CreateFinancialAccountDialogController">
    <content>
       <VBox alignment="CENTER" prefHeight="115.0" prefWidth="345.0">
          <children>
