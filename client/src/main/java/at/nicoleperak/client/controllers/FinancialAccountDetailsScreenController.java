@@ -1,7 +1,15 @@
 package at.nicoleperak.client.controllers;
 
+import at.nicoleperak.client.Client;
+import at.nicoleperak.client.ClientException;
+import at.nicoleperak.client.ServiceFunctions;
+import at.nicoleperak.shared.FinancialAccount;
+import at.nicoleperak.shared.Transaction;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -13,11 +21,24 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class FinancialAccountDetailsScreenController {
+import static at.nicoleperak.client.Client.loadScene;
+import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN;
+import static at.nicoleperak.client.FXMLLocation.TRANSACTION_TILE;
+import static at.nicoleperak.client.Format.formatBalance;
+import static java.time.format.DateTimeFormatter.ofLocalizedDate;
+import static java.time.format.FormatStyle.SHORT;
+
+public class FinancialAccountDetailsScreenController implements Initializable {
+
+    private static final Jsonb jsonb = JsonbBuilder.create();
+
+    private static FinancialAccount selectedFinancialAccount;
 
     @FXML
     private MenuItem accountSettingsMenuItem;
@@ -44,7 +65,7 @@ public class FinancialAccountDetailsScreenController {
     private MenuButton menuButton;
 
     @FXML
-    private PieChart pieCHart;
+    private PieChart pieChart;
 
     @FXML
     private ImageView searchIcon;
@@ -53,21 +74,67 @@ public class FinancialAccountDetailsScreenController {
     private Label userLabel;
 
     @FXML
+    private VBox transactionsPane;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        //loadSelectedFinancialAccount();
+        //showTransactions();
+    }
+
+    @FXML
     protected void onGoBackButtonClicked(MouseEvent event) {
         redirectToFinancialAccountsOverviewScreen();
     }
 
-    private void redirectToFinancialAccountsOverviewScreen() {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/fxml/financial-accounts-overview-screen.fxml"));
+    private void loadSelectedFinancialAccount() {
         try {
-            Parent root = loader.load();
-            Stage stage = (Stage) goBackButton.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+            String jsonResponse = ServiceFunctions.get("financial-account");
+            selectedFinancialAccount = jsonb.fromJson(jsonResponse, FinancialAccount.class);
+        } catch (ClientException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
+    private void showTransactions() {
+        try {
+            for (Transaction transaction : selectedFinancialAccount.getTransactions()) {
+                FXMLLoader transactionTileLoader = new FXMLLoader();
+                transactionTileLoader.setLocation(getClass().getResource(TRANSACTION_TILE.getLocation()));
+                Parent transactionTile = buildTransactionTile(transaction, transactionTileLoader);
+                transactionsPane.getChildren().add(transactionTile);
+            }
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+            //TODO: Alertlabel?
+        }
+    }
+
+
+    private void redirectToFinancialAccountsOverviewScreen() {
+        try {
+            Scene scene = loadScene(FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN);
+            Client.getStage().setScene(scene);
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
     }
 
+    private static Parent buildTransactionTile(Transaction transaction, FXMLLoader loader) throws IOException {
+        Parent transactionTile = loader.load();
+        TransactionTileController controller = loader.getController();
+        controller
+                .getTransactionDateLabel()
+                .setText(transaction.getDate().format(ofLocalizedDate(SHORT)));
+        controller
+                .getTransactionPartnerLabel()
+                .setText(transaction.getTransactionPartner());
+        controller
+                .getTransactionDescriptionLabel()
+                .setText(transaction.getDescription());
+        controller
+                .getTransactionAmountLabel()
+                .setText(formatBalance(transaction.getAmount()));
+        return transactionTile;
+    }
 }

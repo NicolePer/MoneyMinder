@@ -172,7 +172,7 @@
                                     </HBox>
                                     <ScrollPane fitToWidth="true" style="-fx-background-color: #97D6EA;">
                                        <content>
-                                          <VBox style="-fx-background-color: #97D6EA;">
+                                          <VBox fx:id="transactionsPane" style="-fx-background-color: #97D6EA;">
                                              <children>
                                                 <GridPane alignment="CENTER" layoutX="10.0" layoutY="10.0" style="-fx-border-style: solid; -fx-border-radius: 2; -fx-border-color: #3A6A95; -fx-background-color: #FBF9F8;">
                                                    <columnConstraints>
@@ -201,48 +201,6 @@
                                                          </font>
                                                       </Label>
                                                       <Label layoutX="550.0" layoutY="11.0" text="- 831,23€ " textFill="#3a6a95" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
-                                                         <font>
-                                                            <Font name="Source Sans 3 Light" size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                   </children>
-                                                   <padding>
-                                                      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-                                                   </padding>
-                                                   <opaqueInsets>
-                                                      <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-                                                   </opaqueInsets>
-                                                   <cursor>
-                                                      <Cursor fx:constant="HAND" />
-                                                   </cursor>
-                                                </GridPane>
-                                                <GridPane alignment="CENTER" layoutX="10.0" layoutY="10.0" style="-fx-border-style: solid; -fx-border-radius: 2; -fx-border-color: #3A6A95; -fx-background-color: #FBF9F8;">
-                                                   <columnConstraints>
-                                                      <ColumnConstraints hgrow="ALWAYS" percentWidth="15.0" />
-                                                      <ColumnConstraints hgrow="ALWAYS" percentWidth="35.0" />
-                                                      <ColumnConstraints hgrow="ALWAYS" percentWidth="35.0" />
-                                                      <ColumnConstraints hgrow="ALWAYS" percentWidth="15.0" />
-                                                   </columnConstraints>
-                                                   <rowConstraints>
-                                                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                   </rowConstraints>
-                                                   <children>
-                                                      <Label text="JUL 21" textFill="#3a6a95">
-                                                         <font>
-                                                            <Font name="Source Sans 3 Light" size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="10.0" layoutY="11.0" text="BILLA" textFill="#3a6a95" GridPane.columnIndex="1" GridPane.halignment="CENTER">
-                                                         <font>
-                                                            <Font name="Source Sans 3 Light" size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="280.0" layoutY="11.0" text="EINKAUF" textFill="#3a6a95" GridPane.columnIndex="2" GridPane.halignment="CENTER">
-                                                         <font>
-                                                            <Font name="Source Sans 3 Light" size="20.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <Label layoutX="550.0" layoutY="11.0" text="-22,60 €" textFill="#3a6a95" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
                                                          <font>
                                                             <Font name="Source Sans 3 Light" size="20.0" />
                                                          </font>
@@ -336,7 +294,7 @@
                         <RowConstraints />
                      </rowConstraints>
                      <children>
-                        <Label text="OUR HOME" textFill="#fbf9f8" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <Label fx:id="financialAccountTitleLabel" text="OUR HOME" textFill="#fbf9f8" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                            <font>
                               <Font name="Source Sans 3 Light" size="30.0" />
                            </font>
@@ -344,7 +302,7 @@
                               <Insets left="10.0" />
                            </GridPane.margin>
                         </Label>
-                        <Label alignment="CENTER" text="€ 1.780,32" textFill="#fbf9f8" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                        <Label fx:id="balanceLabel" alignment="CENTER" text="€ 1.780,32" textFill="#fbf9f8" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                            <font>
                               <Font name="Source Sans 3 SemiBold" size="30.0" />
                            </font>

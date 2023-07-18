@@ -37,9 +37,11 @@ public class CreateFinancialAccountDialogController implements Initializable {
     public void validateUserInputsOnFinish() {
         Button finish = (Button) dialogPane.lookupButton(ButtonType.FINISH);
         finish.addEventFilter(ActionEvent.ACTION, f -> {
+            String title = financialAccountTitleField.getText();
+            String description = financialAccountDescriptionField.getText();
             try {
-                assertUserInputLengthIsValid(financialAccountTitleField.getText(), "title", 1, 255);
-                assertUserInputLengthIsValid(financialAccountDescriptionField.getText(), "description", 0, 255);
+                assertUserInputLengthIsValid(title, "title", 1, 255);
+                assertUserInputLengthIsValid(description, "description", 0, 255);
             } catch (ClientException e) {
                 alertMessageLabel.setText(e.getMessage());
                 f.consume();

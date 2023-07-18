@@ -28,10 +28,11 @@
 
 .tab-pane {
 	-fx-background-color: transparent;
-	/*-fx-tab-min-width: use_computed_size;
-	-fx-tab-min-height: use_computed_size;
-	-fx-tab-max-height: use_computed_size;*/
+	-fx-tab-min-width: 1;
+	-fx-tab-min-height: 1;
+	-fx-tab-max-height: 100000;
 }
+
 .tab-pane .tab {
 	-fx-background-color: transparent;
 }

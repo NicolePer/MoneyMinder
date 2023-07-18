@@ -1,5 +1,6 @@
 package at.nicoleperak.client.controllers;
 
+import at.nicoleperak.client.Client;
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.shared.FinancialAccount;
@@ -7,17 +8,19 @@ import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Optional;
 
-public class CreateFinancialAccountTileController {
+import static at.nicoleperak.client.Client.loadScene;
+import static at.nicoleperak.client.FXMLLocation.CREATE_FINANCIAL_ACCOUNT_FORM;
+import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN;
+
+public class CreateFinancialAccountTileController{
 
     private static final Jsonb jsonb = JsonbBuilder.create();
 
@@ -26,9 +29,22 @@ public class CreateFinancialAccountTileController {
 
     @FXML
     protected void onCreateFinancialAccountTileClicked(MouseEvent event) {
+        showCreateFinancialAccountDialog();
+    }
+
+    private void reloadFinancialAccountsOverviewScreen() {
+        try {
+            Scene scene = loadScene(FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN);
+            Client.getStage().setScene(scene);
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
+    private void showCreateFinancialAccountDialog() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/fxml/create-financial-account-form.fxml"));
+            loader.setLocation(getClass().getResource(CREATE_FINANCIAL_ACCOUNT_FORM.getLocation()));
             DialogPane createFinancialAccountDialogPane = loader.load();
             CreateFinancialAccountDialogController formController = loader.getController();
             Dialog<ButtonType> dialog = new Dialog<>();
@@ -48,21 +64,9 @@ public class CreateFinancialAccountTileController {
                 }
             }
         } catch (IOException e) {
-           new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
-        }
-    }
-
-    private void reloadFinancialAccountsOverviewScreen() {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/fxml/financial-accounts-overview-screen.fxml"));
-        FinancialAccountsOverviewScreenController overviewController = loader.getController();
-        try {
-            Parent root = loader.load();
-            Stage stage = (Stage) createFinancialAccountTile.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-        } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
     }
+
+
 }

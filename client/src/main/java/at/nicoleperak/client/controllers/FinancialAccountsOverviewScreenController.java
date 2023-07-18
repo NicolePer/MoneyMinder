@@ -16,12 +16,13 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.TilePane;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static at.nicoleperak.client.FXMLLocation.CREATE_FINANCIAL_ACCOUNT_TILE;
+import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNT_TILE;
+import static at.nicoleperak.client.Format.formatBalance;
 
 public class FinancialAccountsOverviewScreenController implements Initializable {
 
@@ -54,18 +55,15 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
         showFinancialAccounts();
     }
 
-    public void showFinancialAccounts() {
+    private void showFinancialAccounts() {
         try {
             String jsonResponse = ServiceFunctions.get("financial-accounts");
             FinancialAccountsList financialAccountsList = jsonb.fromJson(jsonResponse, FinancialAccountsList.class);
             List<FinancialAccount> financialAccounts = financialAccountsList.getFinancialAccounts();
             for (FinancialAccount financialAccount : financialAccounts) {
-                FXMLLoader accountTileLoader = new FXMLLoader();
-                accountTileLoader.setLocation(getClass().getResource("/fxml/financial-account-tile.fxml"));
-                Parent accountTile = accountTileLoader.load();
-                FinancialAccountTileController accountTileController = accountTileLoader.getController();
-                accountTileController.getFinancialAccountBalanceLabel().setText(formatBalance(financialAccount.getBalance()));
-                accountTileController.getFinancialAccountTitleLabel().setText(financialAccount.getTitle());
+                FXMLLoader financialAccountTileLoader = new FXMLLoader();
+                financialAccountTileLoader.setLocation(getClass().getResource(FINANCIAL_ACCOUNT_TILE.getLocation()));
+                Parent accountTile = buildFinancialAccountTile(financialAccount, financialAccountTileLoader);
                 financialAccountsTilePane.getChildren().add(accountTile);
             }
             showCreateFinancialAccountTile();
@@ -74,26 +72,23 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
         }
     }
 
-    private String formatBalance(BigDecimal balance) {
-        balance = balance.setScale(2, RoundingMode.DOWN);
-        DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(2);
-        df.setMinimumFractionDigits(2);
-        df.setGroupingSize(3);
-        return df.format(balance) + " €";
+    private void showCreateFinancialAccountTile() throws IOException {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource(CREATE_FINANCIAL_ACCOUNT_TILE.getLocation()));
+            Parent createAccountTile = loader.load();
+            financialAccountsTilePane.getChildren().add(createAccountTile);
     }
 
-
-    public void showCreateFinancialAccountTile() {
-        try {
-            FXMLLoader createAccountTileLoader = new FXMLLoader();
-            createAccountTileLoader.setLocation(getClass().getResource("/fxml/create-financial-account-tile.fxml"));
-            Parent createAccountTile = createAccountTileLoader.load();
-            CreateFinancialAccountTileController createAccountTileController = createAccountTileLoader.getController();
-            financialAccountsTilePane.getChildren().add(createAccountTile);
-        } catch (IOException e) {
-            alertMessagetLabel.setText(e.getMessage());
-        }
+    private static Parent buildFinancialAccountTile(FinancialAccount financialAccount, FXMLLoader loader) throws IOException {
+        Parent accountTile = loader.load();
+        FinancialAccountTileController controller = loader.getController();
+        controller
+                .getFinancialAccountBalanceLabel()
+                .setText(formatBalance(financialAccount.getBalance()));
+        controller
+                .getFinancialAccountTitleLabel()
+                .setText(financialAccount.getTitle());
+        return accountTile;
     }
 
     public TilePane getFinancialAccountsTilePane() {
@@ -101,4 +96,6 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
     }
 
     public Label getAlertMessagetLabel() { return alertMessagetLabel; }
+
+
 }

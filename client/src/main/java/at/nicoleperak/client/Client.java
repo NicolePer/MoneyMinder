@@ -1,6 +1,5 @@
 package at.nicoleperak.client;
 
-import at.nicoleperak.client.controllers.WelcomeScreenController;
 import at.nicoleperak.shared.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,9 +9,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import static at.nicoleperak.client.FXMLLocation.WELCOME_SCREEN;
+
 public class Client extends Application {
     private static User loggedInUser;
     private static User userCredentials;
+    private static Stage stage;
 
     public static void main(String[] args) {
         launch(args);
@@ -20,20 +22,29 @@ public class Client extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/fxml/welcome-screen.fxml"));
         try {
-            Parent root = loader.load();
-            WelcomeScreenController controller = loader.getController();
-            Scene scene = new Scene(root);
+            stage = primaryStage;
+            Scene scene = loadScene(WELCOME_SCREEN);
             primaryStage.setScene(scene);
             primaryStage.setTitle("MoneyMinder");
             primaryStage.show();
-            root.requestFocus();
+            scene.getRoot().requestFocus();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static Scene loadScene(FXMLLocation fxmlLocation) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Client.class.getResource(fxmlLocation.getLocation()));
+        Parent root = loader.load();
+        return new Scene(root);
+    }
+
+    public static Scene loadScene(FXMLLocation fxmlLocation, FXMLLoader loader) throws IOException {
+        loader.setLocation(Client.class.getResource(fxmlLocation.getLocation()));
+        Parent root = loader.load();
+        return new Scene(root);
     }
 
     public static User getLoggedInUser() {
@@ -41,7 +52,7 @@ public class Client extends Application {
     }
 
     public static void setLoggedInUser(User loggedInUser) {
-      Client.loggedInUser = loggedInUser;
+        Client.loggedInUser = loggedInUser;
     }
 
     public static User getUserCredentials() {
@@ -50,5 +61,9 @@ public class Client extends Application {
 
     public static void setUserCredentials(User userCredentials) {
         Client.userCredentials = userCredentials;
+    }
+
+    public static Stage getStage() {
+        return stage;
     }
 }

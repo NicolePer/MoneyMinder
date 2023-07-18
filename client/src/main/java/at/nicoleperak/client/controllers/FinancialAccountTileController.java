@@ -1,15 +1,15 @@
 package at.nicoleperak.client.controllers;
 
+import at.nicoleperak.client.Client;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-
 import java.io.IOException;
+
+import static at.nicoleperak.client.Client.loadScene;
+import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNT_DETAILS_SCREEN;
 
 public class FinancialAccountTileController extends GridPane {
 
@@ -22,26 +22,22 @@ public class FinancialAccountTileController extends GridPane {
     @FXML
     private Label financialAccountTitleLabel;
 
+    @FXML
+    protected void onFinancialAccountTileClicked(MouseEvent event) {
+        try {
+            Scene scene = loadScene(FINANCIAL_ACCOUNT_DETAILS_SCREEN);
+            Client.getStage().setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
     public Label getFinancialAccountBalanceLabel() {
         return financialAccountBalanceLabel;
     }
 
     public Label getFinancialAccountTitleLabel() {
         return financialAccountTitleLabel;
-    }
-
-    @FXML
-    protected void onFinancialAccountTileClicked(MouseEvent event) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/fxml/financial-account-details-screen.fxml"));
-        try {
-            Parent root = loader.load();
-            Stage stage = (Stage) financialAccountTile.getScene().getWindow();
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-        } catch (IOException e) {
-            e.printStackTrace();
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
-        }
     }
 }
