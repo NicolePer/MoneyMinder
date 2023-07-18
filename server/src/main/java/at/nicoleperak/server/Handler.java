@@ -69,58 +69,66 @@ public class Handler implements HttpHandler {
     }
 
     private void handlePost(HttpExchange exchange, String[] paths) throws ServerException {
-        User currentUser;
         int statusCode = 200;
         String jsonResponse = "";
         if (paths.length == 1 && paths[0].equals("users")) {
-            try {
-                String jsonString = new String(exchange.getRequestBody().readAllBytes());
-                User user = jsonb.fromJson(jsonString, User.class);
-                if (Database.userExistsByEmail(user.getEmail())) {
-                    throw new ServerException(409, "A user with this email address already exists");
-                }
-                String passwordHash = createPasswordHash(user.getPassword());
-                Database.insertUser(user, passwordHash);
-            } catch (SQLException e) {
-                throw new ServerException(500, "Database error", e);
-            } catch (IOException e) {
-                throw new ServerException(400, "Could not read response body", e);
-            }
+            signUpNewUser(exchange);
         }
         else if(paths.length == 1 && paths[0].equals("financial-accounts")) {
-            currentUser = authenticate(exchange);
-            try {
-                String jsonString = new String(exchange.getRequestBody().readAllBytes());
-                FinancialAccount financialAccount = jsonb.fromJson(jsonString, FinancialAccount.class);
-                financialAccount.setOwner(currentUser);
-                //TODO set user as Collaborator
-                financialAccount.setBalance(new BigDecimal(0));
-                Database.insertFinancialAccount(financialAccount);
-            } catch (SQLException e) {
-                throw new ServerException(500, "Database error", e);
-            } catch (IOException e) {
-                throw new ServerException(400, "Could not read response body", e);
-            }
+            createNewFinancialAccount(exchange);
         }else {
             throw new ServerException(400, "URI not supported");
         }
         setResponse(exchange, statusCode, jsonResponse);
     }
 
+
     private void handleGet(HttpExchange exchange, String[] paths) throws ServerException {
-        User currentUser;
         int statusCode = 200;
+        User authenticatedUser;
         String jsonResponse = "";
         if (paths.length == 1 && paths[0].equals("users")) {
-            currentUser = authenticate(exchange);
-            jsonResponse = jsonb.toJson(currentUser);
+            authenticatedUser = authenticate(exchange);
+            jsonResponse = jsonb.toJson(authenticatedUser);
         }
         else if (paths.length == 1 && paths[0].equals("financial-accounts")) {
-            currentUser = authenticate(exchange);
-            FinancialAccountsList financialAccountsList = getFinancialAccountsList(currentUser.getId());
+            authenticatedUser = authenticate(exchange);
+            FinancialAccountsList financialAccountsList = getFinancialAccountsList(authenticatedUser.getId());
             jsonResponse = jsonb.toJson(financialAccountsList);
         }
         setResponse(exchange, statusCode, jsonResponse);
+    }
+
+    private void createNewFinancialAccount(HttpExchange exchange) throws ServerException {
+        User currentUser = authenticate(exchange);
+        try {
+            String jsonString = new String(exchange.getRequestBody().readAllBytes());
+            FinancialAccount financialAccount = jsonb.fromJson(jsonString, FinancialAccount.class);
+            financialAccount.setOwner(currentUser);
+            //TODO for later: set user as Collaborator
+            financialAccount.setBalance(new BigDecimal(0));
+            Database.insertFinancialAccount(financialAccount);
+        } catch (SQLException e) {
+            throw new ServerException(500, "Database error", e);
+        } catch (IOException e) {
+            throw new ServerException(400, "Could not read response body", e);
+        }
+    }
+
+    private void signUpNewUser(HttpExchange exchange) throws ServerException {
+        try {
+            String jsonString = new String(exchange.getRequestBody().readAllBytes());
+            User user = jsonb.fromJson(jsonString, User.class);
+            if (Database.userExistsByEmail(user.getEmail())) {
+                throw new ServerException(409, "A user with this email address already exists");
+            }
+            String passwordHash = createPasswordHash(user.getPassword());
+            Database.insertUser(user, passwordHash);
+        } catch (SQLException e) {
+            throw new ServerException(500, "Database error", e);
+        } catch (IOException e) {
+            throw new ServerException(400, "Could not read response body", e);
+        }
     }
 
     private FinancialAccountsList getFinancialAccountsList(Long userId) throws ServerException {
