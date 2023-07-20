@@ -88,6 +88,8 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
         controller
                 .getFinancialAccountTitleLabel()
                 .setText(financialAccount.getTitle());
+        controller
+                .setFinancialAccount(financialAccount);
         return accountTile;
     }
 

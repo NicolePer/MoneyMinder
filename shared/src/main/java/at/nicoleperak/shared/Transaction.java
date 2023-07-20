@@ -56,6 +56,38 @@ public class Transaction {
         return note;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setTransactionPartner(String transactionPartner) {
+        this.transactionPartner = transactionPartner;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public void setAddedAutomatically(boolean addedAutomatically) {
+        this.addedAutomatically = addedAutomatically;
+    }
+
     public boolean isAddedAutomatically() {
         return addedAutomatically;
     }

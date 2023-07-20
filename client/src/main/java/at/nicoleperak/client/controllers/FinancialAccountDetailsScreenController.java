@@ -25,6 +25,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.Client.loadScene;
@@ -32,13 +33,14 @@ import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNTS_OVERVIEW_SCR
 import static at.nicoleperak.client.FXMLLocation.TRANSACTION_TILE;
 import static at.nicoleperak.client.Format.formatBalance;
 import static java.time.format.DateTimeFormatter.ofLocalizedDate;
+import static java.time.format.FormatStyle.MEDIUM;
 import static java.time.format.FormatStyle.SHORT;
 
 public class FinancialAccountDetailsScreenController implements Initializable {
 
     private static final Jsonb jsonb = JsonbBuilder.create();
 
-    private static FinancialAccount selectedFinancialAccount;
+    private FinancialAccount selectedFinancialAccount;
 
     @FXML
     private MenuItem accountSettingsMenuItem;
@@ -78,8 +80,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //loadSelectedFinancialAccount();
-        //showTransactions();
+        this.selectedFinancialAccount = Client.getSelectedFinancialAccount();
+        loadSelectedFinancialAccountDetails();
+        showTransactions();
     }
 
     @FXML
@@ -87,9 +90,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         redirectToFinancialAccountsOverviewScreen();
     }
 
-    private void loadSelectedFinancialAccount() {
+    private void loadSelectedFinancialAccountDetails() {
         try {
-            String jsonResponse = ServiceFunctions.get("financial-account");
+            String jsonResponse = ServiceFunctions.get("financial-accounts/" + selectedFinancialAccount.getId());
             selectedFinancialAccount = jsonb.fromJson(jsonResponse, FinancialAccount.class);
         } catch (ClientException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
@@ -125,16 +128,24 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         TransactionTileController controller = loader.getController();
         controller
                 .getTransactionDateLabel()
-                .setText(transaction.getDate().format(ofLocalizedDate(SHORT)));
+                .setText(transaction.getDate().format(ofLocalizedDate(MEDIUM).withLocale(Locale.US)).toUpperCase());
         controller
                 .getTransactionPartnerLabel()
-                .setText(transaction.getTransactionPartner());
+                .setText(transaction.getTransactionPartner().toUpperCase());
         controller
                 .getTransactionDescriptionLabel()
-                .setText(transaction.getDescription());
-        controller
-                .getTransactionAmountLabel()
-                .setText(formatBalance(transaction.getAmount()));
+                .setText(transaction.getDescription().toUpperCase());
+        StringBuilder sb = new StringBuilder();
+        if (transaction.getCategory().getType().ordinal() == 1) {
+            sb.append("-");
+        }
+        sb.append(formatBalance(transaction.getAmount()));
+        controller.getTransactionAmountLabel()
+                .setText(sb.toString());
         return transactionTile;
+    }
+
+    public void setSelectedFinancialAccount(FinancialAccount selectedFinancialAccount) {
+        this.selectedFinancialAccount = selectedFinancialAccount;
     }
 }

@@ -96,8 +96,20 @@ public class Handler implements HttpHandler {
             FinancialAccountsList financialAccountsList = getFinancialAccountsList(authenticatedUser.getId());
             jsonResponse = jsonb.toJson(financialAccountsList);
         }
+        else if(paths.length == 2 && paths[0].equals("financial-accounts")) {
+            Long financialAccountId = Long.parseLong(paths[1]);
+            authenticatedUser = authenticate(exchange);
+            //assertAuthenticatedUserIsOwnerOrCollaborator(authenticatedUser.getId(), financialAccountId);
+            FinancialAccount financialAccount = getFinancialAccount(financialAccountId);
+            jsonResponse = jsonb.toJson(financialAccount);
+        }
         setResponse(exchange, statusCode, jsonResponse);
     }
+
+    private void assertAuthenticatedUserIsOwnerOrCollaborator(Long UserId, Long financialAccountId) {
+        //TODO
+    }
+
 
     private void createNewFinancialAccount(HttpExchange exchange) throws ServerException {
         User currentUser = authenticate(exchange);
@@ -133,7 +145,14 @@ public class Handler implements HttpHandler {
 
     private FinancialAccountsList getFinancialAccountsList(Long userId) throws ServerException {
         try {
-            return Database.selectFinancialAccountsOverview(userId);
+            return Database.selectListOfFinancialAccountOverviews(userId);
+        } catch (SQLException e) {
+            throw new ServerException(500, "Database error", e);
+        }
+    }
+    private FinancialAccount getFinancialAccount(Long userId) throws ServerException{
+        try {
+            return Database.selectFullFinancialAccount(userId);
         } catch (SQLException e) {
             throw new ServerException(500, "Database error", e);
         }

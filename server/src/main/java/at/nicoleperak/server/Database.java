@@ -1,11 +1,11 @@
 package at.nicoleperak.server;
 
-import at.nicoleperak.shared.FinancialAccount;
-import at.nicoleperak.shared.FinancialAccountsList;
-import at.nicoleperak.shared.User;
+import at.nicoleperak.shared.*;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Database {
     private static final String DB_LOCATION = "//localhost:5432/postgres";
@@ -23,8 +23,20 @@ public class Database {
     private static final String FINANCIAL_ACCOUNT_DESCRIPTION = "description";
     private static final String FINANCIAL_ACCOUNT_BALANCE = "balance";
     private static final String FINANCIAL_ACCOUNT_OWNER_ID = "owner_user_id";
-
-
+    private static final String TRANSACTION_TABLE = "transactions";
+    private static final String TRANSACTION_ID = "id";
+    private static final String TRANSACTION_DESCRIPTION = "description";
+    private static final String TRANSACTION_AMOUNT = "amount";
+    private static final String TRANSACTION_DATE = "date";
+    private static final String TRANSACTION_PARTNER = "transaction_partner";
+    private static final String TRANSACTION_CATEGORY_ID = "category_id";
+    private static final String TRANSACTION_NOTE = "note";
+    private static final String TRANSACTION_ADDED_AUTOMATICALLY = "added_automatically";
+    private static final String TRANSACTION_FINANCIAL_ACCOUNT_ID = "financial_account_id";
+    private static final String CATEGORY_TABLE = "categories";
+    private static final String CATEGORY_ID = "id";
+    private static final String CATEGORY_TITLE = "title";
+    private static final String CATEGORY_TYPE = "\"type\"";
 
 
     public static void insertUser(User user, String passwordHash) throws SQLException {
@@ -128,7 +140,7 @@ public class Database {
         }
     }
 
-    public static FinancialAccountsList selectFinancialAccountsOverview(Long id) throws SQLException {
+    public static FinancialAccountsList selectListOfFinancialAccountOverviews(Long id) throws SQLException {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -195,6 +207,117 @@ public class Database {
             throw e;
         } finally {
             try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw e;
+            }
+        }
+    }
+
+    public static FinancialAccount selectFullFinancialAccount(Long financialAccountId) throws ServerException, SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String select = "SELECT f." + FINANCIAL_ACCOUNT_TITLE
+                + ", f." + FINANCIAL_ACCOUNT_DESCRIPTION
+                + ", f." + FINANCIAL_ACCOUNT_BALANCE
+                + ", f." + FINANCIAL_ACCOUNT_OWNER_ID
+                + ", u." + USER_NAME + " AS owner_username"
+                + ", u." + USER_EMAIL + " AS owner_email"
+                + " FROM " + FINANCIAL_ACCOUNT_TABLE + " f"
+                + " INNER JOIN " + USER_TABLE + " u ON"
+                + " u." + USER_ID + " = f." + FINANCIAL_ACCOUNT_OWNER_ID
+                + " WHERE f." + FINANCIAL_ACCOUNT_ID + " = ?";
+        try {
+            conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+            pstmt = conn.prepareStatement(select);
+            pstmt.setLong(1, financialAccountId);
+            rs = pstmt.executeQuery();
+            FinancialAccount financialAccount = new FinancialAccount();
+            if (rs.next()) {
+                financialAccount.setId(financialAccountId);
+                financialAccount.setTitle(rs.getString(FINANCIAL_ACCOUNT_TITLE));
+                financialAccount.setDescription(rs.getString(FINANCIAL_ACCOUNT_DESCRIPTION));
+                financialAccount.setBalance(rs.getBigDecimal(FINANCIAL_ACCOUNT_BALANCE));
+                User owner = new User(rs.getLong(FINANCIAL_ACCOUNT_OWNER_ID),
+                        rs.getString("owner_username"),
+                        rs.getString("owner_email"),
+                        null);
+                financialAccount.setOwner(owner);
+                financialAccount.setTransactions(selectListOfTransactions(financialAccountId));
+                return financialAccount;
+            } else {
+                throw new ServerException(404, "Financial account with id " + financialAccountId + " does not exist");
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw e;
+            }
+        }
+
+    }
+
+    private static List<Transaction> selectListOfTransactions(Long financialAccountId) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String select = "SELECT t." + TRANSACTION_ID + " AS transaction_id, "
+                + TRANSACTION_DESCRIPTION + ", "
+                + TRANSACTION_AMOUNT + ", "
+                + TRANSACTION_DATE + ", "
+                + TRANSACTION_PARTNER + ", "
+                + TRANSACTION_NOTE + ", "
+                + TRANSACTION_ADDED_AUTOMATICALLY
+                + ", t." + TRANSACTION_CATEGORY_ID
+                + ", c." + CATEGORY_TITLE + " AS category_title"
+                + ", c." + CATEGORY_TYPE + " AS category_type"
+                + " FROM " + TRANSACTION_TABLE + " t"
+                + " INNER JOIN " + CATEGORY_TABLE + " c ON"
+                + " c." + CATEGORY_ID + " = t." + TRANSACTION_CATEGORY_ID
+                + " WHERE t." + TRANSACTION_FINANCIAL_ACCOUNT_ID + " = ?";
+        try {
+            conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+            pstmt = conn.prepareStatement(select);
+            pstmt.setLong(1, financialAccountId);
+            rs = pstmt.executeQuery();
+            List<Transaction> transactionList = new ArrayList<>();
+            while (rs.next()) {
+                transactionList.add(new Transaction(rs.getLong("transaction_id"),
+                        rs.getString(TRANSACTION_DESCRIPTION),
+                        rs.getBigDecimal(TRANSACTION_AMOUNT),
+                        rs.getDate(TRANSACTION_DATE).toLocalDate(),
+                        new Category(rs.getLong(TRANSACTION_CATEGORY_ID),
+                                rs.getString("category_title"),
+                                Category.CategoryType.values()[rs.getShort("category_type")]),
+                        rs.getString(TRANSACTION_PARTNER),
+                        rs.getString(TRANSACTION_NOTE),
+                        rs.getBoolean(TRANSACTION_ADDED_AUTOMATICALLY)));
+            }
+            return transactionList;
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
                 if (pstmt != null) {
                     pstmt.close();
                 }

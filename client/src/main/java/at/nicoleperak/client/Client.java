@@ -1,5 +1,6 @@
 package at.nicoleperak.client;
 
+import at.nicoleperak.shared.FinancialAccount;
 import at.nicoleperak.shared.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,7 @@ public class Client extends Application {
     private static User loggedInUser;
     private static User userCredentials;
     private static Stage stage;
+    private static FinancialAccount selectedFinancialAccount;
 
     public static void main(String[] args) {
         launch(args);
@@ -65,5 +67,13 @@ public class Client extends Application {
 
     public static Stage getStage() {
         return stage;
+    }
+
+    public static FinancialAccount getSelectedFinancialAccount() {
+        return selectedFinancialAccount;
+    }
+
+    public static void setSelectedFinancialAccount(FinancialAccount selectedFinancialAccount) {
+        Client.selectedFinancialAccount = selectedFinancialAccount;
     }
 }
