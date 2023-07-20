@@ -146,6 +146,24 @@
                                           <ChoiceBox style="-fx-background-color: #FBF9F8;" />
                                           <DatePicker promptText="DATE FROM" style="-fx-background-color: #FBF9F8;" />
                                           <DatePicker promptText="DATE TO" style="-fx-background-color: #FBF9F8;" HBox.hgrow="ALWAYS" />
+                                          <Button fx:id="filterButton" mnemonicParsing="false" style="-fx-background-color: #FBF9F8;" text="Apply Filter" textFill="#3a6a95">
+                                             <font>
+                                                <Font name="Source Sans 3 Medium" size="14.0" />
+                                             </font>
+                                             <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                             </cursor>
+                                             <opaqueInsets>
+                                                <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                                             </opaqueInsets>
+                                             <graphic>
+                                                <ImageView fitHeight="20.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                                   <image>
+                                                      <Image url="@../icons/filter-icon.png" />
+                                                   </image>
+                                                </ImageView>
+                                             </graphic>
+                                          </Button>
                                           <Region HBox.hgrow="ALWAYS" />
                                           <Button mnemonicParsing="false" style="-fx-background-color: #f3de8a;" text="New Transaction" textFill="#3a6a95" HBox.hgrow="ALWAYS">
                                              <font>

@@ -14,10 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -34,7 +31,6 @@ import static at.nicoleperak.client.FXMLLocation.TRANSACTION_TILE;
 import static at.nicoleperak.client.Format.formatBalance;
 import static java.time.format.DateTimeFormatter.ofLocalizedDate;
 import static java.time.format.FormatStyle.MEDIUM;
-import static java.time.format.FormatStyle.SHORT;
 
 public class FinancialAccountDetailsScreenController implements Initializable {
 
@@ -42,14 +38,24 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     private FinancialAccount selectedFinancialAccount;
 
+
     @FXML
     private MenuItem accountSettingsMenuItem;
+
+    @FXML
+    private Label balanceLabel;
 
     @FXML
     private BarChart<?, ?> barChart;
 
     @FXML
     private ImageView downloadIcon;
+
+    @FXML
+    private Button filterButton;
+
+    @FXML
+    private Label financialAccountTitleLabel;
 
     @FXML
     private ImageView goBackButton;
@@ -67,22 +73,23 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private MenuButton menuButton;
 
     @FXML
-    private PieChart pieChart;
+    private PieChart pieCHart;
 
     @FXML
     private ImageView searchIcon;
 
     @FXML
-    private Label userLabel;
+    private VBox transactionsPane;
 
     @FXML
-    private VBox transactionsPane;
+    private Label userLabel;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.selectedFinancialAccount = Client.getSelectedFinancialAccount();
         loadSelectedFinancialAccountDetails();
         showTransactions();
+        setLabels();
     }
 
     @FXML
@@ -111,6 +118,12 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
             //TODO: Alertlabel?
         }
+    }
+
+    private void setLabels(){
+        financialAccountTitleLabel.setText(selectedFinancialAccount.getTitle().toUpperCase());
+        balanceLabel.setText(formatBalance(selectedFinancialAccount.getBalance()));
+        userLabel.setText(Client.getLoggedInUser().getUsername());
     }
 
 

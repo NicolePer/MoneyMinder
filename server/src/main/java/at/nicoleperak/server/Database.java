@@ -250,6 +250,7 @@ public class Database {
                         null);
                 financialAccount.setOwner(owner);
                 financialAccount.setTransactions(selectListOfTransactions(financialAccountId));
+                //TODO Expand for Collaborators, Financial Goals, Recurring TransactionOrders
                 return financialAccount;
             } else {
                 throw new ServerException(404, "Financial account with id " + financialAccountId + " does not exist");
@@ -271,7 +272,6 @@ public class Database {
                 throw e;
             }
         }
-
     }
 
     private static List<Transaction> selectListOfTransactions(Long financialAccountId) throws SQLException {
@@ -291,7 +291,9 @@ public class Database {
                 + " FROM " + TRANSACTION_TABLE + " t"
                 + " INNER JOIN " + CATEGORY_TABLE + " c ON"
                 + " c." + CATEGORY_ID + " = t." + TRANSACTION_CATEGORY_ID
-                + " WHERE t." + TRANSACTION_FINANCIAL_ACCOUNT_ID + " = ?";
+                + " WHERE t." + TRANSACTION_FINANCIAL_ACCOUNT_ID + " = ?"
+                + " ORDER BY " + TRANSACTION_DATE + " DESC"
+                + ", t. " + TRANSACTION_ID + " DESC";
         try {
             conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
             pstmt = conn.prepareStatement(select);
@@ -311,6 +313,42 @@ public class Database {
                         rs.getBoolean(TRANSACTION_ADDED_AUTOMATICALLY)));
             }
             return transactionList;
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw e;
+            }
+        }
+    }
+
+    public static List<Long> selectOwnerAndCollaboratorsIdsOfFinancialAccount(Long financialAccountId) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String select = "SELECT " + FINANCIAL_ACCOUNT_OWNER_ID + " FROM " + FINANCIAL_ACCOUNT_TABLE
+                + " WHERE " + FINANCIAL_ACCOUNT_ID + " = ?";
+        try {
+            conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+            pstmt = conn.prepareStatement(select);
+            pstmt.setLong(1, financialAccountId);
+            rs = pstmt.executeQuery();
+            List<Long> userIds = new ArrayList<>();
+            while (rs.next()) {
+                userIds.add(rs.getLong(FINANCIAL_ACCOUNT_OWNER_ID));
+                //TODO Expand for Collaborators
+            }
+            return userIds;
         } catch (SQLException e) {
             throw e;
         } finally {

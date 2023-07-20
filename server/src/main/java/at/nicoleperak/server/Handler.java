@@ -18,6 +18,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.List;
 
 public class Handler implements HttpHandler {
     private final Argon2Function hashingFunction = Argon2Function.getInstance(19456, 2, 1, 128, Argon2.ID, 19);
@@ -99,15 +100,22 @@ public class Handler implements HttpHandler {
         else if(paths.length == 2 && paths[0].equals("financial-accounts")) {
             Long financialAccountId = Long.parseLong(paths[1]);
             authenticatedUser = authenticate(exchange);
-            //assertAuthenticatedUserIsOwnerOrCollaborator(authenticatedUser.getId(), financialAccountId);
+            assertAuthenticatedUserIsOwnerOrCollaborator(authenticatedUser.getId(), financialAccountId);
             FinancialAccount financialAccount = getFinancialAccount(financialAccountId);
             jsonResponse = jsonb.toJson(financialAccount);
         }
         setResponse(exchange, statusCode, jsonResponse);
     }
 
-    private void assertAuthenticatedUserIsOwnerOrCollaborator(Long UserId, Long financialAccountId) {
-        //TODO
+    private void assertAuthenticatedUserIsOwnerOrCollaborator(Long userId, Long financialAccountId) throws ServerException {
+        try {
+            List<Long> userIds = Database.selectOwnerAndCollaboratorsIdsOfFinancialAccount(financialAccountId);
+            if (!userIds.contains(userId)){
+                throw new ServerException(401, "User is not authorized to access this financial account");
+            }
+        } catch (SQLException e) {
+            throw new ServerException(500, "Database error", e);
+        }
     }
 
 
