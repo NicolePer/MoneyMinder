@@ -22,13 +22,12 @@ public class ServiceFunctions {
             URI uri = new URI(uriS);
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request;
-            if(authenticated){
+            if (authenticated) {
                 request = HttpRequest.newBuilder(uri)
                         .POST(HttpRequest.BodyPublishers.ofString(jsonString))
                         .header("Authorization", getBasicAuthenticationHeader())
                         .build();
-            }
-            else {
+            } else {
                 request = HttpRequest.newBuilder(uri)
                         .POST(HttpRequest.BodyPublishers.ofString(jsonString))
                         .build();

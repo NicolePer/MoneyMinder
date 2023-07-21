@@ -165,7 +165,7 @@
                                              </graphic>
                                           </Button>
                                           <Region HBox.hgrow="ALWAYS" />
-                                          <Button mnemonicParsing="false" style="-fx-background-color: #f3de8a;" text="New Transaction" textFill="#3a6a95" HBox.hgrow="ALWAYS">
+                                          <Button fx:id="newTransactionButton" mnemonicParsing="false" onAction="#onNewTransactionButtonClicked" style="-fx-background-color: #f3de8a;" text="New Transaction" textFill="#3a6a95" HBox.hgrow="ALWAYS">
                                              <font>
                                                 <Font name="Source Sans 3 Medium" size="14.0" />
                                              </font>

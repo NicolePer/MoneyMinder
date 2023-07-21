@@ -1,8 +1,6 @@
 package at.nicoleperak.server;
 
-import at.nicoleperak.shared.FinancialAccount;
-import at.nicoleperak.shared.FinancialAccountsList;
-import at.nicoleperak.shared.User;
+import at.nicoleperak.shared.*;
 import com.password4j.*;
 import com.password4j.types.Argon2;
 import com.sun.net.httpserver.Headers;
@@ -74,10 +72,12 @@ public class Handler implements HttpHandler {
         String jsonResponse = "";
         if (paths.length == 1 && paths[0].equals("users")) {
             signUpNewUser(exchange);
-        }
-        else if(paths.length == 1 && paths[0].equals("financial-accounts")) {
+        } else if (paths.length == 1 && paths[0].equals("financial-accounts")) {
             createNewFinancialAccount(exchange);
-        }else {
+        } else if (paths.length == 3 && paths[2].equals("transactions")) {
+            Long financialAccountId = Long.parseLong(paths[1]);
+            createNewTransaction(exchange, financialAccountId);
+        } else {
             throw new ServerException(400, "URI not supported");
         }
         setResponse(exchange, statusCode, jsonResponse);
@@ -91,26 +91,31 @@ public class Handler implements HttpHandler {
         if (paths.length == 1 && paths[0].equals("users")) {
             authenticatedUser = authenticate(exchange);
             jsonResponse = jsonb.toJson(authenticatedUser);
-        }
-        else if (paths.length == 1 && paths[0].equals("financial-accounts")) {
+        } else if (paths.length == 1 && paths[0].equals("financial-accounts")) {
             authenticatedUser = authenticate(exchange);
             FinancialAccountsList financialAccountsList = getFinancialAccountsList(authenticatedUser.getId());
             jsonResponse = jsonb.toJson(financialAccountsList);
-        }
-        else if(paths.length == 2 && paths[0].equals("financial-accounts")) {
+        } else if (paths.length == 2 && paths[0].equals("financial-accounts")) {
             Long financialAccountId = Long.parseLong(paths[1]);
             authenticatedUser = authenticate(exchange);
             assertAuthenticatedUserIsOwnerOrCollaborator(authenticatedUser.getId(), financialAccountId);
             FinancialAccount financialAccount = getFinancialAccount(financialAccountId);
             jsonResponse = jsonb.toJson(financialAccount);
+        } else if (paths.length == 2 && paths[0].equals("categories")) {
+            authenticate(exchange);
+            int categoryType = paths[1].equals("income")
+                    ? Category.CategoryType.Income.ordinal() : Category.CategoryType.Expense.ordinal();
+            CategoryList categoryList = getCategories(categoryType);
+            jsonResponse = jsonb.toJson(categoryList);
         }
         setResponse(exchange, statusCode, jsonResponse);
     }
 
+
     private void assertAuthenticatedUserIsOwnerOrCollaborator(Long userId, Long financialAccountId) throws ServerException {
         try {
             List<Long> userIds = Database.selectOwnerAndCollaboratorsIdsOfFinancialAccount(financialAccountId);
-            if (!userIds.contains(userId)){
+            if (!userIds.contains(userId)) {
                 throw new ServerException(401, "User is not authorized to access this financial account");
             }
         } catch (SQLException e) {
@@ -118,6 +123,20 @@ public class Handler implements HttpHandler {
         }
     }
 
+    private void createNewTransaction(HttpExchange exchange, Long financialAccountId) throws ServerException {
+        User currentUser = authenticate(exchange);
+        try {
+            assertAuthenticatedUserIsOwnerOrCollaborator(currentUser.getId(), financialAccountId);
+            String jsonString = new String(exchange.getRequestBody().readAllBytes());
+            Transaction transaction = jsonb.fromJson(jsonString, Transaction.class);
+            Database.insertTransaction(transaction, financialAccountId);
+            Database.updateBalance(financialAccountId);
+        } catch (SQLException e) {
+            throw new ServerException(500, "Database error", e);
+        } catch (IOException e) {
+            throw new ServerException(400, "Could not read response body", e);
+        }
+    }
 
     private void createNewFinancialAccount(HttpExchange exchange) throws ServerException {
         User currentUser = authenticate(exchange);
@@ -158,9 +177,18 @@ public class Handler implements HttpHandler {
             throw new ServerException(500, "Database error", e);
         }
     }
-    private FinancialAccount getFinancialAccount(Long userId) throws ServerException{
+
+    private FinancialAccount getFinancialAccount(Long userId) throws ServerException {
         try {
             return Database.selectFullFinancialAccount(userId);
+        } catch (SQLException e) {
+            throw new ServerException(500, "Database error", e);
+        }
+    }
+
+    private CategoryList getCategories(int catgeoryType) throws ServerException {
+        try {
+            return Database.selectCategoryList(catgeoryType);
         } catch (SQLException e) {
             throw new ServerException(500, "Database error", e);
         }

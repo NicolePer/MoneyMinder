@@ -3,10 +3,12 @@ package at.nicoleperak.client.controllers;
 import at.nicoleperak.client.Client;
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.client.ServiceFunctions;
+import at.nicoleperak.shared.Category;
 import at.nicoleperak.shared.FinancialAccount;
 import at.nicoleperak.shared.Transaction;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,13 +23,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.Client.loadScene;
-import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN;
-import static at.nicoleperak.client.FXMLLocation.TRANSACTION_TILE;
+import static at.nicoleperak.client.FXMLLocation.*;
 import static at.nicoleperak.client.Format.formatBalance;
 import static java.time.format.DateTimeFormatter.ofLocalizedDate;
 import static java.time.format.FormatStyle.MEDIUM;
@@ -79,6 +83,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private ImageView searchIcon;
 
     @FXML
+    private Button newTransactionButton;
+
+    @FXML
     private VBox transactionsPane;
 
     @FXML
@@ -95,6 +102,11 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     @FXML
     protected void onGoBackButtonClicked(MouseEvent event) {
         redirectToFinancialAccountsOverviewScreen();
+    }
+
+    @FXML
+    void onNewTransactionButtonClicked(ActionEvent event) {
+        showCreateTransactionDialog();
     }
 
     private void loadSelectedFinancialAccountDetails() {
@@ -116,11 +128,11 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             }
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
-            //TODO: Alertlabel?
+            //TODO for later: Alertlabel?
         }
     }
 
-    private void setLabels(){
+    private void setLabels() {
         financialAccountTitleLabel.setText(selectedFinancialAccount.getTitle().toUpperCase());
         balanceLabel.setText(formatBalance(selectedFinancialAccount.getBalance()));
         userLabel.setText(Client.getLoggedInUser().getUsername());
@@ -148,17 +160,61 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         controller
                 .getTransactionDescriptionLabel()
                 .setText(transaction.getDescription().toUpperCase());
-        StringBuilder sb = new StringBuilder();
-        if (transaction.getCategory().getType().ordinal() == 1) {
-            sb.append("-");
-        }
-        sb.append(formatBalance(transaction.getAmount()));
         controller.getTransactionAmountLabel()
-                .setText(sb.toString());
+                .setText(formatBalance(transaction.getAmount()));
         return transactionTile;
     }
 
     public void setSelectedFinancialAccount(FinancialAccount selectedFinancialAccount) {
         this.selectedFinancialAccount = selectedFinancialAccount;
+    }
+
+    private void showCreateTransactionDialog() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource(CREATE_TRANSACTION_FORM.getLocation()));
+            DialogPane createFinancialAccountDialogPane = loader.load();
+            CreateTransactionDialogController formController = loader.getController();
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setDialogPane(createFinancialAccountDialogPane);
+            Optional<ButtonType> result = dialog.showAndWait();
+            if (result.isPresent()) {
+                if (result.get() == ButtonType.FINISH) {
+                    LocalDate date = formController.getDatePicker().getValue();
+                    String transactionPartner = formController.getTransactionPartnerField().getText();
+                    String description = formController.getDescriptionField().getText();
+                    Category category = (Category) formController.getCategoryComboBox().getSelectionModel().getSelectedItem();
+                    BigDecimal amount = new BigDecimal(getFormattedAmount(formController, category));
+                    String note = formController.getNoteArea().getText();
+                    Transaction transaction = new Transaction(null, description, amount, date, category, transactionPartner, note, false);
+                    try {
+                        ServiceFunctions.post("financial_accounts/" + selectedFinancialAccount.getId() + "/transactions", jsonb.toJson(transaction), true);
+                        reloadFinancialAccountDetailsScreen();
+                    } catch (ClientException e) {
+                        new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+                    }
+                }
+            }
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
+    private static String getFormattedAmount(CreateTransactionDialogController formController, Category category) {
+        StringBuilder sb = new StringBuilder();
+        if (category.getType().equals(Category.CategoryType.Expense)) {
+            sb.append("-");
+        }
+        sb.append(formController.getAmountField().getText());
+        return sb.toString();
+    }
+
+    private void reloadFinancialAccountDetailsScreen() {
+        try {
+            Scene scene = loadScene(FINANCIAL_ACCOUNT_DETAILS_SCREEN);
+            Client.getStage().setScene(scene);
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+        }
     }
 }

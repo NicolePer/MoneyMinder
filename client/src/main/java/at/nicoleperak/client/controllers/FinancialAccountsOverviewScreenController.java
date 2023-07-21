@@ -49,7 +49,6 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
     @FXML
     private Label userLabel;
 
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         showFinancialAccounts();
@@ -73,10 +72,10 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
     }
 
     private void showCreateFinancialAccountTile() throws IOException {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource(CREATE_FINANCIAL_ACCOUNT_TILE.getLocation()));
-            Parent createAccountTile = loader.load();
-            financialAccountsTilePane.getChildren().add(createAccountTile);
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(CREATE_FINANCIAL_ACCOUNT_TILE.getLocation()));
+        Parent createAccountTile = loader.load();
+        financialAccountsTilePane.getChildren().add(createAccountTile);
     }
 
     private static Parent buildFinancialAccountTile(FinancialAccount financialAccount, FXMLLoader loader) throws IOException {
@@ -97,7 +96,7 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
         return financialAccountsTilePane;
     }
 
-    public Label getAlertMessagetLabel() { return alertMessagetLabel; }
-
-
+    public Label getAlertMessagetLabel() {
+        return alertMessagetLabel;
+    }
 }

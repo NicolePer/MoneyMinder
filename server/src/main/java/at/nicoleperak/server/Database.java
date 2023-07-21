@@ -3,7 +3,6 @@ package at.nicoleperak.server;
 import at.nicoleperak.shared.*;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class Database {
     private static final String CATEGORY_TABLE = "categories";
     private static final String CATEGORY_ID = "id";
     private static final String CATEGORY_TITLE = "title";
-    private static final String CATEGORY_TYPE = "\"type\"";
+    private static final String CATEGORY_TYPE = "category_type";
 
 
     public static void insertUser(User user, String passwordHash) throws SQLException {
@@ -45,9 +44,9 @@ public class Database {
 
         String insert = "INSERT INTO " + USER_TABLE
                 + " (" + USER_NAME + "," + USER_EMAIL + "," + USER_PASSWORD_HASH + ") VALUES(" +
-                "?," + // USER_NAME
-                "?," + // USER_EMAIL
-                "?)";  // USER_PASSWORD_HASH
+                "?," + // 1 USER_NAME
+                "?," + // 2 USER_EMAIL
+                "?)";  // 3 USER_PASSWORD_HASH
         try {
             conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
             pstmt = conn.prepareStatement(insert);
@@ -162,7 +161,7 @@ public class Database {
                         null,
                         null,
                         null));
-                //TODO EXPAND FOR COLLABORATORS
+                //TODO for later: Expand for Collaborators
             }
             return new FinancialAccountsList(financialAccounts);
         } catch (SQLException e) {
@@ -182,7 +181,6 @@ public class Database {
                 throw e;
             }
         }
-
     }
 
     public static void insertFinancialAccount(FinancialAccount financialAccount) throws SQLException {
@@ -191,10 +189,10 @@ public class Database {
 
         String insert = "INSERT INTO " + FINANCIAL_ACCOUNT_TABLE
                 + " (" + FINANCIAL_ACCOUNT_TITLE + "," + FINANCIAL_ACCOUNT_DESCRIPTION + "," + FINANCIAL_ACCOUNT_BALANCE + "," + FINANCIAL_ACCOUNT_OWNER_ID + ") VALUES(" +
-                "?," + // TITLE
-                "?," + // DESCRIPTION
-                "?," + // BALANCE
-                "?)";  // OWNER ID
+                "?," + // 1 TITLE
+                "?," + // 2 DESCRIPTION
+                "?," + // 3 BALANCE
+                "?)";  // 4 OWNER ID
         try {
             conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
             pstmt = conn.prepareStatement(insert);
@@ -250,7 +248,7 @@ public class Database {
                         null);
                 financialAccount.setOwner(owner);
                 financialAccount.setTransactions(selectListOfTransactions(financialAccountId));
-                //TODO Expand for Collaborators, Financial Goals, Recurring TransactionOrders
+                //TODO for later: Expand for Collaborators, Financial Goals, Recurring TransactionOrders
                 return financialAccount;
             } else {
                 throw new ServerException(404, "Financial account with id " + financialAccountId + " does not exist");
@@ -287,7 +285,7 @@ public class Database {
                 + TRANSACTION_ADDED_AUTOMATICALLY
                 + ", t." + TRANSACTION_CATEGORY_ID
                 + ", c." + CATEGORY_TITLE + " AS category_title"
-                + ", c." + CATEGORY_TYPE + " AS category_type"
+                + ", c." + CATEGORY_TYPE
                 + " FROM " + TRANSACTION_TABLE + " t"
                 + " INNER JOIN " + CATEGORY_TABLE + " c ON"
                 + " c." + CATEGORY_ID + " = t." + TRANSACTION_CATEGORY_ID
@@ -307,7 +305,7 @@ public class Database {
                         rs.getDate(TRANSACTION_DATE).toLocalDate(),
                         new Category(rs.getLong(TRANSACTION_CATEGORY_ID),
                                 rs.getString("category_title"),
-                                Category.CategoryType.values()[rs.getShort("category_type")]),
+                                Category.CategoryType.values()[rs.getShort(CATEGORY_TYPE)]),
                         rs.getString(TRANSACTION_PARTNER),
                         rs.getString(TRANSACTION_NOTE),
                         rs.getBoolean(TRANSACTION_ADDED_AUTOMATICALLY)));
@@ -346,7 +344,7 @@ public class Database {
             List<Long> userIds = new ArrayList<>();
             while (rs.next()) {
                 userIds.add(rs.getLong(FINANCIAL_ACCOUNT_OWNER_ID));
-                //TODO Expand for Collaborators
+                //TODO for later: Expand for Collaborators
             }
             return userIds;
         } catch (SQLException e) {
@@ -367,6 +365,123 @@ public class Database {
             }
         }
     }
+
+    public static void insertTransaction(Transaction transaction, Long financialAccountId) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        String insert = "INSERT INTO " + TRANSACTION_TABLE
+                + " (" + TRANSACTION_DESCRIPTION + "," + TRANSACTION_AMOUNT + ","
+                + TRANSACTION_DATE + "," + TRANSACTION_PARTNER + ","
+                + TRANSACTION_CATEGORY_ID + "," + TRANSACTION_NOTE + ","
+                + TRANSACTION_ADDED_AUTOMATICALLY + "," + TRANSACTION_FINANCIAL_ACCOUNT_ID
+                + ") VALUES(" +
+                "?," + // 1 DESCRIPTION
+                "?," + // 2 AMOUNT
+                "?," + // 3 DATE
+                "?," + // 4 TRANSACTION PARTNER
+                "?," + // 5 CATEGORY_ID
+                "?," + // 6 NOTE
+                "?," + // 7 ADDED_AUTOMATICALLY
+                "?)";  // 8 FINANCIAL_ACCOUNT_ID
+        try {
+            conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+            pstmt = conn.prepareStatement(insert);
+            pstmt.setString(1, transaction.getDescription());
+            pstmt.setBigDecimal(2, transaction.getAmount());
+            pstmt.setDate(3, java.sql.Date.valueOf(transaction.getDate()));
+            pstmt.setString(4, transaction.getTransactionPartner());
+            pstmt.setLong(5, transaction.getCategory().getId());
+            pstmt.setString(6, transaction.getNote());
+            pstmt.setBoolean(7, transaction.isAddedAutomatically());
+            pstmt.setLong(8, financialAccountId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw e;
+            }
+        }
+    }
+
+    public static CategoryList selectCategoryList(int categoryType) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        ArrayList<Category> categories = new ArrayList<>();
+        String select = "SELECT * FROM " + CATEGORY_TABLE
+                + " WHERE " + CATEGORY_TYPE + " = ?";
+        try {
+            conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+            pstmt = conn.prepareStatement(select);
+            pstmt.setInt(1, categoryType);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                categories.add(
+                        new Category(rs.getLong(CATEGORY_ID),
+                                rs.getString(CATEGORY_TITLE),
+                                Category.CategoryType.values()[rs.getShort(CATEGORY_TYPE)]));
+            }
+            return new CategoryList(categories);
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw e;
+            }
+        }
+    }
+
+    public static void updateBalance(Long financialAccountId) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ArrayList<Category> categories = new ArrayList<>();
+        String select = "UPDATE " + FINANCIAL_ACCOUNT_TABLE
+                + " SET " + FINANCIAL_ACCOUNT_BALANCE
+                + " = (SELECT SUM(" + TRANSACTION_AMOUNT
+                + ") FROM " + TRANSACTION_TABLE
+                + " WHERE " + TRANSACTION_FINANCIAL_ACCOUNT_ID + " = ?)"
+                + " WHERE " + FINANCIAL_ACCOUNT_ID + " = ?";
+        try {
+            conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+            pstmt = conn.prepareStatement(select);
+            pstmt.setLong(1, financialAccountId);
+            pstmt.setLong(2, financialAccountId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw e;
+            }
+        }
+    }
 }
+
 
 

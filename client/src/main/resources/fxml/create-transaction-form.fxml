@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<DialogPane fx:id="dialogPane" expanded="true" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.controllers.CreateTransactionDialogController">
+   <content>
+      <VBox alignment="CENTER">
+         <children>
+            <HBox alignment="TOP_CENTER" spacing="80.0">
+               <children>
+                  <RadioButton fx:id="incomeRadioButton" mnemonicParsing="false" text="Income">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="transactionTypeToggleGroup" />
+                     </toggleGroup>
+                     <font>
+                        <Font name="Source Sans 3 Light" size="13.0" />
+                     </font>
+                  </RadioButton>
+                  <RadioButton fx:id="expenseRadioButton" mnemonicParsing="false" text="Expense" toggleGroup="$transactionTypeToggleGroup" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="Source Sans 3 Light" size="13.0" />
+                     </font>
+                  </RadioButton>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="20.0" />
+               </VBox.margin>
+            </HBox>
+            <GridPane hgap="20.0" vgap="20.0">
+              <columnConstraints>
+                <ColumnConstraints fx:id="labelColumnConstraints" halignment="RIGHT" />
+                <ColumnConstraints hgrow="SOMETIMES" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label fx:id="transactionPartnerLabel" contentDisplay="RIGHT" text="Transaction Partner" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+                     <font>
+                        <Font name="Source Sans 3 Light" size="14.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+                  <TextField fx:id="transactionPartnerField" prefHeight="28.0" prefWidth="159.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                     <font>
+                        <Font name="Source Sans 3 Light" size="13.0" />
+                     </font>
+                  </TextField>
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="16.0" text="Description" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3">
+                     <font>
+                        <Font name="Source Sans 3 Light" size="14.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+                  <TextField fx:id="descriptionField" layoutX="91.0" layoutY="12.0" prefHeight="26.0" prefWidth="391.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+                     <font>
+                        <Font name="Source Sans 3 Light" size="13.0" />
+                     </font>
+                  </TextField>
+                  <Label contentDisplay="RIGHT" layoutX="10.0" layoutY="65.0" text="Amount" GridPane.rowIndex="1">
+                     <font>
+                        <Font name="Source Sans 3 Light" size="14.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+                  <TextField fx:id="amountField" layoutX="143.0" layoutY="61.0" prefWidth="50.0" promptText="0,00" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <font>
+                        <Font name="Source Sans 3 Light" size="13.0" />
+                     </font>
+                  </TextField>
+                  <DatePicker fx:id="datePicker" GridPane.columnIndex="1" />
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="58.0" layoutY="165.0" text="Category" GridPane.rowIndex="4">
+                     <font>
+                        <Font name="Source Sans 3 Light" size="14.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+                  <ComboBox fx:id="categoryComboBox" disable="true" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" />
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="72.0" layoutY="215.0" text="Note (optional)" GridPane.rowIndex="5">
+                     <font>
+                        <Font name="Source Sans 3 Light" size="14.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+                  <TextArea fx:id="noteArea" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.vgrow="ALWAYS">
+                     <font>
+                        <Font name="Source Sans 3 Light" size="13.0" />
+                     </font>
+                  </TextArea>
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="72.0" layoutY="215.0" text="Date">
+                     <font>
+                        <Font name="Source Sans 3 Light" size="14.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+               </children>
+            </GridPane>
+            <Label fx:id="alertMessageLabel" alignment="CENTER">
+               <VBox.margin>
+                  <Insets bottom="-10.0" top="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="Source Sans 3 Regular" size="13.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+   </content>
+   <buttonTypes>
+      <ButtonType fx:constant="FINISH" />
+      <ButtonType fx:constant="CANCEL" />
+   </buttonTypes>
+   <header>
+      <HBox alignment="CENTER">
+         <children>
+            <Label text="Create New Transaction">
+               <font>
+                  <Font name="Source Sans 3 Light" size="18.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets bottom="10.0" top="10.0" />
+         </padding>
+      </HBox>
+   </header>
+   <padding>
+      <Insets left="10.0" right="10.0" />
+   </padding>
+</DialogPane>

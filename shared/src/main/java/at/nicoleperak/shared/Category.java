@@ -40,4 +40,9 @@ public class Category {
     public void setType(CategoryType type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return title;
+    }
 }
