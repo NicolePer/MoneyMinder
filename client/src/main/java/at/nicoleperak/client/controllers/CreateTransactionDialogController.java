@@ -66,7 +66,7 @@ public class CreateTransactionDialogController implements Initializable {
     @FXML
     private Label transactionPartnerLabel;
 
-    private ObservableList<Category> categoryObservableList = FXCollections.observableArrayList();
+    private final ObservableList<Category> categoryObservableList = FXCollections.observableArrayList();
 
     //TODO validateInputs
     public TextField getAmountField() {
@@ -101,23 +101,49 @@ public class CreateTransactionDialogController implements Initializable {
         return transactionPartnerField;
     }
 
-
-    private CategoryList loadCategories() {
-        String categoryType = incomeRadioButton.isSelected() ?
-                Category.CategoryType.Income.name().toLowerCase() : Category.CategoryType.Expense.name().toLowerCase();
-        String jsonResponse = null;
-        try {
-            jsonResponse = ServiceFunctions.get("categories/" + categoryType);
-        } catch (ClientException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
-        }
-        return jsonb.fromJson(jsonResponse, CategoryList.class);
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         validateUserInputsOnFinish();
+        loadCategoriesOnSelectionOfRadioButton();
+        replaceTransactionPartnerLabelOnSelectionOfRadioButton(incomeRadioButton, "Source");
+        replaceTransactionPartnerLabelOnSelectionOfRadioButton(expenseRadioButton, "Recipient");
+    }
 
+    public void validateUserInputsOnFinish() {
+        Button finish = (Button) dialogPane.lookupButton(ButtonType.FINISH);
+        finish.addEventFilter(ActionEvent.ACTION, f -> {
+            LocalDate date = datePicker.getValue();
+            String transactionPartner = transactionPartnerField.getText();
+            String description = descriptionField.getText();
+            String note = noteArea.getText();
+            String amountString = convertIntoParsableDecimal(amountField.getText());
+            try {
+                assertRadioButtonIsSelected(transactionTypeToggleGroup);
+                assertCategoryIsSelected(categoryComboBox);
+                assertDateIsNotNull(date);
+                assertDateIsInPast(date);
+                assertUserInputLengthIsValid(amountField.getText(), "amount", 1, 255);
+                assertAmountIsBigDecimal(amountString);
+                assertUserInputLengthIsValid(transactionPartner, "transaction partner (source / recipient)", 1, 255);
+                assertUserInputLengthIsValid(description, "description", 1, 255);
+                assertUserInputLengthIsValid(note, "note", 0, 1000);
+            } catch (ClientException e) {
+                alertMessageLabel.setText(e.getMessage());
+                f.consume();
+            }
+        });
+    }
+
+    private void replaceTransactionPartnerLabelOnSelectionOfRadioButton(RadioButton radioButton, String labelText) {
+        expenseRadioButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+                transactionPartnerLabel.setText(labelText);
+            }
+        });
+    }
+
+    private void loadCategoriesOnSelectionOfRadioButton() {
         transactionTypeToggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             @Override
             public void changed(ObservableValue<? extends Toggle> observableValue, Toggle toggle, Toggle radioButton) {
@@ -130,48 +156,19 @@ public class CreateTransactionDialogController implements Initializable {
                 }
             }
         });
-
-        incomeRadioButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                transactionPartnerLabel.setText("Source");
-            }
-        });
-
-        expenseRadioButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                transactionPartnerLabel.setText("Recipient");
-
-            }
-        });
-
     }
 
-    public void validateUserInputsOnFinish() {
-        Button finish = (Button) dialogPane.lookupButton(ButtonType.FINISH);
-        finish.addEventFilter(ActionEvent.ACTION, f -> {
-            LocalDate date = datePicker.getValue();
-            String transactionPartner = transactionPartnerField.getText();
-            String description = descriptionField.getText();
-            String note = noteArea.getText();
-            try {
-                assertRadiobuttonIsSelected(transactionTypeToggleGroup);
-                assertCategoryIsSelected(categoryComboBox);
-                assertDateIsNotNull(date);
-                assertDateIsInPast(date);
-                assertUserInputLengthIsValid(amountField.getText(), "amount", 1, 255);
-                String amountString = convertIntoParsableDecimal(amountField.getText());
-                assertAmountIsBigDecimal(amountString);
-                assertUserInputLengthIsValid(transactionPartner, "transaction partner (source / recipient)", 1, 255);
-                assertUserInputLengthIsValid(description, "description", 1, 255);
-                assertUserInputLengthIsValid(note, "note", 0, 1000);
-            } catch (ClientException e) {
-                alertMessageLabel.setText(e.getMessage());
-                f.consume();
-            }
-        });
-    }
 
+    private CategoryList loadCategories() {
+        String categoryType = incomeRadioButton.isSelected() ?
+                Category.CategoryType.Income.name().toLowerCase() : Category.CategoryType.Expense.name().toLowerCase();
+        String jsonResponse = null;
+        try {
+            jsonResponse = ServiceFunctions.get("categories/" + categoryType);
+        } catch (ClientException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+        }
+        return jsonb.fromJson(jsonResponse, CategoryList.class);
+    }
 
 }

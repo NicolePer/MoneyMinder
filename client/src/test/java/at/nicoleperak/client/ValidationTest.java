@@ -3,12 +3,10 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 
 class ValidationTest {
 
@@ -95,6 +93,4 @@ class ValidationTest {
     void shouldThrowWhenGivenStringInWrongFormat() {
         assertThrows(ClientException.class, () -> Validation.assertAmountIsBigDecimal("%123%%"));
     }
-
-
 }

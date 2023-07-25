@@ -18,15 +18,6 @@ public class Format {
         return df.format(balance) + " €";
     }
 
-    public static String formatAmount(CreateTransactionDialogController formController, Category category) {
-        StringBuilder sb = new StringBuilder();
-        if (category.getType().equals(Category.CategoryType.Expense)) {
-            sb.append("-");
-        }
-        sb.append(formController.getAmountField().getText());
-        return sb.toString();
-    }
-
     public static String formatAmount(String amount, Category category) {
         StringBuilder sb = new StringBuilder();
         if (category.getType().equals(Category.CategoryType.Expense)) {

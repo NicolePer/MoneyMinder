@@ -51,7 +51,7 @@ public class Validation {
         }
     }
 
-    public static void assertRadiobuttonIsSelected(ToggleGroup toggleGroup) throws ClientException {
+    public static void assertRadioButtonIsSelected(ToggleGroup toggleGroup) throws ClientException {
         if(toggleGroup.selectedToggleProperty().getValue() == null) {
             throw new ClientException("Please select income or expense");
         };
