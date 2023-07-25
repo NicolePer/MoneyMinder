@@ -49,13 +49,13 @@
               <rowConstraints>
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label fx:id="transactionPartnerLabel" contentDisplay="RIGHT" text="Transaction Partner" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2">
+                  <Label fx:id="transactionPartnerLabel" contentDisplay="RIGHT" text="Transaction Partner" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3">
                      <font>
                         <Font name="Source Sans 3 Light" size="14.0" />
                      </font>
@@ -63,12 +63,12 @@
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField fx:id="transactionPartnerField" prefHeight="28.0" prefWidth="159.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                  <TextField fx:id="transactionPartnerField" prefHeight="28.0" prefWidth="159.0" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                      <font>
                         <Font name="Source Sans 3 Light" size="13.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="16.0" text="Description" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3">
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="16.0" text="Description" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
                      <font>
                         <Font name="Source Sans 3 Light" size="14.0" />
                      </font>
@@ -76,12 +76,12 @@
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField fx:id="descriptionField" layoutX="91.0" layoutY="12.0" prefHeight="26.0" prefWidth="391.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+                  <TextField fx:id="descriptionField" layoutX="91.0" layoutY="12.0" prefHeight="26.0" prefWidth="391.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4">
                      <font>
                         <Font name="Source Sans 3 Light" size="13.0" />
                      </font>
                   </TextField>
-                  <Label contentDisplay="RIGHT" layoutX="10.0" layoutY="65.0" text="Amount" GridPane.rowIndex="1">
+                  <Label contentDisplay="RIGHT" layoutX="10.0" layoutY="65.0" text="Amount" GridPane.rowIndex="2">
                      <font>
                         <Font name="Source Sans 3 Light" size="14.0" />
                      </font>
@@ -89,13 +89,13 @@
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField fx:id="amountField" layoutX="143.0" layoutY="61.0" prefWidth="50.0" promptText="0,00" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <TextField fx:id="amountField" layoutX="143.0" layoutY="61.0" prefWidth="50.0" promptText="0,00" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <font>
                         <Font name="Source Sans 3 Light" size="13.0" />
                      </font>
                   </TextField>
-                  <DatePicker fx:id="datePicker" GridPane.columnIndex="1" />
-                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="58.0" layoutY="165.0" text="Category" GridPane.rowIndex="4">
+                  <DatePicker fx:id="datePicker" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="58.0" layoutY="165.0" text="Category">
                      <font>
                         <Font name="Source Sans 3 Light" size="14.0" />
                      </font>
@@ -103,7 +103,7 @@
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <ComboBox fx:id="categoryComboBox" disable="true" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" />
+                  <ComboBox fx:id="categoryComboBox" disable="true" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
                   <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="72.0" layoutY="215.0" text="Note (optional)" GridPane.rowIndex="5">
                      <font>
                         <Font name="Source Sans 3 Light" size="14.0" />
@@ -117,7 +117,7 @@
                         <Font name="Source Sans 3 Light" size="13.0" />
                      </font>
                   </TextArea>
-                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="72.0" layoutY="215.0" text="Date">
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="72.0" layoutY="215.0" text="Date" GridPane.rowIndex="1">
                      <font>
                         <Font name="Source Sans 3 Light" size="14.0" />
                      </font>
@@ -127,7 +127,7 @@
                   </Label>
                </children>
             </GridPane>
-            <Label fx:id="alertMessageLabel" alignment="CENTER">
+            <Label fx:id="alertMessageLabel" alignment="CENTER" textFill="RED">
                <VBox.margin>
                   <Insets bottom="-10.0" top="10.0" />
                </VBox.margin>

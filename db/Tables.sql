@@ -9,7 +9,6 @@ CREATE TABLE financial_accounts (
  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
  title VARCHAR(255) NOT NULL,
  description VARCHAR(255),
- balance NUMERIC NOT NULL,
  owner_user_id BIGINT REFERENCES users(id) NOT NULL
  );
 

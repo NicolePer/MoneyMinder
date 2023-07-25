@@ -4,24 +4,24 @@ import at.nicoleperak.client.ClientException;
 import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.shared.Category;
 import at.nicoleperak.shared.CategoryList;
-import at.nicoleperak.shared.FinancialAccount;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.Region;
-import javafx.scene.text.TextAlignment;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
+
+import static at.nicoleperak.client.Format.convertIntoParsableDecimal;
+import static at.nicoleperak.client.Validation.*;
 
 public class CreateTransactionDialogController implements Initializable {
 
@@ -116,6 +116,8 @@ public class CreateTransactionDialogController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        validateUserInputsOnFinish();
+
         transactionTypeToggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
             @Override
             public void changed(ObservableValue<? extends Toggle> observableValue, Toggle toggle, Toggle radioButton) {
@@ -143,5 +145,33 @@ public class CreateTransactionDialogController implements Initializable {
 
             }
         });
+
     }
+
+    public void validateUserInputsOnFinish() {
+        Button finish = (Button) dialogPane.lookupButton(ButtonType.FINISH);
+        finish.addEventFilter(ActionEvent.ACTION, f -> {
+            LocalDate date = datePicker.getValue();
+            String transactionPartner = transactionPartnerField.getText();
+            String description = descriptionField.getText();
+            String note = noteArea.getText();
+            try {
+                assertRadiobuttonIsSelected(transactionTypeToggleGroup);
+                assertCategoryIsSelected(categoryComboBox);
+                assertDateIsNotNull(date);
+                assertDateIsInPast(date);
+                assertUserInputLengthIsValid(amountField.getText(), "amount", 1, 255);
+                String amountString = convertIntoParsableDecimal(amountField.getText());
+                assertAmountIsBigDecimal(amountString);
+                assertUserInputLengthIsValid(transactionPartner, "transaction partner (source / recipient)", 1, 255);
+                assertUserInputLengthIsValid(description, "description", 1, 255);
+                assertUserInputLengthIsValid(note, "note", 0, 1000);
+            } catch (ClientException e) {
+                alertMessageLabel.setText(e.getMessage());
+                f.consume();
+            }
+        });
+    }
+
+
 }

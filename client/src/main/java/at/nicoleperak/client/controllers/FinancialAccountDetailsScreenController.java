@@ -32,7 +32,7 @@ import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.*;
-import static at.nicoleperak.client.Format.formatBalance;
+import static at.nicoleperak.client.Format.*;
 import static java.time.format.DateTimeFormatter.ofLocalizedDate;
 import static java.time.format.FormatStyle.MEDIUM;
 
@@ -184,7 +184,8 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                     String transactionPartner = formController.getTransactionPartnerField().getText();
                     String description = formController.getDescriptionField().getText();
                     Category category = (Category) formController.getCategoryComboBox().getSelectionModel().getSelectedItem();
-                    BigDecimal amount = new BigDecimal(getFormattedAmount(formController, category));
+                    String amountString = convertIntoParsableDecimal(formController.getAmountField().getText());
+                    BigDecimal amount = new BigDecimal(formatAmount(amountString, category));
                     String note = formController.getNoteArea().getText();
                     Transaction transaction = new Transaction(null, description, amount, date, category, transactionPartner, note, false);
                     try {
@@ -200,14 +201,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
-    private static String getFormattedAmount(CreateTransactionDialogController formController, Category category) {
-        StringBuilder sb = new StringBuilder();
-        if (category.getType().equals(Category.CategoryType.Expense)) {
-            sb.append("-");
-        }
-        sb.append(formController.getAmountField().getText());
-        return sb.toString();
-    }
 
     private void reloadFinancialAccountDetailsScreen() {
         try {

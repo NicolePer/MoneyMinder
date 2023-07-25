@@ -1,5 +1,10 @@
 package at.nicoleperak.client;
 
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ToggleGroup;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -34,4 +39,36 @@ public class Validation {
         }
     }
 
+    public static void assertDateIsNotNull(LocalDate date) throws ClientException {
+        if(date == null){
+            throw new ClientException("Please select date");
+        }
+    }
+
+    public static void assertDateIsInPast(LocalDate date) throws ClientException {
+        if(date.isAfter(LocalDate.now())){
+            throw new ClientException("Date cannot be in the future");
+        }
+    }
+
+    public static void assertRadiobuttonIsSelected(ToggleGroup toggleGroup) throws ClientException {
+        if(toggleGroup.selectedToggleProperty().getValue() == null) {
+            throw new ClientException("Please select income or expense");
+        };
+    }
+
+    public static void assertCategoryIsSelected(ComboBox categories) throws ClientException {
+        if(categories.getSelectionModel().getSelectedItem() == null){
+            throw new ClientException("Please select category");
+        };
+    }
+
+
+    public static void assertAmountIsBigDecimal(String amount) throws ClientException {
+        try{
+            new BigDecimal(amount);
+        }catch (Exception e){
+            throw new ClientException("Please enter valid number for amount");
+        }
+    }
 }

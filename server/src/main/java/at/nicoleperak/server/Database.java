@@ -144,8 +144,15 @@ public class Database {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         ArrayList<FinancialAccount> financialAccounts = new ArrayList<>();
-        String select = "SELECT * FROM " + FINANCIAL_ACCOUNT_TABLE
-                + " WHERE " + FINANCIAL_ACCOUNT_OWNER_ID + " = ?";
+        String select = "SELECT f." + FINANCIAL_ACCOUNT_ID
+                + ", f." + FINANCIAL_ACCOUNT_TITLE
+                + ", f." + FINANCIAL_ACCOUNT_DESCRIPTION
+                + ", COALESCE(SUM(t." + TRANSACTION_AMOUNT + "),0) AS " + FINANCIAL_ACCOUNT_BALANCE
+                + " FROM " + FINANCIAL_ACCOUNT_TABLE + " f"
+                + " LEFT JOIN " + TRANSACTION_TABLE + " t"
+                + " ON t." + TRANSACTION_FINANCIAL_ACCOUNT_ID + " = f." + FINANCIAL_ACCOUNT_ID
+                + " WHERE f." + FINANCIAL_ACCOUNT_OWNER_ID + " = ?"
+                + " GROUP BY f." + FINANCIAL_ACCOUNT_ID;
         try {
             conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
             pstmt = conn.prepareStatement(select);
@@ -188,18 +195,16 @@ public class Database {
         PreparedStatement pstmt = null;
 
         String insert = "INSERT INTO " + FINANCIAL_ACCOUNT_TABLE
-                + " (" + FINANCIAL_ACCOUNT_TITLE + "," + FINANCIAL_ACCOUNT_DESCRIPTION + "," + FINANCIAL_ACCOUNT_BALANCE + "," + FINANCIAL_ACCOUNT_OWNER_ID + ") VALUES(" +
+                + " (" + FINANCIAL_ACCOUNT_TITLE + "," + FINANCIAL_ACCOUNT_DESCRIPTION + "," + FINANCIAL_ACCOUNT_OWNER_ID + ") VALUES(" +
                 "?," + // 1 TITLE
                 "?," + // 2 DESCRIPTION
-                "?," + // 3 BALANCE
-                "?)";  // 4 OWNER ID
+                "?)";  // 3 OWNER ID
         try {
             conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
             pstmt = conn.prepareStatement(insert);
             pstmt.setString(1, financialAccount.getTitle());
             pstmt.setString(2, financialAccount.getDescription());
-            pstmt.setBigDecimal(3, financialAccount.getBalance());
-            pstmt.setLong(4, financialAccount.getOwner().getId());
+            pstmt.setLong(3, financialAccount.getOwner().getId());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             throw e;
@@ -223,14 +228,17 @@ public class Database {
         ResultSet rs = null;
         String select = "SELECT f." + FINANCIAL_ACCOUNT_TITLE
                 + ", f." + FINANCIAL_ACCOUNT_DESCRIPTION
-                + ", f." + FINANCIAL_ACCOUNT_BALANCE
                 + ", f." + FINANCIAL_ACCOUNT_OWNER_ID
+                + ", COALESCE(SUM(t." + TRANSACTION_AMOUNT +"),0) AS " + FINANCIAL_ACCOUNT_BALANCE
                 + ", u." + USER_NAME + " AS owner_username"
                 + ", u." + USER_EMAIL + " AS owner_email"
                 + " FROM " + FINANCIAL_ACCOUNT_TABLE + " f"
                 + " INNER JOIN " + USER_TABLE + " u ON"
                 + " u." + USER_ID + " = f." + FINANCIAL_ACCOUNT_OWNER_ID
-                + " WHERE f." + FINANCIAL_ACCOUNT_ID + " = ?";
+                + " LEFT JOIN " + TRANSACTION_TABLE + " t ON"
+                + " t." + TRANSACTION_FINANCIAL_ACCOUNT_ID + " = f." + FINANCIAL_ACCOUNT_ID
+                + " WHERE f." + FINANCIAL_ACCOUNT_ID + " = ?"
+                + " GROUP BY f." + FINANCIAL_ACCOUNT_ID + ", u." + USER_NAME + ", u." + USER_EMAIL;
         try {
             conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
             pstmt = conn.prepareStatement(select);
@@ -438,38 +446,6 @@ public class Database {
                 if (rs != null) {
                     rs.close();
                 }
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                throw e;
-            }
-        }
-    }
-
-    public static void updateBalance(Long financialAccountId) throws SQLException {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ArrayList<Category> categories = new ArrayList<>();
-        String select = "UPDATE " + FINANCIAL_ACCOUNT_TABLE
-                + " SET " + FINANCIAL_ACCOUNT_BALANCE
-                + " = (SELECT SUM(" + TRANSACTION_AMOUNT
-                + ") FROM " + TRANSACTION_TABLE
-                + " WHERE " + TRANSACTION_FINANCIAL_ACCOUNT_ID + " = ?)"
-                + " WHERE " + FINANCIAL_ACCOUNT_ID + " = ?";
-        try {
-            conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
-            pstmt = conn.prepareStatement(select);
-            pstmt.setLong(1, financialAccountId);
-            pstmt.setLong(2, financialAccountId);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            throw e;
-        } finally {
-            try {
                 if (pstmt != null) {
                     pstmt.close();
                 }

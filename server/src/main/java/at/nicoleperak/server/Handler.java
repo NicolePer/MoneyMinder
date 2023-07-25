@@ -130,7 +130,7 @@ public class Handler implements HttpHandler {
             String jsonString = new String(exchange.getRequestBody().readAllBytes());
             Transaction transaction = jsonb.fromJson(jsonString, Transaction.class);
             Database.insertTransaction(transaction, financialAccountId);
-            Database.updateBalance(financialAccountId);
+            //TODO IMPLEMENT AS DB TRANSACTION
         } catch (SQLException e) {
             throw new ServerException(500, "Database error", e);
         } catch (IOException e) {
@@ -145,7 +145,6 @@ public class Handler implements HttpHandler {
             FinancialAccount financialAccount = jsonb.fromJson(jsonString, FinancialAccount.class);
             financialAccount.setOwner(currentUser);
             //TODO for later: set user as Collaborator
-            financialAccount.setBalance(new BigDecimal(0));
             Database.insertFinancialAccount(financialAccount);
         } catch (SQLException e) {
             throw new ServerException(500, "Database error", e);
