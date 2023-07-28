@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<DialogPane fx:id="dialogPane" expanded="true" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.controllers.CreateFinancialAccountDialogController">
+<DialogPane fx:id="dialogPane" expanded="true" stylesheets="@../css/Dialog.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.controllers.CreateFinancialAccountDialogController">
    <content>
       <VBox alignment="CENTER" prefHeight="115.0" prefWidth="345.0">
          <children>
@@ -26,7 +26,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Title" GridPane.halignment="LEFT">
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Title" textFill="#fbf9f8" GridPane.halignment="LEFT">
                      <font>
                         <Font name="Source Sans 3 Light" size="14.0" />
                      </font>
@@ -34,12 +34,12 @@
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField fx:id="financialAccountTitleField" prefHeight="26.0" prefWidth="391.0" GridPane.columnIndex="1">
+                  <TextField fx:id="financialAccountTitleField" prefHeight="26.0" prefWidth="391.0" style="-fx-background-color: #FBF9F8;" GridPane.columnIndex="1">
                      <font>
                         <Font name="Source Sans 3 Light" size="13.0" />
                      </font>
                   </TextField>
-                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="16.0" text="Description" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+                  <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="16.0" text="Description" textFill="#fbf9f8" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
                      <font>
                         <Font name="Source Sans 3 Light" size="14.0" />
                      </font>
@@ -47,7 +47,7 @@
                         <Insets />
                      </opaqueInsets>
                   </Label>
-                  <TextField fx:id="financialAccountDescriptionField" layoutX="91.0" layoutY="12.0" prefHeight="26.0" prefWidth="391.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1">
+                  <TextField fx:id="financialAccountDescriptionField" layoutX="91.0" layoutY="12.0" prefHeight="26.0" prefWidth="391.0" style="-fx-background-color: #FBF9F8;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                      <font>
                         <Font name="Source Sans 3 Light" size="13.0" />
                      </font>
@@ -72,7 +72,7 @@
    <header>
       <HBox alignment="CENTER">
          <children>
-            <Label text="Create New Financial Account">
+            <Label text="Create New Financial Account" textFill="#fbf9f8">
                <font>
                   <Font name="Source Sans 3 Light" size="18.0" />
                </font>

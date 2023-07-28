@@ -3,7 +3,9 @@ package at.nicoleperak.client.controllers;
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.shared.Category;
+import at.nicoleperak.shared.Category.CategoryType;
 import at.nicoleperak.shared.CategoryList;
+import at.nicoleperak.shared.Transaction;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import javafx.beans.value.ChangeListener;
@@ -22,8 +24,10 @@ import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.Format.convertIntoParsableDecimal;
 import static at.nicoleperak.client.Validation.*;
+import static at.nicoleperak.shared.Category.CategoryType.Expense;
+import static at.nicoleperak.shared.Category.CategoryType.Income;
 
-public class CreateTransactionDialogController implements Initializable {
+public class TransactionDialogController implements Initializable {
 
     private static final Jsonb jsonb = JsonbBuilder.create();
 
@@ -66,9 +70,12 @@ public class CreateTransactionDialogController implements Initializable {
     @FXML
     private Label transactionPartnerLabel;
 
+    @FXML
+    private Label headerTextLabel;
+
     private final ObservableList<Category> categoryObservableList = FXCollections.observableArrayList();
 
-    //TODO validateInputs
+
     public TextField getAmountField() {
         return amountField;
     }
@@ -85,14 +92,6 @@ public class CreateTransactionDialogController implements Initializable {
         return descriptionField;
     }
 
-    public RadioButton getExpenseRadioButton() {
-        return expenseRadioButton;
-    }
-
-    public RadioButton getIncomeRadioButton() {
-        return incomeRadioButton;
-    }
-
     public TextArea getNoteArea() {
         return noteArea;
     }
@@ -101,12 +100,28 @@ public class CreateTransactionDialogController implements Initializable {
         return transactionPartnerField;
     }
 
+    private Transaction selectedTransaction;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         validateUserInputsOnFinish();
         loadCategoriesOnSelectionOfRadioButton();
         replaceTransactionPartnerLabelOnSelectionOfRadioButton(incomeRadioButton, "Source");
         replaceTransactionPartnerLabelOnSelectionOfRadioButton(expenseRadioButton, "Recipient");
+    }
+
+    private void insertTransactionDetails() {
+        if (selectedTransaction.getCategory().getType().equals(Income)) {
+            incomeRadioButton.setSelected(true);
+        } else {
+            expenseRadioButton.setSelected(true);
+        }
+        categoryComboBox.getSelectionModel().select(selectedTransaction.getCategory());
+        datePicker.setValue(selectedTransaction.getDate());
+        amountField.setText(selectedTransaction.getAmount().abs().toString());
+        transactionPartnerField.setText(selectedTransaction.getTransactionPartner());
+        descriptionField.setText(selectedTransaction.getDescription());
+        noteArea.setText(selectedTransaction.getNote());
     }
 
     public void validateUserInputsOnFinish() {
@@ -158,17 +173,21 @@ public class CreateTransactionDialogController implements Initializable {
         });
     }
 
-
     private CategoryList loadCategories() {
-        String categoryType = incomeRadioButton.isSelected() ?
-                Category.CategoryType.Income.name().toLowerCase() : Category.CategoryType.Expense.name().toLowerCase();
+        CategoryType categoryType = incomeRadioButton.isSelected() ? Income : Expense;
         String jsonResponse = null;
         try {
-            jsonResponse = ServiceFunctions.get("categories/" + categoryType);
+            jsonResponse = ServiceFunctions.get("categories/" + categoryType.name());
         } catch (ClientException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
         return jsonb.fromJson(jsonResponse, CategoryList.class);
+    }
+
+    public void setSelectedTransaction(Transaction selectedTransaction) {
+        this.selectedTransaction = selectedTransaction;
+        headerTextLabel.setText("Edit Transaction");
+        insertTransactionDetails();
     }
 
 }

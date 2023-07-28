@@ -1,0 +1,9 @@
+.radio-button .radio {
+    -fx-background-color : #FBF9F8;
+}
+
+.radio-button .dot {
+     -fx-mark-color: #749AC1;
+}
+
+

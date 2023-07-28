@@ -1,0 +1,16 @@
+.dialog-pane {
+    -fx-background-color:  #3A6A95;
+}
+
+.dialog-pane > .button-bar {
+    -fx-font-size: 14px;
+    -fx-background-color: transparent;
+    -fx-font-family: "Source Sans 3 Medium";
+}
+
+.dialog-pane > .button-bar > .container > .button {
+    -fx-background-color: #FBF9F8;
+    -fx-text-fill: #3A6A95;
+}
+
+

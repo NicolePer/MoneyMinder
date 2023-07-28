@@ -4,10 +4,13 @@ import at.nicoleperak.client.Client;
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.shared.Category;
+import at.nicoleperak.shared.CategoryList;
 import at.nicoleperak.shared.FinancialAccount;
 import at.nicoleperak.shared.Transaction;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +29,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -86,17 +90,27 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private Button newTransactionButton;
 
     @FXML
+    private ComboBox<Category> categoryComboBox;
+
+    @FXML
+    private ComboBox<Category.CategoryType> transactionTypeComboBox;
+
+    @FXML
     private VBox transactionsPane;
 
     @FXML
     private Label userLabel;
 
+    ObservableList<Category> categoryObservableList = FXCollections.observableArrayList();
+    ObservableList<Category.CategoryType> typeObservableList = FXCollections.observableArrayList();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.selectedFinancialAccount = Client.getSelectedFinancialAccount();
         loadSelectedFinancialAccountDetails();
-        showTransactions();
+        showTransactions(selectedFinancialAccount.getTransactions());
         setLabels();
+        setComboBoxes();
     }
 
     @FXML
@@ -109,6 +123,45 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         showCreateTransactionDialog();
     }
 
+    @FXML
+    void onCategorySelected(ActionEvent event) {
+        filterTransactionsByCategory();
+    }
+
+
+    @FXML
+    void onTypeSelected(ActionEvent event) {
+        filterTransactionsByType();
+        CategoryList filteredCategoryList = loadCategories(transactionTypeComboBox.getSelectionModel().getSelectedItem().name());
+        categoryObservableList.clear();
+        categoryObservableList.addAll(filteredCategoryList.getCategories());
+    }
+
+    private void filterTransactionsByType() {
+        List<Transaction> filteredTransactionList = selectedFinancialAccount
+                .getTransactions()
+                .stream()
+                .filter(transaction ->
+                        transaction.getCategory().getType()
+                                .equals(transactionTypeComboBox.getSelectionModel().getSelectedItem()))
+                .toList();
+        transactionsPane.getChildren().clear();
+        showTransactions(filteredTransactionList);
+    }
+
+    private void filterTransactionsByCategory() {
+        List<Transaction> filteredTransactionList = selectedFinancialAccount
+                .getTransactions()
+                .stream()
+                .filter(transaction ->
+                        transaction.getCategory().getId()
+                                .equals(categoryComboBox.getSelectionModel().getSelectedItem().getId()))
+                .toList();
+        transactionsPane.getChildren().clear();
+        showTransactions(filteredTransactionList);
+    }
+
+
     private void loadSelectedFinancialAccountDetails() {
         try {
             String jsonResponse = ServiceFunctions.get("financial-accounts/" + selectedFinancialAccount.getId());
@@ -118,9 +171,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
-    private void showTransactions() {
+    private void showTransactions(List<Transaction> transactions) {
         try {
-            for (Transaction transaction : selectedFinancialAccount.getTransactions()) {
+            for (Transaction transaction : transactions) {
                 FXMLLoader transactionTileLoader = new FXMLLoader();
                 transactionTileLoader.setLocation(getClass().getResource(TRANSACTION_TILE.getLocation()));
                 Parent transactionTile = buildTransactionTile(transaction, transactionTileLoader);
@@ -128,7 +181,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             }
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
-            //TODO for later: Alertlabel?
+            // TODO for later: Alertlabel?
         }
     }
 
@@ -148,7 +201,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
-    private static Parent buildTransactionTile(Transaction transaction, FXMLLoader loader) throws IOException {
+    public Parent buildTransactionTile(Transaction transaction, FXMLLoader loader) throws IOException {
         Parent transactionTile = loader.load();
         TransactionTileController controller = loader.getController();
         controller
@@ -162,19 +215,20 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                 .setText(transaction.getDescription().toUpperCase());
         controller.getTransactionAmountLabel()
                 .setText(formatBalance(transaction.getAmount()));
+        controller
+                .setTransaction(transaction);
+        controller
+                .setTransactionsPane(transactionsPane);
         return transactionTile;
     }
 
-    public void setSelectedFinancialAccount(FinancialAccount selectedFinancialAccount) {
-        this.selectedFinancialAccount = selectedFinancialAccount;
-    }
 
     private void showCreateTransactionDialog() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource(CREATE_TRANSACTION_FORM.getLocation()));
+            loader.setLocation(getClass().getResource(TRANSACTION_FORM.getLocation()));
             DialogPane createFinancialAccountDialogPane = loader.load();
-            CreateTransactionDialogController formController = loader.getController();
+            TransactionDialogController formController = loader.getController();
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(createFinancialAccountDialogPane);
             Optional<ButtonType> result = dialog.showAndWait();
@@ -202,12 +256,43 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     }
 
 
-    private void reloadFinancialAccountDetailsScreen() {
+    public static void reloadFinancialAccountDetailsScreen() {
         try {
             Scene scene = loadScene(FINANCIAL_ACCOUNT_DETAILS_SCREEN);
             Client.getStage().setScene(scene);
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
+    }
+
+    private CategoryList loadCategories() {
+        String jsonResponse = null;
+        try {
+            jsonResponse = ServiceFunctions.get("categories");
+        } catch (ClientException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+        }
+        return jsonb.fromJson(jsonResponse, CategoryList.class);
+    }
+
+    private CategoryList loadCategories(String categoryType) {
+        String jsonResponse = null;
+        try {
+            jsonResponse = ServiceFunctions.get("categories/" + categoryType);
+        } catch (ClientException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+        }
+        return jsonb.fromJson(jsonResponse, CategoryList.class);
+    }
+
+    private void setComboBoxes() {
+        CategoryList categoryList = loadCategories();
+        categoryObservableList.addAll(categoryList.getCategories());
+        typeObservableList.addAll(categoryList.getCategories()
+                .stream()
+                .map(Category::getType)
+                .distinct().toList());
+        categoryComboBox.setItems(categoryObservableList);
+        transactionTypeComboBox.setItems(typeObservableList);
     }
 }

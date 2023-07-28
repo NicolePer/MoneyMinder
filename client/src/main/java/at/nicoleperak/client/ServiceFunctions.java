@@ -67,6 +67,27 @@ public class ServiceFunctions {
         }
     }
 
+    public static void put (String path, String jsonString) throws ClientException {
+        String uriS = SERVER_URI + path;
+        try {
+            URI uri = new URI(uriS);
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder(uri)
+                        .PUT(HttpRequest.BodyPublishers.ofString(jsonString))
+                        .header("Authorization", getBasicAuthenticationHeader())
+                        .build();
+            HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+            int statusCode = response.statusCode();
+            if (statusCode != 200) {
+                String jsonResponse = new String(response.body());
+                String errorMessage = jsonb.fromJson(jsonResponse, String.class);
+                throw new ClientException(errorMessage);
+            }
+        } catch (URISyntaxException | IOException | InterruptedException e) {
+            throw new ClientException("An unexpected error occurred", e);
+        }
+    }
+
     private static String getBasicAuthenticationHeader() {
         User userCredentials = Client.getUserCredentials();
         String credentials = userCredentials.getEmail() + ":" + userCredentials.getPassword();

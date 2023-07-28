@@ -13,7 +13,6 @@
     <packaging>jar</packaging>
 
     <dependencies>
-
         <!-- https://mvnrepository.com/artifact/org.eclipse/yasson -->
         <dependency>
             <groupId>org.eclipse</groupId>

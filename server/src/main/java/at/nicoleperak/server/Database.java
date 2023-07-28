@@ -1,6 +1,7 @@
 package at.nicoleperak.server;
 
 import at.nicoleperak.shared.*;
+import at.nicoleperak.shared.Category.CategoryType;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class Database {
     private static final String TRANSACTION_ID = "id";
     private static final String TRANSACTION_DESCRIPTION = "description";
     private static final String TRANSACTION_AMOUNT = "amount";
-    private static final String TRANSACTION_DATE = "date";
+    private static final String TRANSACTION_DATE = "transaction_date";
     private static final String TRANSACTION_PARTNER = "transaction_partner";
     private static final String TRANSACTION_CATEGORY_ID = "category_id";
     private static final String TRANSACTION_NOTE = "note";
@@ -313,7 +314,7 @@ public class Database {
                         rs.getDate(TRANSACTION_DATE).toLocalDate(),
                         new Category(rs.getLong(TRANSACTION_CATEGORY_ID),
                                 rs.getString("category_title"),
-                                Category.CategoryType.values()[rs.getShort(CATEGORY_TYPE)]),
+                                CategoryType.values()[rs.getShort(CATEGORY_TYPE)]),
                         rs.getString(TRANSACTION_PARTNER),
                         rs.getString(TRANSACTION_NOTE),
                         rs.getBoolean(TRANSACTION_ADDED_AUTOMATICALLY)));
@@ -377,7 +378,6 @@ public class Database {
     public static void insertTransaction(Transaction transaction, Long financialAccountId) throws SQLException {
         Connection conn = null;
         PreparedStatement pstmt = null;
-
         String insert = "INSERT INTO " + TRANSACTION_TABLE
                 + " (" + TRANSACTION_DESCRIPTION + "," + TRANSACTION_AMOUNT + ","
                 + TRANSACTION_DATE + "," + TRANSACTION_PARTNER + ","
@@ -420,7 +420,7 @@ public class Database {
         }
     }
 
-    public static CategoryList selectCategoryList(int categoryType) throws SQLException {
+    public static CategoryList selectCategoryList(CategoryType categoryType) throws SQLException {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -430,13 +430,13 @@ public class Database {
         try {
             conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
             pstmt = conn.prepareStatement(select);
-            pstmt.setInt(1, categoryType);
+            pstmt.setInt(1, categoryType.ordinal());
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 categories.add(
                         new Category(rs.getLong(CATEGORY_ID),
                                 rs.getString(CATEGORY_TITLE),
-                                Category.CategoryType.values()[rs.getShort(CATEGORY_TYPE)]));
+                                CategoryType.values()[rs.getShort(CATEGORY_TYPE)]));
             }
             return new CategoryList(categories);
         } catch (SQLException e) {
@@ -446,6 +446,115 @@ public class Database {
                 if (rs != null) {
                     rs.close();
                 }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw e;
+            }
+        }
+    }
+
+    public static CategoryList selectCategoryList() throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        ArrayList<Category> categories = new ArrayList<>();
+        String select = "SELECT * FROM " + CATEGORY_TABLE;
+        try {
+            conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+            pstmt = conn.prepareStatement(select);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                categories.add(
+                        new Category(rs.getLong(CATEGORY_ID),
+                                rs.getString(CATEGORY_TITLE),
+                                CategoryType.values()[rs.getShort(CATEGORY_TYPE)]));
+            }
+            return new CategoryList(categories);
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw e;
+            }
+        }
+    }
+
+    public static Long selectFinancialAccountId(Long transactionId) throws ServerException, SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String select = "SELECT " + TRANSACTION_FINANCIAL_ACCOUNT_ID  + " FROM " + TRANSACTION_TABLE
+                + " WHERE " + TRANSACTION_ID + " = ?";
+        try {
+            conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+            pstmt = conn.prepareStatement(select);
+            pstmt.setLong(1, transactionId);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getLong(TRANSACTION_FINANCIAL_ACCOUNT_ID);
+            } else {
+                throw new ServerException(404, "Transaction with id " + transactionId + " does not exist");
+            }
+        } catch (SQLException | ServerException e) {
+            throw e;
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw e;
+            }
+        }
+    }
+
+    public static void updateTransaction(Transaction transaction, Long transactionId) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        String insert = "UPDATE " + TRANSACTION_TABLE + " SET "
+                + TRANSACTION_DESCRIPTION + " = ?, "            // 1 DESCRIPTION
+                + TRANSACTION_AMOUNT + " = ?, "                 // 2 AMOUNT
+                + TRANSACTION_DATE + " = ?, "                   // 3 DATE
+                + TRANSACTION_PARTNER + " = ?,"                 // 4 TRANSACTION PARTNER
+                + TRANSACTION_CATEGORY_ID + "= ?, "              // 5 CATEGORY ID
+                + TRANSACTION_NOTE + "= ? "                      // 6 NOTE
+                + " WHERE " + TRANSACTION_ID + " = ?";          // 7 TRANSACTION ID
+        try {
+            conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+            pstmt = conn.prepareStatement(insert);
+            pstmt.setString(1, transaction.getDescription());
+            pstmt.setBigDecimal(2, transaction.getAmount());
+            pstmt.setDate(3, java.sql.Date.valueOf(transaction.getDate()));
+            pstmt.setString(4, transaction.getTransactionPartner());
+            pstmt.setLong(5, transaction.getCategory().getId());
+            pstmt.setString(6, transaction.getNote());
+            pstmt.setLong(7, transactionId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
                 if (pstmt != null) {
                     pstmt.close();
                 }

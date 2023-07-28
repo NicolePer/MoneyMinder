@@ -46,14 +46,14 @@ public class CreateFinancialAccountTileController{
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource(CREATE_FINANCIAL_ACCOUNT_FORM.getLocation()));
             DialogPane createFinancialAccountDialogPane = loader.load();
-            CreateFinancialAccountDialogController formController = loader.getController();
+            CreateFinancialAccountDialogController dialogController = loader.getController();
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(createFinancialAccountDialogPane);
             Optional<ButtonType> result = dialog.showAndWait();
             if (result.isPresent()) {
                 if (result.get() == ButtonType.FINISH) {
-                    String title = formController.getFinancialAccountTitleField().getText();
-                    String description = formController.getFinancialAccountDescriptionField().getText();
+                    String title = dialogController.getFinancialAccountTitleField().getText();
+                    String description = dialogController.getFinancialAccountDescriptionField().getText();
                     FinancialAccount financialAccount = new FinancialAccount(title, description);
                     try {
                         ServiceFunctions.post("financial-accounts", jsonb.toJson(financialAccount), true);
@@ -67,6 +67,4 @@ public class CreateFinancialAccountTileController{
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
     }
-
-
 }

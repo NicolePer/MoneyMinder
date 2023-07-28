@@ -8,7 +8,8 @@ public enum FXMLLocation {
     CREATE_FINANCIAL_ACCOUNT_TILE("/fxml/create-financial-account-tile.fxml"),
     FINANCIAL_ACCOUNT_TILE("/fxml/financial-account-tile.fxml"),
     TRANSACTION_TILE("/fxml/transaction-tile.fxml"),
-    CREATE_TRANSACTION_FORM("/fxml/create-transaction-form.fxml");
+    TRANSACTION_DETAILS_TILE("/fxml/transaction-details-tile.fxml"),
+    TRANSACTION_FORM("/fxml/transaction-form.fxml");
 
     private final String location;
 

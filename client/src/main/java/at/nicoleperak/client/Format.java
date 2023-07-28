@@ -1,6 +1,5 @@
 package at.nicoleperak.client;
 
-import at.nicoleperak.client.controllers.CreateTransactionDialogController;
 import at.nicoleperak.shared.Category;
 
 import java.math.BigDecimal;

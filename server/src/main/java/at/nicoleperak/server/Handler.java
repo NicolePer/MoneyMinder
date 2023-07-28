@@ -1,6 +1,7 @@
 package at.nicoleperak.server;
 
 import at.nicoleperak.shared.*;
+import at.nicoleperak.shared.Category.CategoryType;
 import com.password4j.*;
 import com.password4j.types.Argon2;
 import com.sun.net.httpserver.Headers;
@@ -11,7 +12,6 @@ import jakarta.json.bind.JsonbBuilder;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
@@ -21,7 +21,6 @@ import java.util.List;
 public class Handler implements HttpHandler {
     private final Argon2Function hashingFunction = Argon2Function.getInstance(19456, 2, 1, 128, Argon2.ID, 19);
     private final Jsonb jsonb = JsonbBuilder.create();
-
 
     @Override
     public void handle(HttpExchange exchange) {
@@ -38,7 +37,9 @@ public class Handler implements HttpHandler {
                 handlePost(exchange, paths);
             } else if (requestMethod.equalsIgnoreCase("GET")) {
                 handleGet(exchange, paths);
-            } else {
+            } else if (requestMethod.equalsIgnoreCase("PUT")) {
+                handlePut(exchange, paths);
+            }else {
                 throw new ServerException(400, "Unsupported HTTP-Method");
             }
         } catch (Exception e) {
@@ -67,6 +68,18 @@ public class Handler implements HttpHandler {
         }
     }
 
+    private void handlePut(HttpExchange exchange, String[] paths) throws ServerException {
+        int statusCode = 200;
+        String jsonResponse = "";
+        if (paths.length == 2 && paths[0].equals("transactions")) {
+            Long transactionId = Long.parseLong(paths[1]);
+            editTransaction(exchange, transactionId);
+        } else {
+            throw new ServerException(400, "URI not supported");
+        }
+        setResponse(exchange, statusCode, jsonResponse);
+    }
+
     private void handlePost(HttpExchange exchange, String[] paths) throws ServerException {
         int statusCode = 200;
         String jsonResponse = "";
@@ -82,7 +95,6 @@ public class Handler implements HttpHandler {
         }
         setResponse(exchange, statusCode, jsonResponse);
     }
-
 
     private void handleGet(HttpExchange exchange, String[] paths) throws ServerException {
         int statusCode = 200;
@@ -101,10 +113,13 @@ public class Handler implements HttpHandler {
             assertAuthenticatedUserIsOwnerOrCollaborator(authenticatedUser.getId(), financialAccountId);
             FinancialAccount financialAccount = getFinancialAccount(financialAccountId);
             jsonResponse = jsonb.toJson(financialAccount);
+        } else if (paths.length == 1 && paths[0].equals("categories")) {
+            authenticate(exchange);
+            CategoryList categoryList = getCategories();
+            jsonResponse = jsonb.toJson(categoryList);
         } else if (paths.length == 2 && paths[0].equals("categories")) {
             authenticate(exchange);
-            int categoryType = paths[1].equals("income")
-                    ? Category.CategoryType.Income.ordinal() : Category.CategoryType.Expense.ordinal();
+            CategoryType categoryType = CategoryType.valueOf(paths[1]);
             CategoryList categoryList = getCategories(categoryType);
             jsonResponse = jsonb.toJson(categoryList);
         }
@@ -123,6 +138,23 @@ public class Handler implements HttpHandler {
         }
     }
 
+    private void editTransaction(HttpExchange exchange, Long transactionId) throws ServerException {
+        User currentUser = authenticate(exchange);
+        // TODO Change Path?
+        try {
+            Long financialAccountId = Database.selectFinancialAccountId(transactionId);
+            assertAuthenticatedUserIsOwnerOrCollaborator(currentUser.getId(), financialAccountId);
+            String jsonString = new String(exchange.getRequestBody().readAllBytes());
+            Transaction transaction = jsonb.fromJson(jsonString, Transaction.class);
+            Database.updateTransaction(transaction, transactionId);
+
+        } catch (SQLException e) {
+            throw new ServerException(500, "Database error", e);
+        } catch (IOException e) {
+            throw new ServerException(400, "Could not read response body", e);
+        }
+    }
+
     private void createNewTransaction(HttpExchange exchange, Long financialAccountId) throws ServerException {
         User currentUser = authenticate(exchange);
         try {
@@ -130,7 +162,6 @@ public class Handler implements HttpHandler {
             String jsonString = new String(exchange.getRequestBody().readAllBytes());
             Transaction transaction = jsonb.fromJson(jsonString, Transaction.class);
             Database.insertTransaction(transaction, financialAccountId);
-            //TODO IMPLEMENT AS DB TRANSACTION
         } catch (SQLException e) {
             throw new ServerException(500, "Database error", e);
         } catch (IOException e) {
@@ -185,13 +216,23 @@ public class Handler implements HttpHandler {
         }
     }
 
-    private CategoryList getCategories(int catgeoryType) throws ServerException {
+    private CategoryList getCategories(CategoryType categoryType) throws ServerException {
         try {
-            return Database.selectCategoryList(catgeoryType);
+            return Database.selectCategoryList(categoryType);
         } catch (SQLException e) {
             throw new ServerException(500, "Database error", e);
         }
     }
+
+    private CategoryList getCategories() throws ServerException {
+        try {
+            return Database.selectCategoryList();
+        } catch (SQLException e) {
+            throw new ServerException(500, "Database error", e);
+        }
+    }
+
+
 
     private String createPasswordHash(String password) {
         Hash hash = Password.hash(password).addRandomSalt(12).with(hashingFunction);
