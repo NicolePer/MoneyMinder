@@ -83,7 +83,7 @@ public class TransactionDetailsTileController {
 
     @FXML
     void onRemoveTransactionButtonClicked(ActionEvent event) {
-            // TODO write delete method
+        removeTransaction();
     }
 
     @FXML
@@ -157,6 +157,15 @@ public class TransactionDetailsTileController {
                 }
             }
         } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
+    private void removeTransaction(){
+        try {
+            ServiceFunctions.delete("transactions/" + transaction.getId());
+            reloadFinancialAccountDetailsScreen();
+        } catch (ClientException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
     }

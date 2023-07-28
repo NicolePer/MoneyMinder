@@ -103,6 +103,7 @@ public class Database {
         }
     }
 
+
     public static User selectUser(String email) throws SQLException, ServerException {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -532,17 +533,17 @@ public class Database {
     public static void updateTransaction(Transaction transaction, Long transactionId) throws SQLException {
         Connection conn = null;
         PreparedStatement pstmt = null;
-        String insert = "UPDATE " + TRANSACTION_TABLE + " SET "
+        String update = "UPDATE " + TRANSACTION_TABLE + " SET "
                 + TRANSACTION_DESCRIPTION + " = ?, "            // 1 DESCRIPTION
                 + TRANSACTION_AMOUNT + " = ?, "                 // 2 AMOUNT
                 + TRANSACTION_DATE + " = ?, "                   // 3 DATE
                 + TRANSACTION_PARTNER + " = ?,"                 // 4 TRANSACTION PARTNER
-                + TRANSACTION_CATEGORY_ID + "= ?, "              // 5 CATEGORY ID
-                + TRANSACTION_NOTE + "= ? "                      // 6 NOTE
+                + TRANSACTION_CATEGORY_ID + "= ?, "             // 5 CATEGORY ID
+                + TRANSACTION_NOTE + "= ? "                     // 6 NOTE
                 + " WHERE " + TRANSACTION_ID + " = ?";          // 7 TRANSACTION ID
         try {
             conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
-            pstmt = conn.prepareStatement(insert);
+            pstmt = conn.prepareStatement(update);
             pstmt.setString(1, transaction.getDescription());
             pstmt.setBigDecimal(2, transaction.getAmount());
             pstmt.setDate(3, java.sql.Date.valueOf(transaction.getDate()));
@@ -566,6 +567,33 @@ public class Database {
             }
         }
     }
+
+    public static void deleteTransaction(Long transactionId) throws SQLException {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        String delete = "DELETE FROM " + TRANSACTION_TABLE +
+                " WHERE " + TRANSACTION_ID + " = ?";
+        try {
+            conn = DriverManager.getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+            pstmt = conn.prepareStatement(delete);
+            pstmt.setLong(1, transactionId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                throw e;
+            }
+        }
+    }
+
 }
 
 

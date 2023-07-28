@@ -34,7 +34,7 @@ public class ServiceFunctions {
             }
             HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
             int statusCode = response.statusCode();
-            if (statusCode != 200) {
+            if (statusCode != 201) {
                 String jsonResponse = new String(response.body());
                 String errorMessage = jsonb.fromJson(jsonResponse, String.class);
                 throw new ClientException(errorMessage);
@@ -79,6 +79,27 @@ public class ServiceFunctions {
             HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
             int statusCode = response.statusCode();
             if (statusCode != 200) {
+                String jsonResponse = new String(response.body());
+                String errorMessage = jsonb.fromJson(jsonResponse, String.class);
+                throw new ClientException(errorMessage);
+            }
+        } catch (URISyntaxException | IOException | InterruptedException e) {
+            throw new ClientException("An unexpected error occurred", e);
+        }
+    }
+
+    public static void delete(String path) throws ClientException {
+        String uriS = SERVER_URI + path;
+        try {
+            URI uri = new URI(uriS);
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder(uri)
+                    .DELETE()
+                    .header("Authorization", getBasicAuthenticationHeader())
+                    .build();
+            HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+            int statusCode = response.statusCode();
+            if (statusCode != 204) {
                 String jsonResponse = new String(response.body());
                 String errorMessage = jsonb.fromJson(jsonResponse, String.class);
                 throw new ClientException(errorMessage);
