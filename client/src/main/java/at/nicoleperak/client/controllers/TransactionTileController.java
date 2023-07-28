@@ -1,6 +1,5 @@
 package at.nicoleperak.client.controllers;
 
-import at.nicoleperak.shared.FinancialAccount;
 import at.nicoleperak.shared.Transaction;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -40,7 +39,7 @@ public class TransactionTileController {
     @FXML
     private GridPane transactionTile;
 
-    @FXML
+    @FXML @SuppressWarnings("unused")
     void onTransactionTileClicked(MouseEvent event) {
         try {
             ObservableList<javafx.scene.Node> transactionTileList = transactionsPane.getChildren();

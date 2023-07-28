@@ -2,6 +2,7 @@ package at.nicoleperak.shared;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class FinancialAccountsList {
 
     private List<FinancialAccount> financialAccounts;

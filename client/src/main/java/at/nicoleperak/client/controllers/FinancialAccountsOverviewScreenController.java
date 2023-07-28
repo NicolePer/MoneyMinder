@@ -32,7 +32,7 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
     private MenuItem accountSettingsMenuItem;
 
     @FXML
-    private Label alertMessagetLabel;
+    private Label alertMessageLabel;
 
     @FXML
     private TilePane financialAccountsTilePane;
@@ -67,7 +67,7 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
             }
             showCreateFinancialAccountTile();
         } catch (IOException | ClientException e) {
-            alertMessagetLabel.setText(e.getMessage());
+            alertMessageLabel.setText(e.getMessage());
         }
     }
 
@@ -90,13 +90,5 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
         controller
                 .setFinancialAccount(financialAccount);
         return accountTile;
-    }
-
-    public TilePane getFinancialAccountsTilePane() {
-        return financialAccountsTilePane;
-    }
-
-    public Label getAlertMessagetLabel() {
-        return alertMessagetLabel;
     }
 }

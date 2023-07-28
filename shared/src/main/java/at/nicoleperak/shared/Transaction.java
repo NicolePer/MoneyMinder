@@ -3,6 +3,7 @@ package at.nicoleperak.shared;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@SuppressWarnings("unused")
 public class Transaction {
 
     private Long id;
@@ -26,6 +27,20 @@ public class Transaction {
         this.transactionPartner = transactionPartner;
         this.note = note;
         this.addedAutomatically = addedAutomatically;
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                ", amount=" + amount +
+                ", date=" + date +
+                ", category=" + category +
+                ", transactionPartner='" + transactionPartner + '\'' +
+                ", note='" + note + '\'' +
+                ", addedAutomatically=" + addedAutomatically +
+                '}';
     }
 
     public Long getId() {

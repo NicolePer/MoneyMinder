@@ -13,7 +13,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -71,22 +70,22 @@ public class TransactionDetailsTileController {
     @FXML
     private VBox transactionDetailsTile;
 
-    @FXML
+    @FXML @SuppressWarnings("unused")
     void onCloseDetailsButtonClicked(ActionEvent event) {
         closeTransactionDetailsTile();
     }
 
-    @FXML
+    @FXML @SuppressWarnings("unused")
     void onEditTransactionButtonClicked(ActionEvent event) {
         showEditTransactionDialog();
     }
 
-    @FXML
+    @FXML @SuppressWarnings("unused")
     void onRemoveTransactionButtonClicked(ActionEvent event) {
         removeTransaction();
     }
 
-    @FXML
+    @FXML @SuppressWarnings("unused")
     void onTransactionOverviewTileClicked(MouseEvent event) {
         closeTransactionDetailsTile();
     }

@@ -1,7 +1,6 @@
 package at.nicoleperak.server;
 
 public class ServerException extends Exception {
-
     private final int statusCode;
 
     public ServerException(int statusCode, String message) {
@@ -17,5 +16,4 @@ public class ServerException extends Exception {
     public int getStatusCode() {
         return statusCode;
     }
-
 }

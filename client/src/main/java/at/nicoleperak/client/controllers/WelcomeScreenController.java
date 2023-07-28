@@ -41,7 +41,7 @@ public class WelcomeScreenController {
     @FXML
     private Label alertMessageLabel;
 
-    @FXML
+    @FXML @SuppressWarnings("unused")
     protected void onSignUpLinkClicked(ActionEvent event) {
         try {
             Scene scene = loadScene(SIGN_UP_SCREEN);
@@ -52,7 +52,7 @@ public class WelcomeScreenController {
         }
     }
 
-    @FXML
+    @FXML @SuppressWarnings("unused")
     protected void onSignInButtonClicked(ActionEvent event) {
         String email = emailField.getText();
         String password = passwordField.getText();

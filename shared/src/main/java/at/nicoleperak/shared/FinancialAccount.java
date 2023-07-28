@@ -3,6 +3,7 @@ package at.nicoleperak.shared;
 import java.math.BigDecimal;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class FinancialAccount {
 
     private Long id;

@@ -2,6 +2,7 @@ package at.nicoleperak.shared;
 
 import jakarta.json.bind.annotation.JsonbNillable;
 
+@SuppressWarnings("unused")
 public class User {
     @JsonbNillable
     private Long id;

@@ -8,8 +8,6 @@ import at.nicoleperak.shared.CategoryList;
 import at.nicoleperak.shared.Transaction;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -149,26 +147,20 @@ public class TransactionDialogController implements Initializable {
         });
     }
 
+    @SuppressWarnings("unused")
     private void replaceTransactionPartnerLabelOnSelectionOfRadioButton(RadioButton radioButton, String labelText) {
-        expenseRadioButton.selectedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-                transactionPartnerLabel.setText(labelText);
-            }
-        });
+        radioButton.selectedProperty().addListener((observableValue, aBoolean, t1) ->
+                transactionPartnerLabel.setText(labelText));
     }
 
     private void loadCategoriesOnSelectionOfRadioButton() {
-        transactionTypeToggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            @Override
-            public void changed(ObservableValue<? extends Toggle> observableValue, Toggle toggle, Toggle radioButton) {
-                if (radioButton.isSelected()) {
-                    categoryObservableList.clear();
-                    CategoryList categoryList = loadCategories();
-                    categoryObservableList.addAll(categoryList.getCategories());
-                    categoryComboBox.setItems(categoryObservableList);
-                    categoryComboBox.setDisable(false);
-                }
+        transactionTypeToggleGroup.selectedToggleProperty().addListener((observableValue, toggle, radioButton) -> {
+            if (radioButton.isSelected()) {
+                categoryObservableList.clear();
+                CategoryList categoryList = loadCategories();
+                categoryObservableList.addAll(categoryList.getCategories());
+                categoryComboBox.setItems(categoryObservableList);
+                categoryComboBox.setDisable(false);
             }
         });
     }

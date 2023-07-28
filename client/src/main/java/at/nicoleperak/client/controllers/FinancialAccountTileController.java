@@ -3,7 +3,6 @@ package at.nicoleperak.client.controllers;
 import at.nicoleperak.client.Client;
 import at.nicoleperak.shared.FinancialAccount;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -11,6 +10,7 @@ import javafx.scene.layout.GridPane;
 import java.io.IOException;
 
 import static at.nicoleperak.client.Client.loadScene;
+import static at.nicoleperak.client.Client.setSelectedFinancialAccount;
 import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNT_DETAILS_SCREEN;
 
 public class FinancialAccountTileController extends GridPane {
@@ -26,10 +26,10 @@ public class FinancialAccountTileController extends GridPane {
 
     private FinancialAccount financialAccount;
 
-    @FXML
+    @FXML @SuppressWarnings("unused")
     protected void onFinancialAccountTileClicked(MouseEvent event) {
         try {
-            Client.setSelectedFinancialAccount(financialAccount);
+            setSelectedFinancialAccount(financialAccount);
             Scene scene = loadScene(FINANCIAL_ACCOUNT_DETAILS_SCREEN);
             Client.getStage().setScene(scene);
         } catch (IOException e) {
@@ -44,10 +44,6 @@ public class FinancialAccountTileController extends GridPane {
 
     public Label getFinancialAccountTitleLabel() {
         return financialAccountTitleLabel;
-    }
-
-    public FinancialAccount getFinancialAccount() {
-        return financialAccount;
     }
 
     public void setFinancialAccount(FinancialAccount financialAccount) {

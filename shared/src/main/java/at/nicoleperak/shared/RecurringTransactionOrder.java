@@ -3,6 +3,7 @@ package at.nicoleperak.shared;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@SuppressWarnings("unused")
 public class RecurringTransactionOrder {
 
     private Long id;
@@ -32,5 +33,85 @@ public class RecurringTransactionOrder {
         this.interval = interval;
     }
 
-    public enum Interval { monthly, quarterly, semiannual, yearly}
+    public enum Interval {monthly, quarterly, semiannual, yearly}
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public String getTransactionPartner() {
+        return transactionPartner;
+    }
+
+    public void setTransactionPartner(String transactionPartner) {
+        this.transactionPartner = transactionPartner;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public LocalDate getLastDate() {
+        return lastDate;
+    }
+
+    public void setLastDate(LocalDate lastDate) {
+        this.lastDate = lastDate;
+    }
+
+    public LocalDate getNextDate() {
+        return nextDate;
+    }
+
+    public void setNextDate(LocalDate nextDate) {
+        this.nextDate = nextDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public Interval getInterval() {
+        return interval;
+    }
+
+    public void setInterval(Interval interval) {
+        this.interval = interval;
+    }
 }

@@ -1,5 +1,6 @@
 package at.nicoleperak.shared;
 
+@SuppressWarnings("unused")
 public class Category {
 
     private Long id;

@@ -1,5 +1,6 @@
 package at.nicoleperak.client;
 
+import at.nicoleperak.shared.Category;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ToggleGroup;
 
@@ -56,13 +57,13 @@ public class Validation {
     public static void assertRadioButtonIsSelected(ToggleGroup toggleGroup) throws ClientException {
         if(toggleGroup.selectedToggleProperty().getValue() == null) {
             throw new ClientException("Please select income or expense");
-        };
+        }
     }
 
-    public static void assertCategoryIsSelected(ComboBox categories) throws ClientException {
+    public static void assertCategoryIsSelected(ComboBox<Category> categories) throws ClientException {
         if(categories.getSelectionModel().getSelectedItem() == null){
             throw new ClientException("Please select category");
-        };
+        }
     }
 
 

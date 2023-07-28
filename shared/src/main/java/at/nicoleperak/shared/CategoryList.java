@@ -2,6 +2,7 @@ package at.nicoleperak.shared;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class CategoryList {
 
     private List<Category> categories;
