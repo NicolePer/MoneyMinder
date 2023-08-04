@@ -47,8 +47,7 @@ public class TransactionTileController {
             FXMLLoader transactionDetailsTileLoader = new FXMLLoader();
             transactionDetailsTileLoader.setLocation(getClass().getResource(TRANSACTION_DETAILS_TILE.getLocation()));
             VBox transactionDetailsTile = buildTransactionDetailsTile(transaction, transactionDetailsTileLoader);
-            transactionTileList.add((transactionTileIndex + 1), transactionDetailsTile);
-            transactionTileList.remove(transactionTileIndex);
+            transactionTileList.set(transactionTileIndex, transactionDetailsTile);
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }

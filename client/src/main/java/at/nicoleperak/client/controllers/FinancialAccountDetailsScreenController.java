@@ -3,6 +3,7 @@ package at.nicoleperak.client.controllers;
 import at.nicoleperak.client.Client;
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.client.ServiceFunctions;
+import at.nicoleperak.client.Validation;
 import at.nicoleperak.shared.Category;
 import at.nicoleperak.shared.CategoryList;
 import at.nicoleperak.shared.FinancialAccount;
@@ -21,6 +22,8 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -29,10 +32,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.*;
@@ -40,12 +40,18 @@ import static at.nicoleperak.client.Format.*;
 import static java.time.format.DateTimeFormatter.ofLocalizedDate;
 import static java.time.format.FormatStyle.MEDIUM;
 
+
+
 public class FinancialAccountDetailsScreenController implements Initializable {
 
     private static final Jsonb jsonb = JsonbBuilder.create();
-
     private FinancialAccount selectedFinancialAccount;
-
+    private Category.CategoryType selectedType;
+    private Category selectedCategory;
+    private LocalDate selectedDateFrom;
+    private LocalDate selectedDateTo;
+    ObservableList<Category> categoryObservableList = FXCollections.observableArrayList();
+    ObservableList<Category.CategoryType> typeObservableList = FXCollections.observableArrayList();
 
     @FXML
     private MenuItem accountSettingsMenuItem;
@@ -60,13 +66,19 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private ImageView downloadIcon;
 
     @FXML
-    private Button filterButton;
+    private Button resetFiltersButton;
 
     @FXML
     private Label financialAccountTitleLabel;
 
     @FXML
     private ImageView goBackButton;
+
+    @FXML
+    private DatePicker dateFromDatePicker;
+
+    @FXML
+    private DatePicker dateToDatePicker;
 
     @FXML
     private GridPane goalStatusBar;
@@ -88,6 +100,8 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     private Button newTransactionButton;
+    @FXML
+    private TextField searchField;
 
     @FXML
     private ComboBox<Category> categoryComboBox;
@@ -100,9 +114,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     private Label userLabel;
-
-    ObservableList<Category> categoryObservableList = FXCollections.observableArrayList();
-    ObservableList<Category.CategoryType> typeObservableList = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -125,42 +136,92 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     void onCategorySelected(ActionEvent event) {
-        filterTransactionsByCategory();
+        selectedCategory = categoryComboBox.getSelectionModel().getSelectedItem();
+        filterTransactions();
     }
-
 
     @FXML
     void onTypeSelected(ActionEvent event) {
-        filterTransactionsByType();
-        CategoryList filteredCategoryList = loadCategories(transactionTypeComboBox.getSelectionModel().getSelectedItem().name());
-        categoryObservableList.clear();
-        categoryObservableList.addAll(filteredCategoryList.getCategories());
+        categoryComboBox.getSelectionModel().clearSelection();
+        selectedCategory = null;
+        CategoryList filteredCategoryList = loadCategories(transactionTypeComboBox.getSelectionModel().getSelectedItem());
+        categoryObservableList.setAll(filteredCategoryList.getCategories());
+        selectedType = transactionTypeComboBox.getValue();
+        filterTransactions();
     }
 
-    private void filterTransactionsByType() {
-        List<Transaction> filteredTransactionList = selectedFinancialAccount
-                .getTransactions()
-                .stream()
-                .filter(transaction ->
-                        transaction.getCategory().getType()
-                                .equals(transactionTypeComboBox.getSelectionModel().getSelectedItem()))
-                .toList();
+    @FXML
+    void onDateSelected(ActionEvent event) {
+        DatePicker datePicker = (DatePicker) event.getSource();
+        try {
+            Validation.assertDateIsInPast(datePicker.getValue());
+            selectedDateFrom = Objects.requireNonNullElse(dateFromDatePicker.getValue(), LocalDate.MIN.plusDays(1));
+            selectedDateTo = Objects.requireNonNullElse(dateToDatePicker.getValue(), LocalDate.MAX.minusDays(1));
+            filterTransactions();
+        } catch (ClientException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
+    @FXML
+    void onResetFiltersButtonClicked(ActionEvent event) {
+      reloadFinancialAccountDetailsScreen();
+    }
+
+    @FXML
+    void onEnterKeyTypedInSearchBar(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) { search(); }
+    }
+
+    @FXML
+    void onSearchIconClicked(MouseEvent event) {
+        search();
+    }
+
+    private void search() {
+        String query = searchField.getText();
+        List<Transaction> filteredTransactionList = new ArrayList<>();
+        List<String> searchTerms = List.of(query.toLowerCase().split("[\\s.,+]+"));
+        for (Transaction transaction : selectedFinancialAccount.getTransactions()) {
+            String transactionNote = Objects.requireNonNullElse(transaction.getNote(), "");
+            if (searchTerms.stream().anyMatch(transaction.getDescription().toLowerCase()::contains) ||
+                    searchTerms.stream().anyMatch(transaction.getTransactionPartner().toLowerCase()::contains) ||
+                    searchTerms.stream().anyMatch(transaction.getCategory().getTitle().toLowerCase()::contains) ||
+                    searchTerms.stream().anyMatch(transactionNote.toLowerCase()::contains)) {
+                filteredTransactionList.add(transaction);
+            }
+        }
         transactionsPane.getChildren().clear();
         showTransactions(filteredTransactionList);
     }
 
-    private void filterTransactionsByCategory() {
-        List<Transaction> filteredTransactionList = selectedFinancialAccount
-                .getTransactions()
-                .stream()
-                .filter(transaction ->
-                        transaction.getCategory().getId()
-                                .equals(categoryComboBox.getSelectionModel().getSelectedItem().getId()))
+    private void filterTransactions() {
+        List<Transaction> filteredTransactionList = selectedFinancialAccount.getTransactions().stream()
+                .filter(transaction -> {
+                    if (selectedType != null) {
+                        return transaction.getCategory().getType().equals(selectedType);
+                    } else return true;
+                })
+                .filter(transaction -> {
+                    if (selectedCategory != null) {
+                        return transaction.getCategory().getId().equals(selectedCategory.getId());
+                    } else return true;
+                })
+                .filter(transaction -> {
+                    if (selectedDateTo != null) {
+                        return transaction.getDate().isBefore(selectedDateTo.plusDays(1));
+                    } else return true;
+
+                })
+                .filter(transaction -> {
+                    if (selectedDateFrom != null) {
+                        return transaction.getDate().isAfter(selectedDateFrom.minusDays(1));
+                    } else return true;
+                })
                 .toList();
         transactionsPane.getChildren().clear();
         showTransactions(filteredTransactionList);
     }
-
 
     private void loadSelectedFinancialAccountDetails() {
         try {
@@ -190,7 +251,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         balanceLabel.setText(formatBalance(selectedFinancialAccount.getBalance()));
         userLabel.setText(Client.getLoggedInUser().getUsername());
     }
-
 
     private void redirectToFinancialAccountsOverviewScreen() {
         try {
@@ -222,7 +282,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         return transactionTile;
     }
 
-
     private void showCreateTransactionDialog() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -232,22 +291,13 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(createFinancialAccountDialogPane);
             Optional<ButtonType> result = dialog.showAndWait();
-            if (result.isPresent()) {
-                if (result.get() == ButtonType.FINISH) {
-                    LocalDate date = formController.getDatePicker().getValue();
-                    String transactionPartner = formController.getTransactionPartnerField().getText();
-                    String description = formController.getDescriptionField().getText();
-                    Category category = (Category) formController.getCategoryComboBox().getSelectionModel().getSelectedItem();
-                    String amountString = convertIntoParsableDecimal(formController.getAmountField().getText());
-                    BigDecimal amount = new BigDecimal(formatAmount(amountString, category));
-                    String note = formController.getNoteArea().getText();
-                    Transaction transaction = new Transaction(null, description, amount, date, category, transactionPartner, note, false);
-                    try {
-                        ServiceFunctions.post("financial_accounts/" + selectedFinancialAccount.getId() + "/transactions", jsonb.toJson(transaction), true);
-                        reloadFinancialAccountDetailsScreen();
-                    } catch (ClientException e) {
-                        new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
-                    }
+            if (result.isPresent() && result.get() == ButtonType.FINISH) {
+                Transaction transaction = buildTransaction(formController);
+                try {
+                    ServiceFunctions.post("financial_accounts/" + selectedFinancialAccount.getId() + "/transactions", jsonb.toJson(transaction), true);
+                    reloadFinancialAccountDetailsScreen();
+                } catch (ClientException e) {
+                    new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
                 }
             }
         } catch (IOException e) {
@@ -255,6 +305,16 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    private static Transaction buildTransaction(TransactionDialogController formController) {
+        LocalDate date = formController.getDatePicker().getValue();
+        String transactionPartner = formController.getTransactionPartnerField().getText();
+        String description = formController.getDescriptionField().getText();
+        Category category = (Category) formController.getCategoryComboBox().getSelectionModel().getSelectedItem();
+        String amountString = convertIntoParsableDecimal(formController.getAmountField().getText());
+        BigDecimal amount = new BigDecimal(formatAmount(amountString, category));
+        String note = formController.getNoteArea().getText();
+        return new Transaction(null, description, amount, date, category, transactionPartner, note, false);
+    }
 
     public static void reloadFinancialAccountDetailsScreen() {
         try {
@@ -275,10 +335,10 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         return jsonb.fromJson(jsonResponse, CategoryList.class);
     }
 
-    private CategoryList loadCategories(String categoryType) {
+    private CategoryList loadCategories(Category.CategoryType categoryType) {
         String jsonResponse = null;
         try {
-            jsonResponse = ServiceFunctions.get("categories/" + categoryType);
+            jsonResponse = ServiceFunctions.get("categories/" + categoryType.name());
         } catch (ClientException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }

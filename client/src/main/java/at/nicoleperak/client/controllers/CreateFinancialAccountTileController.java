@@ -20,6 +20,8 @@ import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.CREATE_FINANCIAL_ACCOUNT_FORM;
 import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN;
 
+@SuppressWarnings("unused")
+
 public class CreateFinancialAccountTileController{
 
     private static final Jsonb jsonb = JsonbBuilder.create();

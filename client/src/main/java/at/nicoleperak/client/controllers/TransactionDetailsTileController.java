@@ -98,8 +98,7 @@ public class TransactionDetailsTileController {
             FXMLLoader transactionTileLoader = new FXMLLoader();
             transactionTileLoader.setLocation(getClass().getResource(TRANSACTION_TILE.getLocation()));
             Parent transactionTile = buildTransactionTile(transaction, transactionTileLoader);
-            transactionTileList.add((transactionDetailsTileIndex + 1), transactionTile);
-            transactionTileList.remove(transactionDetailsTileIndex);
+            transactionTileList.set(transactionDetailsTileIndex, transactionTile);
         } catch (IOException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();

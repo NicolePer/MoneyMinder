@@ -34,6 +34,10 @@ public class CreateFinancialAccountDialogController implements Initializable {
         return financialAccountTitleField;
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        validateUserInputsOnFinish();
+    }
     public void validateUserInputsOnFinish() {
         Button finish = (Button) dialogPane.lookupButton(ButtonType.FINISH);
         finish.addEventFilter(ActionEvent.ACTION, f -> {
@@ -47,10 +51,5 @@ public class CreateFinancialAccountDialogController implements Initializable {
                 f.consume();
             }
         });
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        validateUserInputsOnFinish();
     }
 }
