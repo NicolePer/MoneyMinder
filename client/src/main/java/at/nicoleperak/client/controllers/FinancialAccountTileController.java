@@ -33,7 +33,6 @@ public class FinancialAccountTileController extends GridPane {
             Scene scene = loadScene(FINANCIAL_ACCOUNT_DETAILS_SCREEN);
             Client.getStage().setScene(scene);
         } catch (IOException e) {
-            e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
     }

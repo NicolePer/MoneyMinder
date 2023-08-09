@@ -98,7 +98,6 @@ public class TransactionDetailsTileController {
             Parent transactionTile = buildTransactionTile(transaction, transactionTileLoader, transactionsPane);
             transactionTileList.set(transactionDetailsTileIndex, transactionTile);
         } catch (IOException e) {
-            e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
     }

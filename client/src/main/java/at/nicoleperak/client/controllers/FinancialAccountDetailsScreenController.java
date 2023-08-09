@@ -38,6 +38,8 @@ import java.util.*;
 import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.*;
 import static at.nicoleperak.client.Format.*;
+import static at.nicoleperak.client.Redirection.redirectToFinancialAccountsOverviewScreen;
+import static at.nicoleperak.client.Redirection.redirectToWelcomeScreen;
 import static at.nicoleperak.client.factories.TransactionFactory.buildTransaction;
 import static at.nicoleperak.client.factories.TransactionTileFactory.buildTransactionTile;
 import static at.nicoleperak.shared.Category.CategoryType.Expense;
@@ -80,6 +82,12 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     private ImageView goBackButton;
+
+    @FXML
+    private ImageView addCollaboratorsIcon;
+
+    @FXML
+    private ImageView deleteCollaboratorIcon;
 
     @FXML
     private DatePicker dateFromDatePicker;
@@ -195,6 +203,11 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     }
 
     @FXML
+    void onLogoutMenuItemClicked(ActionEvent event) {
+        redirectToWelcomeScreen();
+    }
+
+    @FXML
     void onSearchIconClicked(MouseEvent event) {
         searchTransactions();
     }
@@ -290,15 +303,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
-    private void redirectToFinancialAccountsOverviewScreen() {
-        try {
-            Scene scene = loadScene(FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN);
-            Client.getStage().setScene(scene);
-        } catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
-        }
-    }
-
     public static void reloadFinancialAccountDetailsScreen() {
         try {
             Scene scene = loadScene(FINANCIAL_ACCOUNT_DETAILS_SCREEN);
@@ -352,12 +356,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     }
 
     private void resetPieChartOnChangesOfPieChartToggleGroup() {
-        pieChartToggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            @Override
-            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-                setPieChart();
-            }
-        });
+        pieChartToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> setPieChart());
     }
 
     private void setBarChart(int numberOfMonths) {

@@ -8,18 +8,15 @@ import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 
 import static at.nicoleperak.client.Client.loadScene;
-import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN;
 import static at.nicoleperak.client.FXMLLocation.SIGN_UP_SCREEN;
+import static at.nicoleperak.client.Redirection.redirectToFinancialAccountsOverviewScreen;
 import static at.nicoleperak.client.Validation.assertEmailIsValid;
 import static at.nicoleperak.client.Validation.assertUserInputLengthIsValid;
 
@@ -70,17 +67,6 @@ public class WelcomeScreenController {
         }
     }
 
-    private void redirectToFinancialAccountsOverviewScreen() {
-        try {
-            Scene scene = loadScene(FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN);
-            Stage stage = Client.getStage();
-            stage.setScene(scene);
-            centerStage(stage);
-        } catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
-        }
-    }
-
     private static void saveLoggedInUser(User loggedInUser) {
         Client.setLoggedInUser(loggedInUser);
     }
@@ -94,13 +80,8 @@ public class WelcomeScreenController {
         Client.setUserCredentials(user);
     }
 
-    private static void centerStage(Stage stage) {
-        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-        stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
-        stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
-    }
 
-    public void setAlertMessageLabelText(String message) {
+    public void setWelcomeScreenAlertMessageLabelText(String message) {
         alertMessageLabel.setText(message);
     }
 }

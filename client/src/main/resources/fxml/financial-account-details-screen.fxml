@@ -72,7 +72,7 @@
       </Label>
       <MenuButton fx:id="menuButton" mnemonicParsing="false" style="-fx-background-color: transparent;">
          <items>
-            <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" text="Logout" />
+            <MenuItem fx:id="logoutMenuItem" mnemonicParsing="false" onAction="#onLogoutMenuItemClicked" text="Logout" />
             <MenuItem fx:id="accountSettingsMenuItem" mnemonicParsing="false" text="Account Settings" />
             <MenuItem fx:id="helpMenuItem" mnemonicParsing="false" text="Help" />
          </items>
@@ -102,50 +102,44 @@
                      <font>
                         <Font name="Source Sans 3 Regular" size="15.0" />
                      </font>
-                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #749AC1;">
-                        <children>
-                           <VBox fx:id="collaboratorsVBox" spacing="10.0">
-                              <padding>
-                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                              </padding>
-                              <children>
-                                 <HBox spacing="5.0">
-                                    <children>
-                                       <TextField style="-fx-background-color: #fbf9f8;" text="E-Mail">
-                                          <font>
-                                             <Font name="Source Sans 3 Medium" size="14.0" />
-                                          </font>
-                                       </TextField>
-                                       <ImageView fx:id="searchIcon1" fitHeight="25.0" fitWidth="25.0" onMouseClicked="#onSearchIconClicked" pickOnBounds="true" preserveRatio="true">
-                                          <cursor>
-                                             <Cursor fx:constant="HAND" />
-                                          </cursor>
-                                          <image>
-                                             <Image url="@../icons/add-icon-white.png" />
-                                          </image>
-                                       </ImageView>
-                                    </children>
-                                 </HBox>
-                                 <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="20.0" spacing="10.0">
-                                    <children>
-                                       <Label text="User1234" textFill="#fbf9f8">
-                                          <font>
-                                             <Font name="Source Sans 3 Medium" size="14.0" />
-                                          </font>
-                                       </Label>
-                                       <ImageView fx:id="searchIcon11" fitHeight="15.0" fitWidth="15.0" onMouseClicked="#onSearchIconClicked" pickOnBounds="true" preserveRatio="true">
-                                          <cursor>
-                                             <Cursor fx:constant="HAND" />
-                                          </cursor>
-                                          <image>
-                                             <Image url="@../icons/delete-icon-white.png" />
-                                          </image>
-                                       </ImageView>
-                                    </children>
-                                 </HBox>
-                              </children>
-                           </VBox>
-                        </children></AnchorPane>
+                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"
+                                 style="-fx-background-color: #749AC1;">
+                        <VBox fx:id="collaboratorsVBox" spacing="10.0">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                           </padding>
+                           <HBox spacing="5.0">
+                              <TextField style="-fx-background-color: #fbf9f8;" text="E-Mail">
+                                 <font>
+                                    <Font name="Source Sans 3 Medium" size="14.0"/>
+                                 </font>
+                              </TextField>
+                              <ImageView fx:id="addCollaboratorsIcon" fitHeight="25.0" fitWidth="25.0"
+                                         onMouseClicked="#onSearchIconClicked" pickOnBounds="true"
+                                         preserveRatio="true">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND"/>
+                                 </cursor>
+                                 <Image url="@../icons/add-icon-white.png"/>
+                              </ImageView>
+                           </HBox>
+                           <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="20.0" spacing="10.0">
+                              <Label text="User1234" textFill="#fbf9f8">
+                                 <font>
+                                    <Font name="Source Sans 3 Medium" size="14.0"/>
+                                 </font>
+                              </Label>
+                              <ImageView fx:id="deleteCollaboratorIcon" fitHeight="15.0" fitWidth="15.0"
+                                         onMouseClicked="#onSearchIconClicked" pickOnBounds="true"
+                                         preserveRatio="true">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND"/>
+                                 </cursor>
+                                 <Image url="@../icons/delete-icon-white.png"/>
+                              </ImageView>
+                           </HBox>
+                        </VBox>
+                     </AnchorPane>
                   </TitledPane>
                   <TitledPane animated="false" text="Monthly Goal">
                      <font>
@@ -328,55 +322,57 @@
                </Tab>
                <Tab closable="false" text="ANALYISIS">
                   <VBox>
-                     <children>
-                        <HBox alignment="CENTER" spacing="80.0">
-                           <children>
-                              <RadioButton fx:id="expensesRadioButton" mnemonicParsing="false" selected="true" stylesheets="@../css/RadioButton.css" text="Expenses" textFill="#3a6a95">
-                                 <font>
-                                    <Font name="Source Sans 3 Medium" size="18.0" />
-                                 </font>
-                                 <toggleGroup>
-                                    <ToggleGroup fx:id="pieChartToggleGroup" />
-                                 </toggleGroup>
-                              </RadioButton>
-                              <RadioButton fx:id="incomeRadioButton" mnemonicParsing="false" stylesheets="@../css/RadioButton.css" text="Income" textFill="#3a6a95" toggleGroup="$pieChartToggleGroup">
-                                 <font>
-                                    <Font name="Source Sans 3 Medium" size="18.0" />
-                                 </font>
-                              </RadioButton>
-                           </children>
-                           <padding>
-                              <Insets bottom="10.0" top="10.0" />
-                           </padding>
-                        </HBox>
-                        <PieChart fx:id="pieChart" stylesheets="@../css/PieChart.css" VBox.vgrow="ALWAYS">
-                           <VBox.margin>
-                              <Insets bottom="10.0" left="10.0" right="10.0" />
-                           </VBox.margin>
-                        </PieChart>
-                     </children>
+                     <HBox alignment="CENTER" spacing="80.0">
+                        <padding>
+                           <Insets bottom="10.0" top="10.0"/>
+                        </padding>
+                        <RadioButton fx:id="expensesRadioButton" mnemonicParsing="false" selected="true"
+                                     stylesheets="@../css/RadioButton.css" text="Expenses" textFill="#3a6a95">
+                           <font>
+                              <Font name="Source Sans 3 Medium" size="18.0"/>
+                           </font>
+                           <toggleGroup>
+                              <ToggleGroup fx:id="pieChartToggleGroup"/>
+                           </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="incomeRadioButton" mnemonicParsing="false"
+                                     stylesheets="@../css/RadioButton.css" text="Income" textFill="#3a6a95"
+                                     toggleGroup="$pieChartToggleGroup">
+                           <font>
+                              <Font name="Source Sans 3 Medium" size="18.0"/>
+                           </font>
+                        </RadioButton>
+                     </HBox>
+                     <PieChart fx:id="pieChart" stylesheets="@../css/PieChart.css" VBox.vgrow="ALWAYS">
+                        <VBox.margin>
+                           <Insets bottom="10.0" left="10.0" right="10.0"/>
+                        </VBox.margin>
+                     </PieChart>
                   </VBox>
                </Tab>
                <Tab closable="false" text="TRENDS">
-                  <content>
-                     <BarChart fx:id="barChart" alternativeRowFillVisible="false" barGap="10.0" categoryGap="20.0" horizontalGridLinesVisible="false" style="-fx-background-color: #FBF9F8;" stylesheets="@../css/BarChart.css" verticalGridLinesVisible="false">
-                        <xAxis>
-                           <CategoryAxis fx:id="categoryAxis" side="BOTTOM" tickLabelFill="#3a6a95">
-                              <tickLabelFont>
-                                 <Font name="Source Sans 3 Medium" size="13.0" />
-                              </tickLabelFont></CategoryAxis>
-                        </xAxis>
-                        <yAxis>
-                           <NumberAxis label="Euro" minorTickCount="0" minorTickVisible="false" side="LEFT" tickLabelFill="#3a6a95" upperBound="1000.0">
-                              <tickLabelFont>
-                                 <Font name="Source Sans 3 Medium" size="13.0" />
-                              </tickLabelFont></NumberAxis>
-                        </yAxis>
-                        <padding>
-                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                        </padding>
-                     </BarChart>
-                  </content>
+                  <BarChart fx:id="barChart" alternativeRowFillVisible="false" barGap="10.0" categoryGap="20.0"
+                            horizontalGridLinesVisible="false" style="-fx-background-color: #FBF9F8;"
+                            stylesheets="@../css/BarChart.css" verticalGridLinesVisible="false">
+                     <xAxis>
+                        <CategoryAxis fx:id="categoryAxis" side="BOTTOM" tickLabelFill="#3a6a95">
+                           <tickLabelFont>
+                              <Font name="Source Sans 3 Medium" size="13.0"/>
+                           </tickLabelFont>
+                        </CategoryAxis>
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis label="Euro" minorTickCount="0" minorTickVisible="false" side="LEFT"
+                                    tickLabelFill="#3a6a95" upperBound="1000.0">
+                           <tickLabelFont>
+                              <Font name="Source Sans 3 Medium" size="13.0"/>
+                           </tickLabelFont>
+                        </NumberAxis>
+                     </yAxis>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                     </padding>
+                  </BarChart>
                </Tab>
             </TabPane>
          </VBox>

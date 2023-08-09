@@ -1,11 +1,13 @@
 package at.nicoleperak.client.controllers;
 
+import at.nicoleperak.client.Client;
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.shared.FinancialAccount;
 import at.nicoleperak.shared.FinancialAccountsList;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,6 +24,7 @@ import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.FXMLLocation.CREATE_FINANCIAL_ACCOUNT_TILE;
 import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNT_TILE;
+import static at.nicoleperak.client.Redirection.redirectToWelcomeScreen;
 import static at.nicoleperak.client.factories.FinancialAccountTileFactory.buildFinancialAccountTile;
 
 public class FinancialAccountsOverviewScreenController implements Initializable {
@@ -51,6 +54,7 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        userLabel.setText(Client.getLoggedInUser().getUsername());
         showFinancialAccounts();
     }
 
@@ -76,6 +80,11 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
         loader.setLocation(getClass().getResource(CREATE_FINANCIAL_ACCOUNT_TILE.getLocation()));
         Parent createAccountTile = loader.load();
         financialAccountsTilePane.getChildren().add(createAccountTile);
+    }
+
+    @FXML
+    void onLogoutMenuItemClicked(ActionEvent event) {
+        redirectToWelcomeScreen();
     }
 
 }
