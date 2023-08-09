@@ -18,14 +18,12 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Locale;
 import java.util.Optional;
 
 import static at.nicoleperak.client.FXMLLocation.*;
 import static at.nicoleperak.client.Format.*;
+import static at.nicoleperak.client.TransactionTileFactory.buildTransactionTile;
 import static at.nicoleperak.client.controllers.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
-import static java.time.format.DateTimeFormatter.ofLocalizedDate;
-import static java.time.format.FormatStyle.MEDIUM;
 
 public class TransactionDetailsTileController {
 
@@ -97,33 +95,12 @@ public class TransactionDetailsTileController {
 
             FXMLLoader transactionTileLoader = new FXMLLoader();
             transactionTileLoader.setLocation(getClass().getResource(TRANSACTION_TILE.getLocation()));
-            Parent transactionTile = buildTransactionTile(transaction, transactionTileLoader);
+            Parent transactionTile = buildTransactionTile(transaction, transactionTileLoader, transactionsPane);
             transactionTileList.set(transactionDetailsTileIndex, transactionTile);
         } catch (IOException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
-    }
-
-    public Parent buildTransactionTile(Transaction transaction, FXMLLoader loader) throws IOException {
-        Parent transactionTile = loader.load();
-        TransactionTileController controller = loader.getController();
-        controller
-                .getTransactionDateLabel()
-                .setText(transaction.getDate().format(ofLocalizedDate(MEDIUM).withLocale(Locale.US)).toUpperCase());
-        controller
-                .getTransactionPartnerLabel()
-                .setText(transaction.getTransactionPartner().toUpperCase());
-        controller
-                .getTransactionDescriptionLabel()
-                .setText(transaction.getDescription().toUpperCase());
-        controller.getTransactionAmountLabel()
-                .setText(formatBalance(transaction.getAmount()));
-        controller
-                .setTransaction(transaction);
-        controller
-                .setTransactionsPane(transactionsPane);
-        return transactionTile;
     }
 
     private void showEditTransactionDialog() {
@@ -208,6 +185,5 @@ public class TransactionDetailsTileController {
         this.transactionsPane = transactionsPane;
     }
 
-    // TODO FACTORY CLASS
 }
 

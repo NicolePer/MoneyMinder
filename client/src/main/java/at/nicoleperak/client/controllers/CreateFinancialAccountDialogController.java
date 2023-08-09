@@ -25,15 +25,6 @@ public class CreateFinancialAccountDialogController implements Initializable {
     @FXML
     private Label alertMessageLabel;
 
-
-    public TextField getFinancialAccountDescriptionField() {
-        return financialAccountDescriptionField;
-    }
-
-    public TextField getFinancialAccountTitleField() {
-        return financialAccountTitleField;
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         validateUserInputsOnFinish();
@@ -51,5 +42,12 @@ public class CreateFinancialAccountDialogController implements Initializable {
                 f.consume();
             }
         });
+    }
+    public TextField getFinancialAccountDescriptionField() {
+        return financialAccountDescriptionField;
+    }
+
+    public TextField getFinancialAccountTitleField() {
+        return financialAccountTitleField;
     }
 }

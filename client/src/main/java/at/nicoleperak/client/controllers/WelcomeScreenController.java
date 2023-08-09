@@ -77,7 +77,6 @@ public class WelcomeScreenController {
             stage.setScene(scene);
             centerStage(stage);
         } catch (IOException e) {
-            e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
     }

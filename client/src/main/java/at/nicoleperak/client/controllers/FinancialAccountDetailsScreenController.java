@@ -37,11 +37,10 @@ import java.util.*;
 import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.*;
 import static at.nicoleperak.client.Format.*;
+import static at.nicoleperak.client.TransactionFactory.buildTransaction;
+import static at.nicoleperak.client.TransactionTileFactory.buildTransactionTile;
 import static at.nicoleperak.shared.Category.CategoryType.Expense;
 import static at.nicoleperak.shared.Category.CategoryType.Income;
-import static java.time.format.DateTimeFormatter.ofLocalizedDate;
-import static java.time.format.FormatStyle.MEDIUM;
-
 
 public class FinancialAccountDetailsScreenController implements Initializable {
 
@@ -254,49 +253,13 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             for (Transaction transaction : transactions) {
                 FXMLLoader transactionTileLoader = new FXMLLoader();
                 transactionTileLoader.setLocation(getClass().getResource(TRANSACTION_TILE.getLocation()));
-                Parent transactionTile = buildTransactionTile(transaction, transactionTileLoader);
+                Parent transactionTile = buildTransactionTile(transaction, transactionTileLoader, transactionsPane);
                 transactionsPane.getChildren().add(transactionTile);
             }
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
             // TODO for later: Alertlabel?
         }
-    }
-
-    private void setLabels() {
-        financialAccountTitleLabel.setText(selectedFinancialAccount.getTitle().toUpperCase());
-        balanceLabel.setText(formatBalance(selectedFinancialAccount.getBalance()));
-        userLabel.setText(Client.getLoggedInUser().getUsername());
-    }
-
-    private void redirectToFinancialAccountsOverviewScreen() {
-        try {
-            Scene scene = loadScene(FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN);
-            Client.getStage().setScene(scene);
-        } catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
-        }
-    }
-
-    public Parent buildTransactionTile(Transaction transaction, FXMLLoader loader) throws IOException {
-        Parent transactionTile = loader.load();
-        TransactionTileController controller = loader.getController();
-        controller
-                .getTransactionDateLabel()
-                .setText(transaction.getDate().format(ofLocalizedDate(MEDIUM).withLocale(Locale.US)).toUpperCase());
-        controller
-                .getTransactionPartnerLabel()
-                .setText(transaction.getTransactionPartner().toUpperCase());
-        controller
-                .getTransactionDescriptionLabel()
-                .setText(transaction.getDescription().toUpperCase());
-        controller.getTransactionAmountLabel()
-                .setText(formatBalance(transaction.getAmount()));
-        controller
-                .setTransaction(transaction);
-        controller
-                .setTransactionsPane(transactionsPane);
-        return transactionTile;
     }
 
     private void showCreateTransactionDialog() {
@@ -322,15 +285,13 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
-    private static Transaction buildTransaction(TransactionDialogController formController) {
-        LocalDate date = formController.getDatePicker().getValue();
-        String transactionPartner = formController.getTransactionPartnerField().getText();
-        String description = formController.getDescriptionField().getText();
-        Category category = (Category) formController.getCategoryComboBox().getSelectionModel().getSelectedItem();
-        String amountString = convertIntoParsableDecimal(formController.getAmountField().getText());
-        BigDecimal amount = new BigDecimal(formatAmount(amountString, category));
-        String note = formController.getNoteArea().getText();
-        return new Transaction(null, description, amount, date, category, transactionPartner, note, false);
+    private void redirectToFinancialAccountsOverviewScreen() {
+        try {
+            Scene scene = loadScene(FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN);
+            Client.getStage().setScene(scene);
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+        }
     }
 
     public static void reloadFinancialAccountDetailsScreen() {
@@ -360,6 +321,12 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
         return jsonb.fromJson(jsonResponse, CategoryList.class);
+    }
+
+    private void setLabels() {
+        financialAccountTitleLabel.setText(selectedFinancialAccount.getTitle().toUpperCase());
+        balanceLabel.setText(formatBalance(selectedFinancialAccount.getBalance()));
+        userLabel.setText(Client.getLoggedInUser().getUsername());
     }
 
     private void setComboBoxes() {

@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.FXMLLocation.CREATE_FINANCIAL_ACCOUNT_TILE;
 import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNT_TILE;
-import static at.nicoleperak.client.Format.formatBalance;
+import static at.nicoleperak.client.FinancialAccountTileFactory.buildFinancialAccountTile;
 
 public class FinancialAccountsOverviewScreenController implements Initializable {
 
@@ -78,17 +78,4 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
         financialAccountsTilePane.getChildren().add(createAccountTile);
     }
 
-    private static Parent buildFinancialAccountTile(FinancialAccount financialAccount, FXMLLoader loader) throws IOException {
-        Parent accountTile = loader.load();
-        FinancialAccountTileController controller = loader.getController();
-        controller
-                .getFinancialAccountBalanceLabel()
-                .setText(formatBalance(financialAccount.getBalance()));
-        controller
-                .getFinancialAccountTitleLabel()
-                .setText(financialAccount.getTitle());
-        controller
-                .setFinancialAccount(financialAccount);
-        return accountTile;
-    }
 }
