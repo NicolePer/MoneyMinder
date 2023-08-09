@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 
 import static at.nicoleperak.client.FXMLLocation.TRANSACTION_DETAILS_TILE;
-import static at.nicoleperak.client.TransactionDetailsTileFactory.buildTransactionDetailsTile;
+import static at.nicoleperak.client.factories.TransactionDetailsTileFactory.buildTransactionDetailsTile;
 
 public class TransactionTileController {
 

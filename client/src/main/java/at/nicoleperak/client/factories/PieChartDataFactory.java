@@ -1,4 +1,4 @@
-package at.nicoleperak.client;
+package at.nicoleperak.client.factories;
 
 import at.nicoleperak.shared.Category;
 import at.nicoleperak.shared.Transaction;

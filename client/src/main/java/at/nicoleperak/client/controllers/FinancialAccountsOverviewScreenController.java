@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.FXMLLocation.CREATE_FINANCIAL_ACCOUNT_TILE;
 import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNT_TILE;
-import static at.nicoleperak.client.FinancialAccountTileFactory.buildFinancialAccountTile;
+import static at.nicoleperak.client.factories.FinancialAccountTileFactory.buildFinancialAccountTile;
 
 public class FinancialAccountsOverviewScreenController implements Initializable {
 

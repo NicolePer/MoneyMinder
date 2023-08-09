@@ -22,7 +22,7 @@ import java.util.Optional;
 
 import static at.nicoleperak.client.FXMLLocation.*;
 import static at.nicoleperak.client.Format.*;
-import static at.nicoleperak.client.TransactionTileFactory.buildTransactionTile;
+import static at.nicoleperak.client.factories.TransactionTileFactory.buildTransactionTile;
 import static at.nicoleperak.client.controllers.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
 
 public class TransactionDetailsTileController {

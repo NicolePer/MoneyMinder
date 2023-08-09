@@ -9,4 +9,6 @@ module client {
     opens at.nicoleperak.client to javafx.fxml;
     exports at.nicoleperak.client.controllers;
     opens at.nicoleperak.client.controllers to javafx.fxml;
+    exports at.nicoleperak.client.factories;
+    opens at.nicoleperak.client.factories to javafx.fxml;
 }

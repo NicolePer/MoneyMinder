@@ -1,6 +1,7 @@
 package at.nicoleperak.client.controllers;
 
 import at.nicoleperak.client.*;
+import at.nicoleperak.client.factories.PieChartDataFactory;
 import at.nicoleperak.shared.Category;
 import at.nicoleperak.shared.CategoryList;
 import at.nicoleperak.shared.FinancialAccount;
@@ -37,8 +38,8 @@ import java.util.*;
 import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.*;
 import static at.nicoleperak.client.Format.*;
-import static at.nicoleperak.client.TransactionFactory.buildTransaction;
-import static at.nicoleperak.client.TransactionTileFactory.buildTransactionTile;
+import static at.nicoleperak.client.factories.TransactionFactory.buildTransaction;
+import static at.nicoleperak.client.factories.TransactionTileFactory.buildTransactionTile;
 import static at.nicoleperak.shared.Category.CategoryType.Expense;
 import static at.nicoleperak.shared.Category.CategoryType.Income;
 
@@ -58,8 +59,12 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     private Label balanceLabel;
+
     @FXML
     private CategoryAxis categoryAxis;
+
+    @FXML
+    private VBox collaboratorsVBox;
 
     @FXML
     private BarChart<String, Number> barChart;

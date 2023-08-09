@@ -1,4 +1,4 @@
-package at.nicoleperak.client;
+package at.nicoleperak.client.factories;
 
 import at.nicoleperak.client.controllers.TransactionTileController;
 import at.nicoleperak.shared.Transaction;
