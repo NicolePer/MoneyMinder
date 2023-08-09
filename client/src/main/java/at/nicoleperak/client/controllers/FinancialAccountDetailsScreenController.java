@@ -1,15 +1,14 @@
 package at.nicoleperak.client.controllers;
 
-import at.nicoleperak.client.Client;
-import at.nicoleperak.client.ClientException;
-import at.nicoleperak.client.ServiceFunctions;
-import at.nicoleperak.client.Validation;
+import at.nicoleperak.client.*;
 import at.nicoleperak.shared.Category;
 import at.nicoleperak.shared.CategoryList;
 import at.nicoleperak.shared.FinancialAccount;
 import at.nicoleperak.shared.Transaction;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,8 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.PieChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -32,14 +30,17 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.TextStyle;
 import java.util.*;
 
 import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.*;
 import static at.nicoleperak.client.Format.*;
+import static at.nicoleperak.shared.Category.CategoryType.Expense;
+import static at.nicoleperak.shared.Category.CategoryType.Income;
 import static java.time.format.DateTimeFormatter.ofLocalizedDate;
 import static java.time.format.FormatStyle.MEDIUM;
-
 
 
 public class FinancialAccountDetailsScreenController implements Initializable {
@@ -58,9 +59,11 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     private Label balanceLabel;
+    @FXML
+    private CategoryAxis categoryAxis;
 
     @FXML
-    private BarChart<?, ?> barChart;
+    private BarChart<String, Number> barChart;
 
     @FXML
     private ImageView downloadIcon;
@@ -93,7 +96,16 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private MenuButton menuButton;
 
     @FXML
-    private PieChart pieCHart;
+    private PieChart pieChart;
+
+    @FXML
+    private ToggleGroup pieChartToggleGroup;
+
+    @FXML
+    private RadioButton incomeRadioButton;
+
+    @FXML
+    private RadioButton expensesRadioButton;
 
     @FXML
     private ImageView searchIcon;
@@ -122,6 +134,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         showTransactions(selectedFinancialAccount.getTransactions());
         setLabels();
         setComboBoxes();
+        setPieChart();
+        resetPieChartOnChangesOfPieChartToggleGroup();
+        setBarChart(6);
     }
 
     @FXML
@@ -165,20 +180,22 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     void onResetFiltersButtonClicked(ActionEvent event) {
-      reloadFinancialAccountDetailsScreen();
+        reloadFinancialAccountDetailsScreen();
     }
 
     @FXML
     void onEnterKeyTypedInSearchBar(KeyEvent event) {
-        if (event.getCode().equals(KeyCode.ENTER)) { search(); }
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            searchTransactions();
+        }
     }
 
     @FXML
     void onSearchIconClicked(MouseEvent event) {
-        search();
+        searchTransactions();
     }
 
-    private void search() {
+    private void searchTransactions() {
         String query = searchField.getText();
         List<Transaction> filteredTransactionList = new ArrayList<>();
         List<String> searchTerms = List.of(query.toLowerCase().split("[\\s.,+]+"));
@@ -354,5 +371,52 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                 .distinct().toList());
         categoryComboBox.setItems(categoryObservableList);
         transactionTypeComboBox.setItems(typeObservableList);
+    }
+
+    private void setPieChart() {
+        Category.CategoryType categoryType = pieChartToggleGroup.getSelectedToggle()
+                .equals(incomeRadioButton) ? Income : Expense;
+        pieChart.setData(PieChartDataFactory.buildPieChartData(selectedFinancialAccount.getTransactions(), categoryType));
+    }
+
+    private void resetPieChartOnChangesOfPieChartToggleGroup() {
+        pieChartToggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override
+            public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+                setPieChart();
+            }
+        });
+    }
+
+    private void setBarChart(int numberOfMonths) {
+        ObservableList<String> months = FXCollections.observableArrayList();
+        List<Transaction> transactionList = selectedFinancialAccount.getTransactions();
+        XYChart.Series<String, Number> incomeSeries = new XYChart.Series<>();
+        incomeSeries.setName("Income");
+        XYChart.Series<String, Number> expenseSeries = new XYChart.Series<>();
+        expenseSeries.setName("Expenses");
+        for (int i = 0; i < numberOfMonths; i++) {
+            int currentMonthValue = LocalDate.now().getMonthValue() - i;
+            List<Transaction> monthTransactionList = transactionList.stream()
+                    .filter(transaction ->
+                            transaction.getDate().getMonthValue() == currentMonthValue)
+                    .toList();
+            BigDecimal sumIncome = new BigDecimal(0);
+            BigDecimal sumExpenses = new BigDecimal(0);
+            months.add(Month.of(currentMonthValue).getDisplayName(TextStyle.FULL, Locale.US));
+            for (Transaction transaction : monthTransactionList) {
+                BigDecimal amount = transaction.getAmount().abs();
+                if (transaction.getCategory().getType().equals(Income)) {
+                    sumIncome = sumIncome.add(amount);
+                } else {
+                    sumExpenses = sumExpenses.add(amount);
+                }
+            }
+            incomeSeries.getData().add(new XYChart.Data<>(Month.of(currentMonthValue).getDisplayName(TextStyle.FULL, Locale.US), sumIncome.doubleValue()));
+            expenseSeries.getData().add(new XYChart.Data<>(Month.of(currentMonthValue).getDisplayName(TextStyle.FULL, Locale.US), sumExpenses.doubleValue()));
+        }
+        barChart.getData().addAll(incomeSeries, expenseSeries);
+        FXCollections.reverse(months);
+        categoryAxis.setCategories(months);
     }
 }

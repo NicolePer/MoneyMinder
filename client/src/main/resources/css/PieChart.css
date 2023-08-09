@@ -1,0 +1,38 @@
+.chart-pie-label {
+    -fx-font-family: "Source Sans 3 Light";
+    -fx-fill: #3A6A95;
+}
+
+
+.chart-legend {
+    -fx-font-family: "Source Sans 3 Medium";
+    -fx-fill:  #3A6A95;
+    -fx-background-color: transparent;
+}
+
+.chart-legend-item{
+    -fx-text-fill: #3A6A95;
+}
+
+.data0.chart-pie { -fx-pie-color: #749AC1; }
+.data1.chart-pie { -fx-pie-color: #813076; }
+.data2.chart-pie { -fx-pie-color: #523aa1; }
+.data3.chart-pie { -fx-pie-color: #ad8787; }
+.data4.chart-pie { -fx-pie-color: #b4afdc; }
+.data5.chart-pie { -fx-pie-color: #3d8860; }
+.data6.chart-pie { -fx-pie-color: #3cd5e2; }
+.data7.chart-pie { -fx-pie-color: #abefab; }
+.data8.chart-pie { -fx-pie-color: #6e97b1; }
+.data9.chart-pie { -fx-pie-color: #779d68; }
+.data10.chart-pie { -fx-pie-color: #437860; }
+.data11.chart-pie { -fx-pie-color: #720958; }
+.data12.chart-pie { -fx-pie-color: #bbbf61; }
+.data13.chart-pie { -fx-pie-color: #fa78a5; }
+.data14.chart-pie { -fx-pie-color: #1319b6; }
+.data15.chart-pie { -fx-pie-color: #fdbc12; }
+.data16.chart-pie { -fx-pie-color: #b3a893; }
+.data17.chart-pie { -fx-pie-color: #ba425c; }
+.data18.chart-pie { -fx-pie-color: #8bf3fc; }
+.data19.chart-pie { -fx-pie-color: #2bb02d; }
+.data20.chart-pie { -fx-pie-color: #94afde; }
+
