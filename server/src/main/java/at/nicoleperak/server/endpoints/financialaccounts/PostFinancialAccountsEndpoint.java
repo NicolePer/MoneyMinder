@@ -9,7 +9,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 
-import static at.nicoleperak.server.Database.*;
+import static at.nicoleperak.server.databaseoperations.FinancialAccountsTableOperations.insertFinancialAccount;
 import static at.nicoleperak.server.endpoints.AuthUtils.authenticate;
 import static at.nicoleperak.server.endpoints.EndpointUtils.*;
 import static at.nicoleperak.server.endpoints.HttpMethod.POST;

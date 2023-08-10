@@ -20,7 +20,7 @@ import java.util.Optional;
 import static at.nicoleperak.server.endpoints.EndpointUtils.jsonb;
 import static at.nicoleperak.server.endpoints.EndpointUtils.setResponse;
 
-public class Handler implements HttpHandler {
+public class EndpointsHandler implements HttpHandler {
     private final List<Endpoint> endpoints = List.of(
             new PostUsersEndpoint(),
             new GetUsersEndpoint(),

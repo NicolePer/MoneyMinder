@@ -1,0 +1,151 @@
+package at.nicoleperak.server.databaseoperations;
+
+import at.nicoleperak.server.ServerException;
+import at.nicoleperak.shared.Category;
+import at.nicoleperak.shared.Transaction;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static at.nicoleperak.server.databaseoperations.CategoryTableOperations.*;
+import static at.nicoleperak.server.databaseoperations.DatabaseUtils.*;
+import static java.sql.DriverManager.getConnection;
+
+public class TransactionsTableOperations {
+
+    protected static final String TRANSACTION_TABLE = "transactions";
+    private static final String TRANSACTION_ID = "id";
+    private static final String TRANSACTION_DESCRIPTION = "description";
+    protected static final String TRANSACTION_AMOUNT = "amount";
+    private static final String TRANSACTION_DATE = "transaction_date";
+    private static final String TRANSACTION_PARTNER = "transaction_partner";
+    private static final String TRANSACTION_CATEGORY_ID = "category_id";
+    private static final String TRANSACTION_NOTE = "note";
+    private static final String TRANSACTION_ADDED_AUTOMATICALLY = "added_automatically";
+    protected static final String TRANSACTION_FINANCIAL_ACCOUNT_ID = "financial_account_id";
+
+    public static List<Transaction> selectListOfTransactions(Long financialAccountId) throws ServerException {
+        String select = "SELECT t." + TRANSACTION_ID + " AS transaction_id, "
+                + TRANSACTION_DESCRIPTION + ", " + TRANSACTION_AMOUNT + ", "
+                + TRANSACTION_DATE + ", " + TRANSACTION_PARTNER + ", "
+                + TRANSACTION_NOTE + ", " + TRANSACTION_ADDED_AUTOMATICALLY
+                + ", t." + TRANSACTION_CATEGORY_ID
+                + ", c." + CATEGORY_TITLE + " AS category_title"
+                + ", c." + CATEGORY_TYPE
+                + " FROM " + TRANSACTION_TABLE + " t"
+                + " INNER JOIN " + CATEGORY_TABLE + " c ON"
+                + " c." + CATEGORY_ID + " = t." + TRANSACTION_CATEGORY_ID
+                + " WHERE t." + TRANSACTION_FINANCIAL_ACCOUNT_ID + " = ?"
+                + " ORDER BY " + TRANSACTION_DATE + " DESC"
+                + ", t. " + TRANSACTION_ID + " DESC";
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(select)) {
+            stmt.setLong(1, financialAccountId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                List<Transaction> transactionList = new ArrayList<>();
+                while (rs.next()) {
+                    transactionList.add(new Transaction(rs.getLong("transaction_id"),
+                            rs.getString(TRANSACTION_DESCRIPTION),
+                            rs.getBigDecimal(TRANSACTION_AMOUNT),
+                            rs.getDate(TRANSACTION_DATE).toLocalDate(),
+                            new Category(rs.getLong(TRANSACTION_CATEGORY_ID),
+                                    rs.getString("category_title"),
+                                    Category.CategoryType.values()[rs.getShort(CATEGORY_TYPE)]),
+                            rs.getString(TRANSACTION_PARTNER),
+                            rs.getString(TRANSACTION_NOTE),
+                            rs.getBoolean(TRANSACTION_ADDED_AUTOMATICALLY)));
+                }
+                return transactionList;
+            }
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not select list of transactions", e);
+        }
+    }
+
+    public static void insertTransaction(Transaction transaction, Long financialAccountId) throws ServerException {
+        String insert = "INSERT INTO " + TRANSACTION_TABLE
+                + " (" + TRANSACTION_DESCRIPTION + "," + TRANSACTION_AMOUNT + ","
+                + TRANSACTION_DATE + "," + TRANSACTION_PARTNER + ","
+                + TRANSACTION_CATEGORY_ID + "," + TRANSACTION_NOTE + ","
+                + TRANSACTION_ADDED_AUTOMATICALLY + "," + TRANSACTION_FINANCIAL_ACCOUNT_ID
+                + ") VALUES(" +
+                "?," + // 1 DESCRIPTION
+                "?," + // 2 AMOUNT
+                "?," + // 3 DATE
+                "?," + // 4 TRANSACTION PARTNER
+                "?," + // 5 CATEGORY_ID
+                "?," + // 6 NOTE
+                "?," + // 7 ADDED_AUTOMATICALLY
+                "?)";  // 8 FINANCIAL_ACCOUNT_ID
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(insert)) {
+            stmt.setString(1, transaction.getDescription());
+            stmt.setBigDecimal(2, transaction.getAmount());
+            stmt.setDate(3, Date.valueOf(transaction.getDate()));
+            stmt.setString(4, transaction.getTransactionPartner());
+            stmt.setLong(5, transaction.getCategory().getId());
+            stmt.setString(6, transaction.getNote());
+            stmt.setBoolean(7, transaction.isAddedAutomatically());
+            stmt.setLong(8, financialAccountId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not create transaction" + transaction, e);
+        }
+    }
+
+    public static Long selectFinancialAccountId(Long transactionId) throws ServerException {
+        String select = "SELECT " + TRANSACTION_FINANCIAL_ACCOUNT_ID + " FROM " + TRANSACTION_TABLE
+                + " WHERE " + TRANSACTION_ID + " = ?";
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(select)) {
+            stmt.setLong(1, transactionId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(TRANSACTION_FINANCIAL_ACCOUNT_ID);
+                } else {
+                    throw new ServerException(404, "Transaction with id " + transactionId + " does not exist");
+                }
+            }
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not select financial account id of transaction", e);
+        }
+    }
+
+    public static void updateTransaction(Transaction transaction, Long transactionId) throws ServerException {
+        String update = "UPDATE " + TRANSACTION_TABLE + " SET "
+                + TRANSACTION_DESCRIPTION + " = ?, "            // 1 DESCRIPTION
+                + TRANSACTION_AMOUNT + " = ?, "                 // 2 AMOUNT
+                + TRANSACTION_DATE + " = ?, "                   // 3 DATE
+                + TRANSACTION_PARTNER + " = ?,"                 // 4 TRANSACTION PARTNER
+                + TRANSACTION_CATEGORY_ID + "= ?, "             // 5 CATEGORY ID
+                + TRANSACTION_NOTE + "= ? "                     // 6 NOTE
+                + " WHERE " + TRANSACTION_ID + " = ?";          // 7 TRANSACTION ID
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(update)) {
+            stmt.setString(1, transaction.getDescription());
+            stmt.setBigDecimal(2, transaction.getAmount());
+            stmt.setDate(3, Date.valueOf(transaction.getDate()));
+            stmt.setString(4, transaction.getTransactionPartner());
+            stmt.setLong(5, transaction.getCategory().getId());
+            stmt.setString(6, transaction.getNote());
+            stmt.setLong(7, transactionId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not update " + transaction, e);
+        }
+    }
+
+    public static void deleteTransaction(Long transactionId) throws ServerException {
+        String delete = "DELETE FROM " + TRANSACTION_TABLE +
+                " WHERE " + TRANSACTION_ID + " = ?";
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(delete)) {
+            stmt.setLong(1, transactionId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not delete transaction", e);
+        }
+    }
+
+}

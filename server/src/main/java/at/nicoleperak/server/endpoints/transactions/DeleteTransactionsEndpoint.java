@@ -1,7 +1,7 @@
 package at.nicoleperak.server.endpoints.transactions;
 
-import at.nicoleperak.server.Database;
 import at.nicoleperak.server.ServerException;
+import at.nicoleperak.server.databaseoperations.TransactionsTableOperations;
 import at.nicoleperak.server.endpoints.Endpoint;
 import at.nicoleperak.server.endpoints.HttpMethod;
 import at.nicoleperak.shared.User;
@@ -30,8 +30,8 @@ public class DeleteTransactionsEndpoint implements Endpoint {
 
     private void deleteTransaction(HttpExchange exchange, Long transactionId) throws ServerException {
         User currentUser = authenticate(exchange);
-        Long financialAccountId = Database.selectFinancialAccountId(transactionId);
+        Long financialAccountId = TransactionsTableOperations.selectFinancialAccountId(transactionId);
         assertAuthenticatedUserIsOwnerOrCollaborator(currentUser.getId(), financialAccountId);
-        Database.deleteTransaction(transactionId);
+        TransactionsTableOperations.deleteTransaction(transactionId);
     }
 }

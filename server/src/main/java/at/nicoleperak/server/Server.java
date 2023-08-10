@@ -16,16 +16,18 @@ public class Server {
             InetSocketAddress addr = new InetSocketAddress(inet, 4712);
 
             HttpServer server = HttpServer.create(addr, 0);
-            server.createContext("/", new Handler());
+            server.createContext("/", new EndpointsHandler());
 
             server.setExecutor(Executors.newCachedThreadPool());
             server.start();
             System.out.println("server started - press enter to terminate");
+            //noinspection ResultOfMethodCallIgnored
             System.in.read();
             System.out.println("server terminated");
             server.stop(0);
             ((ExecutorService) server.getExecutor()).shutdown();
         } catch (IOException e) {
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
         }
     }

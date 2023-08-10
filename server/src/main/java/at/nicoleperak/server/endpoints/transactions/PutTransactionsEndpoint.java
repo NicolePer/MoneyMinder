@@ -9,7 +9,8 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 
-import static at.nicoleperak.server.Database.*;
+import static at.nicoleperak.server.databaseoperations.TransactionsTableOperations.selectFinancialAccountId;
+import static at.nicoleperak.server.databaseoperations.TransactionsTableOperations.updateTransaction;
 import static at.nicoleperak.server.endpoints.AuthUtils.assertAuthenticatedUserIsOwnerOrCollaborator;
 import static at.nicoleperak.server.endpoints.AuthUtils.authenticate;
 import static at.nicoleperak.server.endpoints.EndpointUtils.*;

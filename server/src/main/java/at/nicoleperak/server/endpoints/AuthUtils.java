@@ -13,7 +13,8 @@ import com.sun.net.httpserver.HttpExchange;
 import java.util.Base64;
 import java.util.List;
 
-import static at.nicoleperak.server.Database.*;
+import static at.nicoleperak.server.databaseoperations.FinancialAccountsTableOperations.selectOwnerAndCollaboratorsIdsOfFinancialAccount;
+import static at.nicoleperak.server.databaseoperations.UsersTableOperations.selectUser;
 
 public class AuthUtils {
 

@@ -7,7 +7,7 @@ import at.nicoleperak.shared.FinancialAccount;
 import at.nicoleperak.shared.User;
 import com.sun.net.httpserver.HttpExchange;
 
-import static at.nicoleperak.server.Database.*;
+import static at.nicoleperak.server.databaseoperations.FinancialAccountsTableOperations.selectFullFinancialAccount;
 import static at.nicoleperak.server.endpoints.AuthUtils.assertAuthenticatedUserIsOwnerOrCollaborator;
 import static at.nicoleperak.server.endpoints.AuthUtils.authenticate;
 import static at.nicoleperak.server.endpoints.EndpointUtils.*;

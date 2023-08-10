@@ -7,7 +7,7 @@ import at.nicoleperak.shared.Category;
 import at.nicoleperak.shared.CategoryList;
 import com.sun.net.httpserver.HttpExchange;
 
-import static at.nicoleperak.server.Database.selectCategoryList;
+import static at.nicoleperak.server.databaseoperations.CategoryTableOperations.selectCategoryList;
 import static at.nicoleperak.server.endpoints.AuthUtils.authenticate;
 import static at.nicoleperak.server.endpoints.EndpointUtils.*;
 import static at.nicoleperak.server.endpoints.HttpMethod.GET;
