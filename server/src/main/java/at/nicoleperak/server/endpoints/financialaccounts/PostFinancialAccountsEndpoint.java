@@ -1,6 +1,7 @@
 package at.nicoleperak.server.endpoints.financialaccounts;
 
 import at.nicoleperak.server.ServerException;
+import at.nicoleperak.server.database.CollaboratorsOperations;
 import at.nicoleperak.server.endpoints.Endpoint;
 import at.nicoleperak.server.endpoints.HttpMethod;
 import at.nicoleperak.shared.FinancialAccount;
@@ -9,7 +10,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 
-import static at.nicoleperak.server.databaseoperations.FinancialAccountsTableOperations.insertFinancialAccount;
+import static at.nicoleperak.server.database.FinancialAccountsOperations.insertFinancialAccount;
 import static at.nicoleperak.server.endpoints.AuthUtils.authenticate;
 import static at.nicoleperak.server.endpoints.EndpointUtils.*;
 import static at.nicoleperak.server.endpoints.HttpMethod.POST;
@@ -35,8 +36,11 @@ public class PostFinancialAccountsEndpoint implements Endpoint {
             String jsonString = new String(exchange.getRequestBody().readAllBytes());
             FinancialAccount financialAccount = jsonb.fromJson(jsonString, FinancialAccount.class);
             financialAccount.setOwner(currentUser);
-            //TODO for later: set user as Collaborator
-            insertFinancialAccount(financialAccount);
+            Long financialAccountId = insertFinancialAccount(financialAccount);
+            if (financialAccountId.equals(-1L)){
+                throw new ServerException(500, "Could not create financial account");
+            }
+            CollaboratorsOperations.insertCollaborator(currentUser.getId(),financialAccountId);
         } catch (IOException e) {
             throw new ServerException(400, "Could not read request body", e);
         }

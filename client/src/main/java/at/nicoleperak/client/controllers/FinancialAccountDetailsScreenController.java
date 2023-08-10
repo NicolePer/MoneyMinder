@@ -8,8 +8,6 @@ import at.nicoleperak.shared.FinancialAccount;
 import at.nicoleperak.shared.Transaction;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -35,6 +33,7 @@ import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.*;
 
+import static at.nicoleperak.client.Client.*;
 import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.*;
 import static at.nicoleperak.client.Format.*;
@@ -62,6 +61,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     @FXML
     private Label balanceLabel;
 
+
     @FXML
     private CategoryAxis categoryAxis;
 
@@ -84,10 +84,10 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private ImageView goBackButton;
 
     @FXML
-    private ImageView addCollaboratorsIcon;
+    private ImageView addCollaboratorIcon;
 
     @FXML
-    private ImageView deleteCollaboratorIcon;
+    private TextField collaboratorEmailTextField;
 
     @FXML
     private DatePicker dateFromDatePicker;
@@ -109,6 +109,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     private PieChart pieChart;
+
+    @FXML
+    private Label collaboratorAlertMessageLabel;
 
     @FXML
     private ToggleGroup pieChartToggleGroup;
@@ -141,7 +144,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.selectedFinancialAccount = Client.getSelectedFinancialAccount();
+        this.selectedFinancialAccount = getSelectedFinancialAccount();
         loadSelectedFinancialAccountDetails();
         showTransactions(selectedFinancialAccount.getTransactions());
         setLabels();
@@ -205,11 +208,25 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     @FXML
     void onLogoutMenuItemClicked(ActionEvent event) {
         redirectToWelcomeScreen();
+        setLoggedInUser(null);
+        setUserCredentials(null);
     }
 
     @FXML
     void onSearchIconClicked(MouseEvent event) {
         searchTransactions();
+    }
+
+    @FXML
+    void onAddCollaboratorIconClicked(MouseEvent event) {
+        String collaboratorEmail = collaboratorEmailTextField.getText();
+        try {
+            Validation.assertEmailIsValid(collaboratorEmail);
+            ServiceFunctions.post("financial_accounts/" + selectedFinancialAccount.getId() + "/collaborators", jsonb.toJson(collaboratorEmail), true);
+            reloadFinancialAccountDetailsScreen();
+        } catch (ClientException e) {
+            collaboratorAlertMessageLabel.setText(e.getMessage());
+        }
     }
 
     private void searchTransactions() {
@@ -306,7 +323,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     public static void reloadFinancialAccountDetailsScreen() {
         try {
             Scene scene = loadScene(FINANCIAL_ACCOUNT_DETAILS_SCREEN);
-            Client.getStage().setScene(scene);
+            getStage().setScene(scene);
         } catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
@@ -335,7 +352,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private void setLabels() {
         financialAccountTitleLabel.setText(selectedFinancialAccount.getTitle().toUpperCase());
         balanceLabel.setText(formatBalance(selectedFinancialAccount.getBalance()));
-        userLabel.setText(Client.getLoggedInUser().getUsername());
+        userLabel.setText(getLoggedInUser().getUsername());
     }
 
     private void setComboBoxes() {

@@ -9,9 +9,9 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 
-import static at.nicoleperak.server.databaseoperations.TransactionsTableOperations.selectFinancialAccountId;
-import static at.nicoleperak.server.databaseoperations.TransactionsTableOperations.updateTransaction;
-import static at.nicoleperak.server.endpoints.AuthUtils.assertAuthenticatedUserIsOwnerOrCollaborator;
+import static at.nicoleperak.server.Validation.assertAuthenticatedUserIsCollaborator;
+import static at.nicoleperak.server.database.TransactionsOperations.selectFinancialAccountId;
+import static at.nicoleperak.server.database.TransactionsOperations.updateTransaction;
 import static at.nicoleperak.server.endpoints.AuthUtils.authenticate;
 import static at.nicoleperak.server.endpoints.EndpointUtils.*;
 import static at.nicoleperak.server.endpoints.HttpMethod.PUT;
@@ -36,7 +36,7 @@ public class PutTransactionsEndpoint implements Endpoint {
         User currentUser = authenticate(exchange);
         try {
             Long financialAccountId = selectFinancialAccountId(transactionId);
-            assertAuthenticatedUserIsOwnerOrCollaborator(currentUser.getId(), financialAccountId);
+            assertAuthenticatedUserIsCollaborator(currentUser.getId(), financialAccountId);
             String jsonString = new String(exchange.getRequestBody().readAllBytes());
             Transaction transaction = jsonb.fromJson(jsonString, Transaction.class);
             updateTransaction(transaction, transactionId);

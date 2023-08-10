@@ -1,4 +1,4 @@
-package at.nicoleperak.server.databaseoperations;
+package at.nicoleperak.server.database;
 
 import at.nicoleperak.server.ServerException;
 import at.nicoleperak.shared.User;
@@ -8,15 +8,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static at.nicoleperak.server.databaseoperations.DatabaseUtils.*;
+import static at.nicoleperak.server.database.DatabaseUtils.*;
 import static java.sql.DriverManager.getConnection;
 
-public class UsersTableOperations {
+public class UsersOperations {
     protected static final String USER_TABLE = "users";
     protected static final String USER_ID = "id";
     protected static final String USER_NAME = "username";
     protected static final String USER_EMAIL = "email";
-    private static final String USER_PASSWORD_HASH = "password_hash";
+    protected static final String USER_PASSWORD_HASH = "password_hash";
 
     public static void insertUser(User user, String passwordHash) throws ServerException {
 

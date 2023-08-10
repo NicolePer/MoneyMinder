@@ -1,4 +1,4 @@
-package at.nicoleperak.server.databaseoperations;
+package at.nicoleperak.server.database;
 
 import at.nicoleperak.server.ServerException;
 import at.nicoleperak.shared.FinancialAccount;
@@ -10,37 +10,43 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
-import static at.nicoleperak.server.databaseoperations.DatabaseUtils.*;
-import static at.nicoleperak.server.databaseoperations.TransactionsTableOperations.*;
-import static at.nicoleperak.server.databaseoperations.UsersTableOperations.*;
+import static at.nicoleperak.server.database.DatabaseUtils.*;
+import static at.nicoleperak.server.database.TransactionsOperations.*;
+import static at.nicoleperak.server.database.UsersOperations.*;
 import static java.sql.DriverManager.getConnection;
 
-public class FinancialAccountsTableOperations {
-    private static final String FINANCIAL_ACCOUNT_TABLE = "financial_accounts";
-    private static final String FINANCIAL_ACCOUNT_ID = "id";
-    private static final String FINANCIAL_ACCOUNT_TITLE = "title";
-    private static final String FINANCIAL_ACCOUNT_DESCRIPTION = "description";
-    private static final String FINANCIAL_ACCOUNT_BALANCE = "balance";
-    private static final String FINANCIAL_ACCOUNT_OWNER_ID = "owner_user_id";
+public class FinancialAccountsOperations {
+    protected static final String FINANCIAL_ACCOUNT_TABLE = "financial_accounts";
+    protected static final String FINANCIAL_ACCOUNT_ID = "id";
+    protected static final String FINANCIAL_ACCOUNT_TITLE = "title";
+    protected static final String FINANCIAL_ACCOUNT_DESCRIPTION = "description";
+    protected static final String FINANCIAL_ACCOUNT_BALANCE = "balance";
+    protected static final String FINANCIAL_ACCOUNT_OWNER_ID = "owner_user_id";
 
-    public static void insertFinancialAccount(FinancialAccount financialAccount) throws ServerException {
+    public static Long insertFinancialAccount(FinancialAccount financialAccount) throws ServerException {
         String insert = "INSERT INTO " + FINANCIAL_ACCOUNT_TABLE
                 + " (" + FINANCIAL_ACCOUNT_TITLE + "," + FINANCIAL_ACCOUNT_DESCRIPTION
                 + "," + FINANCIAL_ACCOUNT_OWNER_ID + ") VALUES(" +
                 "?," + // 1 TITLE
                 "?," + // 2 DESCRIPTION
                 "?)";  // 3 OWNER ID
+        String[] returnId = { FINANCIAL_ACCOUNT_ID };
         try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
-             PreparedStatement stmt = conn.prepareStatement(insert)) {
+             PreparedStatement stmt = conn.prepareStatement(insert, returnId)) {
             stmt.setString(1, financialAccount.getTitle());
             stmt.setString(2, financialAccount.getDescription());
             stmt.setLong(3, financialAccount.getOwner().getId());
             stmt.executeUpdate();
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
         } catch (SQLException e) {
             throw new ServerException(500, "Could not create financial account", e);
         }
+        return -1L;
     }
 
     public static FinancialAccount selectFullFinancialAccount(Long financialAccountId) throws ServerException {
@@ -118,22 +124,22 @@ public class FinancialAccountsTableOperations {
         }
     }
 
-    public static List<Long> selectOwnerAndCollaboratorsIdsOfFinancialAccount(Long financialAccountId) throws ServerException {
+    public static Long selectOwnerIdOfFinancialAccount(Long financialAccountId) throws ServerException {
         String select = "SELECT " + FINANCIAL_ACCOUNT_OWNER_ID + " FROM " + FINANCIAL_ACCOUNT_TABLE
                 + " WHERE " + FINANCIAL_ACCOUNT_ID + " = ?";
         try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(select)) {
             stmt.setLong(1, financialAccountId);
             try (ResultSet rs = stmt.executeQuery()) {
-                List<Long> userIds = new ArrayList<>();
-                while (rs.next()) {
-                    userIds.add(rs.getLong(FINANCIAL_ACCOUNT_OWNER_ID));
-                    //TODO for later: Expand for Collaborators
+                if (rs.next()) {
+                    return rs.getLong(FINANCIAL_ACCOUNT_OWNER_ID);
+                } else {
+                    throw new ServerException(404, "Financial account with id " + financialAccountId + " does not exist");
                 }
-                return userIds;
             }
         } catch (SQLException e) {
-            throw new ServerException(500, "Could not select user ids of financial account", e);
+            throw new ServerException(500, "Could not select owner id of financial account", e);
         }
     }
+
 }

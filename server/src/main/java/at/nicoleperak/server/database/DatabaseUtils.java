@@ -1,4 +1,4 @@
-package at.nicoleperak.server.databaseoperations;
+package at.nicoleperak.server.database;
 
 public class DatabaseUtils {
     protected static final String DB_LOCATION = "//localhost:5432/postgres";

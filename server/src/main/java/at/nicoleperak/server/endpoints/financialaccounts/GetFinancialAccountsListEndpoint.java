@@ -7,7 +7,7 @@ import at.nicoleperak.shared.FinancialAccountsList;
 import at.nicoleperak.shared.User;
 import com.sun.net.httpserver.HttpExchange;
 
-import static at.nicoleperak.server.databaseoperations.FinancialAccountsTableOperations.selectListOfFinancialAccountOverviews;
+import static at.nicoleperak.server.database.FinancialAccountsOperations.selectListOfFinancialAccountOverviews;
 import static at.nicoleperak.server.endpoints.AuthUtils.authenticate;
 import static at.nicoleperak.server.endpoints.EndpointUtils.*;
 import static at.nicoleperak.server.endpoints.EndpointUtils.getPathSegments;

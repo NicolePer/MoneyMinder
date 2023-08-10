@@ -1,4 +1,4 @@
-package at.nicoleperak.server.databaseoperations;
+package at.nicoleperak.server.database;
 
 import at.nicoleperak.server.ServerException;
 import at.nicoleperak.shared.Category;
@@ -8,21 +8,21 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static at.nicoleperak.server.databaseoperations.CategoryTableOperations.*;
-import static at.nicoleperak.server.databaseoperations.DatabaseUtils.*;
+import static at.nicoleperak.server.database.CategoryOperations.*;
+import static at.nicoleperak.server.database.DatabaseUtils.*;
 import static java.sql.DriverManager.getConnection;
 
-public class TransactionsTableOperations {
+public class TransactionsOperations {
 
     protected static final String TRANSACTION_TABLE = "transactions";
-    private static final String TRANSACTION_ID = "id";
-    private static final String TRANSACTION_DESCRIPTION = "description";
+    protected static final String TRANSACTION_ID = "id";
+    protected static final String TRANSACTION_DESCRIPTION = "description";
     protected static final String TRANSACTION_AMOUNT = "amount";
-    private static final String TRANSACTION_DATE = "transaction_date";
-    private static final String TRANSACTION_PARTNER = "transaction_partner";
-    private static final String TRANSACTION_CATEGORY_ID = "category_id";
-    private static final String TRANSACTION_NOTE = "note";
-    private static final String TRANSACTION_ADDED_AUTOMATICALLY = "added_automatically";
+    protected static final String TRANSACTION_DATE = "transaction_date";
+    protected static final String TRANSACTION_PARTNER = "transaction_partner";
+    protected static final String TRANSACTION_CATEGORY_ID = "category_id";
+    protected static final String TRANSACTION_NOTE = "note";
+    protected static final String TRANSACTION_ADDED_AUTOMATICALLY = "added_automatically";
     protected static final String TRANSACTION_FINANCIAL_ACCOUNT_ID = "financial_account_id";
 
     public static List<Transaction> selectListOfTransactions(Long financialAccountId) throws ServerException {

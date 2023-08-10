@@ -11,10 +11,8 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 
 import java.util.Base64;
-import java.util.List;
 
-import static at.nicoleperak.server.databaseoperations.FinancialAccountsTableOperations.selectOwnerAndCollaboratorsIdsOfFinancialAccount;
-import static at.nicoleperak.server.databaseoperations.UsersTableOperations.selectUser;
+import static at.nicoleperak.server.database.UsersOperations.selectUser;
 
 public class AuthUtils {
 
@@ -37,13 +35,6 @@ public class AuthUtils {
         assertPasswordMatchesPasswordHash(password, currentUser.getPassword());
         currentUser.setPassword(null);
         return currentUser;
-    }
-
-    public static void assertAuthenticatedUserIsOwnerOrCollaborator(Long userId, Long financialAccountId) throws ServerException {
-        List<Long> userIds = selectOwnerAndCollaboratorsIdsOfFinancialAccount(financialAccountId);
-        if (!userIds.contains(userId)) {
-            throw new ServerException(401, "User is not authorized to access this financial account");
-        }
     }
 
     private static void assertPasswordMatchesPasswordHash(String password, String passwordHash) throws ServerException {

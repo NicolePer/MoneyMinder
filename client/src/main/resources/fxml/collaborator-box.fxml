@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox fx:id="collaboratorBox" alignment="CENTER_LEFT" spacing="10.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.controllers.collaboratorBoxController">
+   <Label fx:id="collaboratorLabel" text="User1234" textFill="#fbf9f8">
+      <font>
+         <Font name="Source Sans 3 Medium" size="14.0" />
+      </font>
+   </Label>
+   <ImageView fx:id="deleteCollaboratorIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor>
+      <Image url="@../icons/delete-icon-white.png" />
+   </ImageView>
+</HBox>

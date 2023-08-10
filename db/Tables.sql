@@ -88,7 +88,8 @@ CREATE TABLE financial_goals (
 CREATE TABLE collaborators (
  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
  financial_account_id BIGINT REFERENCES financial_accounts(id) NOT NULL,
- user_id BIGINT REFERENCES users(id) NOT NULL
+ user_id BIGINT REFERENCES users(id) NOT NULL,
+ UNIQUE (financial_account_id, user_id)
 );
 
 

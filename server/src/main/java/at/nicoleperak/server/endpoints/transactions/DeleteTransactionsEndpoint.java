@@ -1,13 +1,13 @@
 package at.nicoleperak.server.endpoints.transactions;
 
 import at.nicoleperak.server.ServerException;
-import at.nicoleperak.server.databaseoperations.TransactionsTableOperations;
+import at.nicoleperak.server.database.TransactionsOperations;
 import at.nicoleperak.server.endpoints.Endpoint;
 import at.nicoleperak.server.endpoints.HttpMethod;
 import at.nicoleperak.shared.User;
 import com.sun.net.httpserver.HttpExchange;
 
-import static at.nicoleperak.server.endpoints.AuthUtils.assertAuthenticatedUserIsOwnerOrCollaborator;
+import static at.nicoleperak.server.Validation.assertAuthenticatedUserIsCollaborator;
 import static at.nicoleperak.server.endpoints.AuthUtils.authenticate;
 import static at.nicoleperak.server.endpoints.EndpointUtils.*;
 import static at.nicoleperak.server.endpoints.HttpMethod.DELETE;
@@ -30,8 +30,8 @@ public class DeleteTransactionsEndpoint implements Endpoint {
 
     private void deleteTransaction(HttpExchange exchange, Long transactionId) throws ServerException {
         User currentUser = authenticate(exchange);
-        Long financialAccountId = TransactionsTableOperations.selectFinancialAccountId(transactionId);
-        assertAuthenticatedUserIsOwnerOrCollaborator(currentUser.getId(), financialAccountId);
-        TransactionsTableOperations.deleteTransaction(transactionId);
+        Long financialAccountId = TransactionsOperations.selectFinancialAccountId(transactionId);
+        assertAuthenticatedUserIsCollaborator(currentUser.getId(), financialAccountId);
+        TransactionsOperations.deleteTransaction(transactionId);
     }
 }

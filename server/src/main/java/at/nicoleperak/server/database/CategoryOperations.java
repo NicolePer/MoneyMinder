@@ -1,4 +1,4 @@
-package at.nicoleperak.server.databaseoperations;
+package at.nicoleperak.server.database;
 
 import at.nicoleperak.server.ServerException;
 import at.nicoleperak.shared.Category;
@@ -10,10 +10,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import static at.nicoleperak.server.databaseoperations.DatabaseUtils.*;
+import static at.nicoleperak.server.database.DatabaseUtils.*;
 import static java.sql.DriverManager.getConnection;
 
-public class CategoryTableOperations {
+public class CategoryOperations {
     protected static final String CATEGORY_TABLE = "categories";
     protected static final String CATEGORY_ID = "id";
     protected static final String CATEGORY_TITLE = "title";

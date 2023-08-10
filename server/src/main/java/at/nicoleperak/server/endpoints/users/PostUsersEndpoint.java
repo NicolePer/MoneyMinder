@@ -8,7 +8,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 import java.io.IOException;
 
-import static at.nicoleperak.server.databaseoperations.UsersTableOperations.*;
+import static at.nicoleperak.server.database.UsersOperations.*;
 import static at.nicoleperak.server.endpoints.AuthUtils.createPasswordHash;
 import static at.nicoleperak.server.endpoints.EndpointUtils.*;
 import static at.nicoleperak.server.endpoints.HttpMethod.POST;

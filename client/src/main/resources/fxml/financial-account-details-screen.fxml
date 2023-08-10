@@ -102,20 +102,19 @@
                      <font>
                         <Font name="Source Sans 3 Regular" size="15.0" />
                      </font>
-                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"
-                                 style="-fx-background-color: #749AC1;">
+                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #749AC1;">
                         <VBox fx:id="collaboratorsVBox" spacing="10.0">
                            <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding>
                            <HBox spacing="5.0">
-                              <TextField style="-fx-background-color: #fbf9f8;" text="E-Mail">
+                              <TextField fx:id="collaboratorEmailTextField" style="-fx-background-color: #fbf9f8;" text="E-Mail">
                                  <font>
-                                    <Font name="Source Sans 3 Medium" size="14.0"/>
+                                    <Font name="Source Sans 3 Medium" size="14.0" />
                                  </font>
                               </TextField>
-                              <ImageView fx:id="addCollaboratorsIcon" fitHeight="25.0" fitWidth="25.0"
-                                         onMouseClicked="#onSearchIconClicked" pickOnBounds="true"
+                              <ImageView fx:id="addCollaboratorIcon" fitHeight="25.0" fitWidth="25.0"
+                                         onMouseClicked="#onAddCollaboratorIconClicked" pickOnBounds="true"
                                          preserveRatio="true">
                                  <cursor>
                                     <Cursor fx:constant="HAND"/>
@@ -123,20 +122,15 @@
                                  <Image url="@../icons/add-icon-white.png"/>
                               </ImageView>
                            </HBox>
-                           <HBox alignment="CENTER_LEFT" layoutX="20.0" layoutY="20.0" spacing="10.0">
-                              <Label text="User1234" textFill="#fbf9f8">
+                           <HBox alignment="CENTER">
+                              <Label fx:id="collaboratorAlertMessageLabel" alignment="CENTER" textFill="WHITE">
                                  <font>
-                                    <Font name="Source Sans 3 Medium" size="14.0"/>
+                                    <Font name="Source Sans 3 Regular" size="13.0"/>
                                  </font>
+                                 <opaqueInsets>
+                                    <Insets/>
+                                 </opaqueInsets>
                               </Label>
-                              <ImageView fx:id="deleteCollaboratorIcon" fitHeight="15.0" fitWidth="15.0"
-                                         onMouseClicked="#onSearchIconClicked" pickOnBounds="true"
-                                         preserveRatio="true">
-                                 <cursor>
-                                    <Cursor fx:constant="HAND"/>
-                                 </cursor>
-                                 <Image url="@../icons/delete-icon-white.png"/>
-                              </ImageView>
                            </HBox>
                         </VBox>
                      </AnchorPane>
