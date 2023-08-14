@@ -2,10 +2,7 @@ package at.nicoleperak.client.controllers;
 
 import at.nicoleperak.client.*;
 import at.nicoleperak.client.factories.PieChartDataFactory;
-import at.nicoleperak.shared.Category;
-import at.nicoleperak.shared.CategoryList;
-import at.nicoleperak.shared.FinancialAccount;
-import at.nicoleperak.shared.Transaction;
+import at.nicoleperak.shared.*;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import javafx.collections.FXCollections;
@@ -39,6 +36,7 @@ import static at.nicoleperak.client.FXMLLocation.*;
 import static at.nicoleperak.client.Format.*;
 import static at.nicoleperak.client.Redirection.redirectToFinancialAccountsOverviewScreen;
 import static at.nicoleperak.client.Redirection.redirectToWelcomeScreen;
+import static at.nicoleperak.client.factories.CollaboratorBoxFactory.buildCollaboratorBox;
 import static at.nicoleperak.client.factories.TransactionFactory.buildTransaction;
 import static at.nicoleperak.client.factories.TransactionTileFactory.buildTransactionTile;
 import static at.nicoleperak.shared.Category.CategoryType.Expense;
@@ -66,7 +64,10 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private CategoryAxis categoryAxis;
 
     @FXML
-    private VBox collaboratorsVBox;
+    private TitledPane collaboratorsTitledPane;
+
+    @FXML
+    private VBox collaboratorsPane;
 
     @FXML
     private BarChart<String, Number> barChart;
@@ -126,6 +127,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private ImageView searchIcon;
 
     @FXML
+    private Accordion sideBarAccordion;
+
+    @FXML
     private Button newTransactionButton;
     @FXML
     private TextField searchField;
@@ -152,7 +156,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         setPieChart();
         resetPieChartOnChangesOfPieChartToggleGroup();
         setBarChart(6);
+        showCollaborators();
     }
+
 
     @FXML
     protected void onGoBackButtonClicked(MouseEvent event) {
@@ -199,7 +205,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     }
 
     @FXML
-    void onEnterKeyTypedInSearchBar(KeyEvent event) {
+    void onEnterKeyPressedInSearchBar(KeyEvent event) {
         if (event.getCode().equals(KeyCode.ENTER)) {
             searchTransactions();
         }
@@ -219,10 +225,24 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     void onAddCollaboratorIconClicked(MouseEvent event) {
+        addCollaborator();
+    }
+
+    @FXML
+    void onEnterKeyPressedInCollaboratorsEmailTextField(KeyEvent event) {
+        if (event.getCode().equals(KeyCode.ENTER)) {
+            addCollaborator();
+        }
+    }
+
+    private void addCollaborator() {
+        collaboratorAlertMessageLabel.setText("");
         String collaboratorEmail = collaboratorEmailTextField.getText();
         try {
             Validation.assertEmailIsValid(collaboratorEmail);
             ServiceFunctions.post("financial_accounts/" + selectedFinancialAccount.getId() + "/collaborators", jsonb.toJson(collaboratorEmail), true);
+            new Alert(Alert.AlertType.INFORMATION, "User successfully added as collaborator").showAndWait();
+            //TODO style Alert
             reloadFinancialAccountDetailsScreen();
         } catch (ClientException e) {
             collaboratorAlertMessageLabel.setText(e.getMessage());
@@ -297,6 +317,30 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    private void showCollaborators() {
+        List<User> collaborators = selectedFinancialAccount.getCollaborators();
+        Long ownerId = selectedFinancialAccount.getOwner().getId();
+        boolean isOwner = getLoggedInUser().getId().equals(ownerId);
+        if(!isOwner){
+            collaboratorsPane.getChildren().clear();
+        }
+        try {
+            for (User collaborator : collaborators) {
+                if (isOwner && collaborator.getId().equals(ownerId)) {
+                    continue;
+                }
+                FXMLLoader collaboratorBoxLoader = new FXMLLoader();
+                collaboratorBoxLoader.setLocation(getClass().getResource(COLLABORATOR_BOX.getLocation()));
+                GridPane collaboratorBox = buildCollaboratorBox(collaborator, selectedFinancialAccount.getId(), isOwner, collaboratorBoxLoader);
+                collaboratorsPane.getChildren().add(collaboratorBox);
+            }
+        } catch (IOException e) {
+            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+            // TODO for later: Alertlabel?
+        }
+    }
+
+
     private void showCreateTransactionDialog() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -328,6 +372,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
         }
     }
+
 
     private CategoryList loadCategories() {
         String jsonResponse = null;

@@ -1,22 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="collaboratorBox" alignment="CENTER_LEFT" spacing="10.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.controllers.collaboratorBoxController">
-   <Label fx:id="collaboratorLabel" text="User1234" textFill="#fbf9f8">
-      <font>
-         <Font name="Source Sans 3 Medium" size="14.0" />
-      </font>
-   </Label>
-   <ImageView fx:id="deleteCollaboratorIcon" fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor>
-      <Image url="@../icons/delete-icon-white.png" />
-   </ImageView>
-</HBox>
+<GridPane fx:id="collaboratorBox" hgap="15.0" style="-fx-background-color: #3A6A95; -fx-background-radius: 5;"
+          xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="at.nicoleperak.client.controllers.CollaboratorBoxController">
+    <columnConstraints>
+        <ColumnConstraints hgrow="NEVER" percentWidth="30.0" prefWidth="80.0"/>
+        <ColumnConstraints hgrow="NEVER" percentWidth="60.0"/>
+        <ColumnConstraints halignment="CENTER" hgrow="NEVER" percentWidth="10.0"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <padding>
+        <Insets left="9.0" right="5.0"/>
+    </padding>
+    <Label fx:id="collaboratorUserNameLabel" text="User1234" textFill="#fbf9f8">
+        <font>
+          <Font name="Source Sans 3 Medium" size="13.0"/>
+        </font>
+    </Label>
+    <ImageView fx:id="deleteCollaboratorIcon" fitHeight="15.0" fitWidth="15.0"
+               onMouseClicked="#onDeleteCollaboratorIconClicked" pickOnBounds="true" preserveRatio="true"
+               visible="false" GridPane.columnIndex="2">
+        <cursor>
+          <Cursor fx:constant="HAND"/>
+        </cursor>
+        <Image url="@../icons/delete-icon-white.png"/>
+    </ImageView>
+    <Label fx:id="collaboratorEmailLabel" layoutX="10.0" layoutY="15.0" text="user@blabllabla.at" textFill="#fbf9f8"
+           GridPane.columnIndex="1">
+        <font>
+          <Font name="Source Sans 3 Medium" size="13.0"/>
+        </font>
+    </Label>
+</GridPane>

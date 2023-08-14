@@ -16,61 +16,49 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #FBF9F8;"
-          xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="at.nicoleperak.client.controllers.SignUpScreenController">
+<GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #FBF9F8;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.controllers.SignUpScreenController">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" percentWidth="65.0"/>
-      <ColumnConstraints hgrow="SOMETIMES" percentWidth="35.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="65.0" />
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="35.0" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints/>
-      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES"/>
+      <RowConstraints />
+      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
       <ImageView fitHeight="116.0" fitWidth="163.0" pickOnBounds="true" preserveRatio="true">
          <cursor>
-            <Cursor fx:constant="HAND"/>
+            <Cursor fx:constant="HAND" />
          </cursor>
-         <Image url="@../icons/money-minder-logo.png"/>
+         <Image url="@../icons/money-minder-logo.png" />
       </ImageView>
    </VBox>
-   <VBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #3A6A95;" GridPane.halignment="CENTER"
-         GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+   <VBox alignment="CENTER" spacing="5.0" style="-fx-background-color: #3A6A95;" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <VBox fillWidth="false" spacing="20.0">
             <Label text="SIGN UP" textFill="#fbf9f8" textOverrun="CLIP">
                <font>
-                  <Font name="Source Sans 3 Light" size="26.0"/>
+                  <Font name="Source Sans 3 Medium" size="26.0" />
                </font>
             </Label>
-            <TextField fx:id="usernameField" layoutX="10.0" layoutY="65.0" maxHeight="-Infinity"
-                       maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0"
-                       prefWidth="270.0" promptText="username" style="-fx-background-color: #FBF9F8;">
+            <TextField fx:id="usernameField" layoutX="10.0" layoutY="65.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="username" style="-fx-background-color: #FBF9F8;">
                <font>
-                  <Font name="Source Sans 3 Regular" size="13.0"/>
+                  <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </TextField>
-            <TextField fx:id="emailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                       minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="email"
-                       style="-fx-background-color: #FBF9F8;">
+            <TextField fx:id="emailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="email" style="-fx-background-color: #FBF9F8;">
                <font>
-                  <Font name="Source Sans 3 Regular" size="13.0"/>
+                  <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </TextField>
-            <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity"
-                           minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0"
-                           promptText="password" style="-fx-background-color: #FBF9F8;">
+            <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="password" style="-fx-background-color: #FBF9F8;">
                <font>
-                  <Font name="Source Sans 3 Regular" size="13.0"/>
+                  <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </PasswordField>
-            <PasswordField fx:id="retypePasswordField" layoutX="10.0" layoutY="113.0" maxHeight="-Infinity"
-                           maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-                           onKeyTyped="#onKeyPressedInRetypedPasswordField" prefHeight="28.0" prefWidth="270.0"
-                           promptText="retype password" style="-fx-background-color: #FBF9F8;">
+            <PasswordField fx:id="retypePasswordField" layoutX="10.0" layoutY="113.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#onKeyPressedInRetypedPasswordField" prefHeight="28.0" prefWidth="270.0" promptText="retype password" style="-fx-background-color: #FBF9F8;">
                <font>
-                  <Font name="Source Sans 3 Regular" size="13.0"/>
+                  <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </PasswordField>
          </VBox>
@@ -78,49 +66,44 @@
       <VBox alignment="CENTER">
          <Label fx:id="alertMessageLabel" alignment="CENTER" textFill="WHITE">
             <font>
-               <Font name="Source Sans 3 Regular" size="13.0"/>
+               <Font name="Source Sans 3 Regular" size="13.0" />
             </font>
             <opaqueInsets>
-               <Insets/>
+               <Insets />
             </opaqueInsets>
             <VBox.margin>
-               <Insets/>
+               <Insets />
             </VBox.margin>
          </Label>
       </VBox>
       <VBox spacing="5.0">
          <HBox alignment="CENTER">
-            <Button fx:id="signUpButton" alignment="CENTER" cache="true" mnemonicParsing="false"
-                    onAction="#onSignUpButtonClicked" style="-fx-background-color: #FBF9F8;" text="Sign Up"
-                    textAlignment="JUSTIFY" textFill="#3a6a95">
+            <Button fx:id="signUpButton" alignment="CENTER" cache="true" mnemonicParsing="false" onAction="#onSignUpButtonClicked" style="-fx-background-color: #FBF9F8;" text="Sign Up" textAlignment="JUSTIFY" textFill="#3a6a95">
                <font>
-                  <Font name="Source Sans 3 Regular" size="13.0"/>
+                  <Font name="Source Sans 3 Medium" size="13.0" />
                </font>
                <opaqueInsets>
-                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0"/>
+                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                </opaqueInsets>
                <cursor>
-                  <Cursor fx:constant="HAND"/>
+                  <Cursor fx:constant="HAND" />
                </cursor>
                <padding>
-                  <Insets bottom="5.0" left="40.0" right="40.0" top="5.0"/>
+                  <Insets bottom="5.0" left="40.0" right="40.0" top="5.0" />
                </padding>
             </Button>
          </HBox>
       </VBox>
    </VBox>
-   <AnchorPane fx:id="goBackButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-               minWidth="-Infinity" onMouseClicked="#onGoBackButtonClicked" prefHeight="37.0" prefWidth="37.0"
-               GridPane.halignment="LEFT" GridPane.valignment="TOP">
+   <AnchorPane fx:id="goBackButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onGoBackButtonClicked" prefHeight="37.0" prefWidth="37.0" GridPane.halignment="LEFT" GridPane.valignment="TOP">
       <cursor>
-         <Cursor fx:constant="HAND"/>
+         <Cursor fx:constant="HAND" />
       </cursor>
       <GridPane.margin>
-         <Insets/>
+         <Insets />
       </GridPane.margin>
-      <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true"
-                 AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="7.0">
-         <Image url="@../icons/arrow-left-icon.png"/>
+      <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="7.0">
+         <Image url="@../icons/arrow-left-icon.png" />
       </ImageView>
    </AnchorPane>
 </GridPane>

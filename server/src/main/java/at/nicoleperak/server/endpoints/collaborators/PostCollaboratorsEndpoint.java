@@ -27,9 +27,14 @@ public class PostCollaboratorsEndpoint implements Endpoint {
 
     @Override
     public void handle(HttpExchange exchange) throws ServerException {
-        User currentUser = authenticate(exchange);
+        Long financialAccountId = Long.parseLong(getPathSegments(exchange)[1]);
+        postCollaborator(exchange, financialAccountId);
+        setResponse(exchange, 201, "");
+    }
+
+    private static void postCollaborator(HttpExchange exchange, Long financialAccountId) throws ServerException {
         try {
-            Long financialAccountId = Long.parseLong(getPathSegments(exchange)[1]);
+            User currentUser = authenticate(exchange);
             assertAuthenticatedUserIsOwner(currentUser.getId(), financialAccountId);
             String jsonString = new String(exchange.getRequestBody().readAllBytes());
             String userEmail = jsonb.fromJson(jsonString, String.class);
@@ -39,6 +44,5 @@ public class PostCollaboratorsEndpoint implements Endpoint {
         } catch (IOException e) {
             throw new ServerException(400, "Could not read request body", e);
         }
-        setResponse(exchange, 201, "");
     }
 }

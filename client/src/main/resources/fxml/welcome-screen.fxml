@@ -16,83 +16,74 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #FBF9F8;"
-          xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="at.nicoleperak.client.controllers.WelcomeScreenController">
+<GridPane alignment="CENTER" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #FBF9F8;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.controllers.WelcomeScreenController">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" percentWidth="65.0"/>
-      <ColumnConstraints hgrow="SOMETIMES" percentWidth="35.0"/>
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="65.0" />
+      <ColumnConstraints hgrow="SOMETIMES" percentWidth="35.0" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints/>
-      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES"/>
-      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES"/>
+      <RowConstraints />
+      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints percentHeight="0.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
       <ImageView fitHeight="116.0" fitWidth="163.0" pickOnBounds="true" preserveRatio="true">
-         <Image url="@../icons/money-minder-logo.png"/>
+         <Image url="@../icons/money-minder-logo.png" />
       </ImageView>
    </VBox>
-   <VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: #3A6A95;" GridPane.halignment="CENTER"
-         GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+   <VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: #3A6A95;" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
          <VBox fillWidth="false" spacing="20.0">
             <Label text="LOGIN" textFill="#fbf9f8" textOverrun="CLIP">
                <font>
-                  <Font name="Source Sans 3 Light" size="26.0"/>
+                  <Font name="Source Sans 3 Medium" size="26.0" />
                </font>
             </Label>
-            <TextField fx:id="emailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-                       minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="email"
-                       style="-fx-background-color: #FBF9F8;" text="test123@test.com">
+            <TextField fx:id="emailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="email" style="-fx-background-color: #FBF9F8;" text="test123@test.com">
                <font>
-                  <Font name="Source Sans 3 Regular" size="13.0"/>
+                  <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </TextField>
-            <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity"
-                           minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0"
-                           promptText="password" style="-fx-background-color: #FBF9F8;" text="test1234">
+            <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="password" style="-fx-background-color: #FBF9F8;" text="test1234">
                <font>
-                  <Font name="Source Sans 3 Regular" size="13.0"/>
+                  <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </PasswordField>
          </VBox>
       </HBox>
       <VBox spacing="5.0" VBox.vgrow="NEVER">
          <HBox alignment="CENTER">
-            <Button fx:id="signInButton" alignment="CENTER" cache="true" mnemonicParsing="false"
-                    onAction="#onSignInButtonClicked" prefHeight="26.0" prefWidth="121.0"
-                    style="-fx-background-color: #FBF9F8;" text="Sign In" textAlignment="JUSTIFY"
-                    textFill="#3a6a95">
+            <Button fx:id="signInButton" alignment="CENTER" cache="true" mnemonicParsing="false" onAction="#onSignInButtonClicked" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #FBF9F8;" text="Sign In" textAlignment="JUSTIFY" textFill="#3a6a95">
                <font>
-                  <Font name="Source Sans 3 Regular" size="13.0"/>
+                  <Font name="Source Sans 3 Medium" size="13.0" />
                </font>
                <opaqueInsets>
-                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0"/>
+                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                </opaqueInsets>
                <cursor>
-                  <Cursor fx:constant="HAND"/>
+                  <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
          </HBox>
          <HBox alignment="CENTER" VBox.vgrow="NEVER">
-            <Label text="Don't have an account?" textFill="#fbf9f8"/>
-            <Hyperlink fx:id="signUpLink" onAction="#onSignUpLinkClicked" text="Sign up" textFill="WHITE"
-                       underline="true">
+            <Label text="Don't have an account?" textFill="#fbf9f8">
                <font>
-                  <Font name="Source Sans 3 Regular" size="13.0"/>
+                  <Font name="Source Sans 3 Regular" size="13.0" />
+               </font></Label>
+            <Hyperlink fx:id="signUpLink" onAction="#onSignUpLinkClicked" text="Sign up" textFill="WHITE" underline="true">
+               <font>
+                  <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </Hyperlink>
          </HBox>
       </VBox>
    </VBox>
-   <Label fx:id="alertMessageLabel" alignment="CENTER" textFill="#14cc60" GridPane.halignment="CENTER"
-          GridPane.valignment="TOP">
+   <Label fx:id="alertMessageLabel" alignment="CENTER" textFill="#14cc60" GridPane.halignment="CENTER" GridPane.valignment="TOP">
       <font>
-         <Font name="Source Sans Pro SemiBold" size="14.0"/>
+         <Font name="Source Sans Pro SemiBold" size="14.0" />
       </font>
       <GridPane.margin>
-         <Insets top="70.0"/>
+         <Insets top="70.0" />
       </GridPane.margin>
    </Label>
 </GridPane>

@@ -29,12 +29,12 @@
                   <ToggleGroup fx:id="transactionTypeToggleGroup" />
                </toggleGroup>
                <font>
-                  <Font name="Source Sans 3 Light" size="14.0" />
+                  <Font name="Source Sans 3 Medium" size="14.0" />
                </font>
             </RadioButton>
             <RadioButton fx:id="expenseRadioButton" mnemonicParsing="false" stylesheets="@../css/RadioButton.css" text="Expense" textFill="#fbf9f8" toggleGroup="$transactionTypeToggleGroup" HBox.hgrow="ALWAYS">
                <font>
-                  <Font name="Source Sans 3 Light" size="14.0" />
+                  <Font name="Source Sans 3 Medium" size="14.0" />
                </font>
             </RadioButton>
          </HBox>
@@ -53,7 +53,7 @@
             </rowConstraints>
             <Label fx:id="transactionPartnerLabel" contentDisplay="RIGHT" text="Transaction Partner" textFill="#fbf9f8" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3">
                <font>
-                  <Font name="Source Sans 3 Light" size="14.0" />
+                  <Font name="Source Sans 3 Medium" size="14.0" />
                </font>
                <opaqueInsets>
                   <Insets />
@@ -61,12 +61,12 @@
             </Label>
             <TextField fx:id="transactionPartnerField" prefHeight="28.0" prefWidth="159.0" style="-fx-background-color: #fbf9f8;" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                <font>
-                  <Font name="Source Sans 3 Medium" size="13.0" />
+                  <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </TextField>
             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="16.0" text="Description" textFill="#fbf9f8" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4">
                <font>
-                  <Font name="Source Sans 3 Light" size="14.0" />
+                  <Font name="Source Sans 3 Medium" size="14.0" />
                </font>
                <opaqueInsets>
                   <Insets />
@@ -74,12 +74,12 @@
             </Label>
             <TextField fx:id="descriptionField" layoutX="91.0" layoutY="12.0" prefHeight="26.0" prefWidth="391.0" style="-fx-background-color: #fbf9f8;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4">
                <font>
-                  <Font name="Source Sans 3 Medium" size="13.0" />
+                  <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </TextField>
             <Label contentDisplay="RIGHT" layoutX="10.0" layoutY="65.0" text="Amount" textFill="#fbf9f8" GridPane.rowIndex="2">
                <font>
-                  <Font name="Source Sans 3 Light" size="14.0" />
+                  <Font name="Source Sans 3 Medium" size="14.0" />
                </font>
                <opaqueInsets>
                   <Insets />
@@ -87,13 +87,13 @@
             </Label>
             <TextField fx:id="amountField" layoutX="143.0" layoutY="61.0" prefWidth="50.0" promptText="0,00" style="-fx-background-color: #fbf9f8;" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <font>
-                  <Font name="Source Sans 3 Medium" size="13.0" />
+                  <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </TextField>
             <DatePicker fx:id="datePicker" editable="false" promptText="Pick Date" style="-fx-background-color: #fbf9f8;" stylesheets="@../css/DatePicker.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="58.0" layoutY="165.0" text="Category" textFill="#fbf9f8">
                <font>
-                  <Font name="Source Sans 3 Light" size="14.0" />
+                  <Font name="Source Sans 3 Medium" size="14.0" />
                </font>
                <opaqueInsets>
                   <Insets />
@@ -102,7 +102,7 @@
             <ComboBox fx:id="categoryComboBox" disable="true" promptText="Choose Category" style="-fx-background-color: #fbf9f8;" stylesheets="@../css/ComboBox.css" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="72.0" layoutY="215.0" text="Note (optional)" textFill="#fbf9f8" GridPane.rowIndex="5">
                <font>
-                  <Font name="Source Sans 3 Light" size="14.0" />
+                  <Font name="Source Sans 3 Medium" size="14.0" />
                </font>
                <opaqueInsets>
                   <Insets />
@@ -110,12 +110,12 @@
             </Label>
             <TextArea fx:id="noteArea" prefHeight="100.0" style="-fx-background-color: #fbf9f8;" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.vgrow="ALWAYS">
                <font>
-                  <Font name="Source Sans 3 Medium" size="13.0" />
+                  <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </TextArea>
             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="72.0" layoutY="215.0" text="Date" textFill="#fbf9f8" GridPane.rowIndex="1">
                <font>
-                  <Font name="Source Sans 3 Light" size="14.0" />
+                  <Font name="Source Sans 3 Medium" size="14.0" />
                </font>
                <opaqueInsets>
                   <Insets />
@@ -139,7 +139,7 @@
          </padding>
          <Label fx:id="headerTextLabel" text="Create New Transaction" textFill="#fbf9f8">
             <font>
-               <Font name="Source Sans 3 Light" size="24.0" />
+               <Font name="Source Sans 3 Medium" size="24.0" />
             </font>
          </Label>
       </HBox>

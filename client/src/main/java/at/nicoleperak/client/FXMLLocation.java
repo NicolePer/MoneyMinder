@@ -9,7 +9,8 @@ public enum FXMLLocation {
     TRANSACTION_DETAILS_TILE("/fxml/transaction-details-tile.fxml"),
     TRANSACTION_FORM("/fxml/transaction-form.fxml"),
     TRANSACTION_TILE("/fxml/transaction-tile.fxml"),
-    WELCOME_SCREEN("/fxml/welcome-screen.fxml");
+    WELCOME_SCREEN("/fxml/welcome-screen.fxml"),
+    COLLABORATOR_BOX("/fxml/collaborator-box.fxml");
 
     private final String location;
 

@@ -3,6 +3,7 @@ package at.nicoleperak.server;
 import at.nicoleperak.server.endpoints.Endpoint;
 import at.nicoleperak.server.endpoints.categories.GetCategoriesByTypeEndpoint;
 import at.nicoleperak.server.endpoints.categories.GetCategoriesEndpoint;
+import at.nicoleperak.server.endpoints.collaborators.DeleteCollaboratorsEndpoint;
 import at.nicoleperak.server.endpoints.collaborators.PostCollaboratorsEndpoint;
 import at.nicoleperak.server.endpoints.financialaccounts.GetFinancialAccountsEndpoint;
 import at.nicoleperak.server.endpoints.financialaccounts.GetFinancialAccountsListEndpoint;
@@ -33,7 +34,8 @@ public class EndpointsHandler implements HttpHandler {
             new PostTransactionsEndpoint(),
             new PutTransactionsEndpoint(),
             new DeleteTransactionsEndpoint(),
-            new PostCollaboratorsEndpoint()
+            new PostCollaboratorsEndpoint(),
+            new DeleteCollaboratorsEndpoint()
     );
 
     @Override

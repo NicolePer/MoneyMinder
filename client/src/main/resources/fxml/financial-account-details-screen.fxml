@@ -23,7 +23,6 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -90,56 +89,71 @@
       <right>
          <VBox style="-fx-background-color: #749AC1;" BorderPane.alignment="CENTER">
             <Region prefHeight="48.0" style="-fx-background-color: #749AC1;" />
-            <Accordion stylesheets="@../css/Accordion.css">
+            <Accordion fx:id="sideBarAccordion" stylesheets="@../css/Accordion.css">
                <panes>
                   <TitledPane animated="false" text="Recurring Transactions">
                      <font>
                         <Font name="Source Sans 3 Regular" size="15.0" />
                      </font>
-                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #749AC1;" />
                   </TitledPane>
-                  <TitledPane animated="false" text="Collaborators">
+                  <TitledPane fx:id="collaboratorsTitledPane" animated="false" text="Collaborators">
                      <font>
                         <Font name="Source Sans 3 Regular" size="15.0" />
                      </font>
-                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #749AC1;">
-                        <VBox fx:id="collaboratorsVBox" spacing="10.0">
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                           <HBox spacing="5.0">
-                              <TextField fx:id="collaboratorEmailTextField" style="-fx-background-color: #fbf9f8;" text="E-Mail">
-                                 <font>
-                                    <Font name="Source Sans 3 Medium" size="14.0" />
-                                 </font>
-                              </TextField>
-                              <ImageView fx:id="addCollaboratorIcon" fitHeight="25.0" fitWidth="25.0"
-                                         onMouseClicked="#onAddCollaboratorIconClicked" pickOnBounds="true"
-                                         preserveRatio="true">
-                                 <cursor>
-                                    <Cursor fx:constant="HAND"/>
-                                 </cursor>
-                                 <Image url="@../icons/add-icon-white.png"/>
-                              </ImageView>
-                           </HBox>
-                           <HBox alignment="CENTER">
-                              <Label fx:id="collaboratorAlertMessageLabel" alignment="CENTER" textFill="WHITE">
-                                 <font>
-                                    <Font name="Source Sans 3 Regular" size="13.0"/>
-                                 </font>
-                                 <opaqueInsets>
-                                    <Insets/>
-                                 </opaqueInsets>
-                              </Label>
-                           </HBox>
-                        </VBox>
-                     </AnchorPane>
+                     <VBox fx:id="collaboratorsPane" spacing="5.0" style="-fx-background-color: #749AC1;">
+                        <padding>
+                           <Insets bottom="10.0" left="10.0" right="10.0" top="20.0"/>
+                        </padding>
+                        <HBox spacing="5.0">
+                           <VBox.margin>
+                              <Insets bottom="10.0" top="-5.0"/>
+                           </VBox.margin>
+                           <Label text="Add Collaborator:" textFill="#fbf9f8" wrapText="true">
+                              <font>
+                                 <Font name="Source Sans 3 Medium" size="14.0"/>
+                              </font>
+                              <opaqueInsets>
+                                 <Insets/>
+                              </opaqueInsets>
+                              <HBox.margin>
+                                 <Insets bottom="-7.0"/>
+                              </HBox.margin>
+                           </Label>
+                        </HBox>
+                        <HBox spacing="5.0">
+                           <TextField fx:id="collaboratorEmailTextField"
+                                      onKeyPressed="#onEnterKeyPressedInCollaboratorsEmailTextField" promptText="E-Mail"
+                                      style="-fx-background-color: #fbf9f8;" HBox.hgrow="ALWAYS">
+                              <font>
+                                 <Font name="Source Sans 3 Regular" size="14.0"/>
+                              </font>
+                           </TextField>
+                           <ImageView fx:id="addCollaboratorIcon" fitHeight="25.0" fitWidth="25.0"
+                                      onMouseClicked="#onAddCollaboratorIconClicked" pickOnBounds="true"
+                                      preserveRatio="true">
+                              <cursor>
+                                 <Cursor fx:constant="HAND"/>
+                              </cursor>
+                              <Image url="@../icons/add-icon-white.png"/>
+                           </ImageView>
+                        </HBox>
+                        <HBox>
+                           <Label fx:id="collaboratorAlertMessageLabel" alignment="CENTER" maxWidth="196.0"
+                                  textFill="#f3de8a" wrapText="true">
+                              <font>
+                                 <Font name="Source Sans 3 Regular" size="13.0"/>
+                              </font>
+                              <opaqueInsets>
+                                 <Insets/>
+                              </opaqueInsets>
+                           </Label>
+                        </HBox>
+                     </VBox>
                   </TitledPane>
                   <TitledPane animated="false" text="Monthly Goal">
                      <font>
                         <Font name="Source Sans 3 Regular" size="15.0" />
                      </font>
-                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" style="-fx-background-color: #749AC1;" />
                   </TitledPane>
                </panes>
             </Accordion>
@@ -158,7 +172,7 @@
                </rowConstraints>
                <Label fx:id="financialAccountTitleLabel" text="OUR HOME" textFill="#fbf9f8" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                   <font>
-                     <Font name="Source Sans 3 Light" size="30.0" />
+                     <Font name="Source Sans 3 Medium" size="30.0" />
                   </font>
                   <GridPane.margin>
                      <Insets left="10.0" />
@@ -208,7 +222,7 @@
                <HBox alignment="CENTER" spacing="30.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
                   <Label alignment="CENTER" contentDisplay="CENTER" text="Monthly Goal" textFill="#fbf9f8" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font name="Source Sans 3 Light" size="24.0" />
+                        <Font name="Source Sans 3 Regular" size="24.0" />
                      </font>
                      <padding>
                         <Insets left="10.0" />
@@ -233,7 +247,7 @@
                         <padding>
                            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                         </padding>
-                        <TextField fx:id="searchField" onKeyPressed="#onEnterKeyTypedInSearchBar" promptText="Search..." style="-fx-background-color: #FBF9F8;" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="searchField" onKeyPressed="#onEnterKeyPressedInSearchBar" promptText="Search..." style="-fx-background-color: #FBF9F8;" HBox.hgrow="ALWAYS">
                            <font>
                               <Font name="Source Sans 3 Medium" size="14.0" />
                            </font>
@@ -257,58 +271,97 @@
                            <Image url="@../icons/download-icon.png" />
                         </ImageView>
                      </HBox>
-                     <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-background-color: #3A6A95;">
+                     <GridPane hgap="15.0" style="-fx-background-color: #3A6A95;" vgap="5.0">
+                        <columnConstraints>
+                           <ColumnConstraints hgrow="NEVER"/>
+                           <ColumnConstraints hgrow="NEVER"/>
+                           <ColumnConstraints hgrow="NEVER"/>
+                           <ColumnConstraints hgrow="NEVER"/>
+                           <ColumnConstraints hgrow="NEVER"/>
+                           <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES"/>
+                           <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER"/>
+                        </columnConstraints>
+                        <rowConstraints>
+                           <RowConstraints vgrow="SOMETIMES"/>
+                           <RowConstraints vgrow="SOMETIMES"/>
+                        </rowConstraints>
+                        <VBox.margin>
+                           <Insets/>
+                        </VBox.margin>
                         <padding>
-                           <Insets bottom="10.0" left="10.0" right="10.0" />
+                           <Insets bottom="15.0" left="10.0" right="10.0"/>
                         </padding>
-                        <Label text="Type:" textFill="#fbf9f8">
+                        <ComboBox fx:id="transactionTypeComboBox" onAction="#onTypeSelected"
+                                  stylesheets="@../css/ComboBox.css" GridPane.rowIndex="1"/>
+                        <ComboBox fx:id="categoryComboBox" onAction="#onCategorySelected"
+                                  stylesheets="@../css/ComboBox.css" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <DatePicker fx:id="dateFromDatePicker" onAction="#onDateSelected" promptText="DATE FROM"
+                                    style="-fx-background-color: #FBF9F8;" stylesheets="@../css/DatePicker.css"
+                                    GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <DatePicker fx:id="dateToDatePicker" onAction="#onDateSelected" promptText="DATE TO"
+                                    style="-fx-background-color: #FBF9F8;" stylesheets="@../css/DatePicker.css"
+                                    GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                        <Button fx:id="resetFiltersButton" mnemonicParsing="false"
+                                onAction="#onResetFiltersButtonClicked" style="-fx-background-color: #FBF9F8;"
+                                text="Reset Filters" textFill="#3a6a95" GridPane.columnIndex="4" GridPane.rowIndex="1">
                            <font>
-                              <Font name="Source Sans 3 Medium" size="13.0" />
-                           </font>
-                        </Label>
-                        <ComboBox fx:id="transactionTypeComboBox" layoutX="20.0" layoutY="12.0" onAction="#onTypeSelected" stylesheets="@../css/ComboBox.css" />
-                        <Label layoutX="20.0" layoutY="16.0" text="Category:" textFill="#fbf9f8">
-                           <font>
-                              <Font name="Source Sans 3 Medium" size="13.0" />
-                           </font>
-                        </Label>
-                        <ComboBox fx:id="categoryComboBox" onAction="#onCategorySelected" stylesheets="@../css/ComboBox.css" />
-                        <DatePicker fx:id="dateFromDatePicker" onAction="#onDateSelected" promptText="DATE FROM" style="-fx-background-color: #FBF9F8;" stylesheets="@../css/DatePicker.css" />
-                        <DatePicker fx:id="dateToDatePicker" onAction="#onDateSelected" promptText="DATE TO" style="-fx-background-color: #FBF9F8;" stylesheets="@../css/DatePicker.css" HBox.hgrow="ALWAYS" />
-                        <Button fx:id="resetFiltersButton" mnemonicParsing="false" onAction="#onResetFiltersButtonClicked" style="-fx-background-color: #FBF9F8;" text="Reset Filters" textFill="#3a6a95">
-                           <font>
-                              <Font name="Source Sans 3 Medium" size="14.0" />
+                              <Font name="Source Sans 3 Medium" size="14.0"/>
                            </font>
                            <cursor>
-                              <Cursor fx:constant="HAND" />
+                              <Cursor fx:constant="HAND"/>
                            </cursor>
                            <opaqueInsets>
-                              <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                              <Insets bottom="1.0" left="1.0" right="1.0" top="1.0"/>
                            </opaqueInsets>
                            <graphic>
                               <ImageView fitHeight="20.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-                                 <Image url="@../icons/cross-icon-color.png" />
+                                 <Image url="@../icons/cross-icon-color.png"/>
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Region HBox.hgrow="ALWAYS" />
-                        <Button fx:id="newTransactionButton" mnemonicParsing="false" onAction="#onNewTransactionButtonClicked" style="-fx-background-color: #f3de8a;" text="New Transaction" textFill="#3a6a95" HBox.hgrow="ALWAYS">
+                        <Button fx:id="newTransactionButton" mnemonicParsing="false"
+                                onAction="#onNewTransactionButtonClicked" style="-fx-background-color: #f3de8a;"
+                                text="New Transaction" textFill="#3a6a95" GridPane.columnIndex="6"
+                                GridPane.rowIndex="1">
                            <font>
-                              <Font name="Source Sans 3 Medium" size="14.0" />
+                              <Font name="Source Sans 3 Medium" size="14.0"/>
                            </font>
                            <cursor>
-                              <Cursor fx:constant="HAND" />
+                              <Cursor fx:constant="HAND"/>
                            </cursor>
                            <opaqueInsets>
-                              <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+                              <Insets bottom="1.0" left="1.0" right="1.0" top="1.0"/>
                            </opaqueInsets>
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                 <Image url="@../icons/add-icon-color-50.png" />
+                                 <Image url="@../icons/add-icon-color-50.png"/>
                               </ImageView>
                            </graphic>
                         </Button>
-                     </HBox>
+                        <Label text="Type:" textFill="#fbf9f8">
+                           <font>
+                              <Font name="Source Sans 3 Medium" size="13.0"/>
+                           </font>
+                        </Label>
+                        <Label text="Category:" textFill="#fbf9f8" GridPane.columnIndex="1">
+                           <font>
+                              <Font name="Source Sans 3 Medium" size="13.0"/>
+                           </font>
+                        </Label>
+                        <Label layoutX="187.0" layoutY="16.0" text="Date From:" textFill="#fbf9f8"
+                               GridPane.columnIndex="2">
+                           <font>
+                              <Font name="Source Sans 3 Medium" size="13.0"/>
+                           </font>
+                        </Label>
+                        <Label layoutX="364.0" layoutY="16.0" text="Date To:" textFill="#fbf9f8"
+                               GridPane.columnIndex="3">
+                           <font>
+                              <Font name="Source Sans 3 Medium" size="13.0"/>
+                           </font>
+                        </Label>
+                        <Region GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+                     </GridPane>
                      <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; fx-background: transparent;">
                         <VBox fx:id="transactionsPane" style="-fx-background-color: transparent; -fx-background: transparent;" />
                      </ScrollPane>
@@ -318,53 +371,47 @@
                   <VBox>
                      <HBox alignment="CENTER" spacing="80.0">
                         <padding>
-                           <Insets bottom="10.0" top="10.0"/>
+                           <Insets bottom="10.0" top="10.0" />
                         </padding>
-                        <RadioButton fx:id="expensesRadioButton" mnemonicParsing="false" selected="true"
-                                     stylesheets="@../css/RadioButton.css" text="Expenses" textFill="#3a6a95">
+                        <RadioButton fx:id="expensesRadioButton" mnemonicParsing="false" selected="true" stylesheets="@../css/RadioButton.css" text="Expenses" textFill="#3a6a95">
                            <font>
-                              <Font name="Source Sans 3 Medium" size="18.0"/>
+                              <Font name="Source Sans 3 Medium" size="18.0" />
                            </font>
                            <toggleGroup>
-                              <ToggleGroup fx:id="pieChartToggleGroup"/>
+                              <ToggleGroup fx:id="pieChartToggleGroup" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="incomeRadioButton" mnemonicParsing="false"
-                                     stylesheets="@../css/RadioButton.css" text="Income" textFill="#3a6a95"
-                                     toggleGroup="$pieChartToggleGroup">
+                        <RadioButton fx:id="incomeRadioButton" mnemonicParsing="false" stylesheets="@../css/RadioButton.css" text="Income" textFill="#3a6a95" toggleGroup="$pieChartToggleGroup">
                            <font>
-                              <Font name="Source Sans 3 Medium" size="18.0"/>
+                              <Font name="Source Sans 3 Medium" size="18.0" />
                            </font>
                         </RadioButton>
                      </HBox>
                      <PieChart fx:id="pieChart" stylesheets="@../css/PieChart.css" VBox.vgrow="ALWAYS">
                         <VBox.margin>
-                           <Insets bottom="10.0" left="10.0" right="10.0"/>
+                           <Insets bottom="10.0" left="10.0" right="10.0" />
                         </VBox.margin>
                      </PieChart>
                   </VBox>
                </Tab>
                <Tab closable="false" text="TRENDS">
-                  <BarChart fx:id="barChart" alternativeRowFillVisible="false" barGap="10.0" categoryGap="20.0"
-                            horizontalGridLinesVisible="false" style="-fx-background-color: #FBF9F8;"
-                            stylesheets="@../css/BarChart.css" verticalGridLinesVisible="false">
+                  <BarChart fx:id="barChart" alternativeRowFillVisible="false" barGap="10.0" categoryGap="20.0" horizontalGridLinesVisible="false" style="-fx-background-color: #FBF9F8;" stylesheets="@../css/BarChart.css" verticalGridLinesVisible="false">
                      <xAxis>
                         <CategoryAxis fx:id="categoryAxis" side="BOTTOM" tickLabelFill="#3a6a95">
                            <tickLabelFont>
-                              <Font name="Source Sans 3 Medium" size="13.0"/>
+                              <Font name="Source Sans 3 Medium" size="13.0" />
                            </tickLabelFont>
                         </CategoryAxis>
                      </xAxis>
                      <yAxis>
-                        <NumberAxis label="Euro" minorTickCount="0" minorTickVisible="false" side="LEFT"
-                                    tickLabelFill="#3a6a95" upperBound="1000.0">
+                        <NumberAxis label="Euro" minorTickCount="0" minorTickVisible="false" side="LEFT" tickLabelFill="#3a6a95" upperBound="1000.0">
                            <tickLabelFont>
-                              <Font name="Source Sans 3 Medium" size="13.0"/>
+                              <Font name="Source Sans 3 Medium" size="13.0" />
                            </tickLabelFont>
                         </NumberAxis>
                      </yAxis>
                      <padding>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </padding>
                   </BarChart>
                </Tab>

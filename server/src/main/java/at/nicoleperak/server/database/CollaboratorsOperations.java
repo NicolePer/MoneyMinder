@@ -1,6 +1,7 @@
 package at.nicoleperak.server.database;
 
 import at.nicoleperak.server.ServerException;
+import at.nicoleperak.shared.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,12 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static at.nicoleperak.server.database.DatabaseUtils.*;
+import static at.nicoleperak.server.database.UsersOperations.*;
+import static at.nicoleperak.server.database.UsersOperations.USER_EMAIL;
 import static java.sql.DriverManager.getConnection;
 
 public class CollaboratorsOperations {
 
     protected static final String COLLABORATOR_TABLE = "collaborators";
-    protected static final String COLLABORATOR_ID = "id";
     protected static final String COLLABORATOR_FINANCIAL_ACCOUNT_ID = "financial_account_id";
     protected static final String COLLABORATOR_USER_ID = "user_id";
 
@@ -35,7 +37,7 @@ public class CollaboratorsOperations {
         }
     }
 
-    public static List<Long> selectCollaboratorIdsOfFinancialAccount(Long financialAccountId) throws ServerException {
+    public static List<Long> selectCollaboratorIds(Long financialAccountId) throws ServerException {
         String select = "SELECT " + COLLABORATOR_USER_ID + " FROM " + COLLABORATOR_TABLE
                 + " WHERE " + COLLABORATOR_FINANCIAL_ACCOUNT_ID + " = ?";
         try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
@@ -50,6 +52,48 @@ public class CollaboratorsOperations {
             }
         } catch (SQLException e) {
             throw new ServerException(500, "Could not select collaborator ids of financial account", e);
+        }
+    }
+
+    public static List<User> selectListOfCollaborators(Long financialAccountId) throws ServerException {
+        String select = "SELECT c." + COLLABORATOR_USER_ID
+                + ", u." + USER_NAME
+                + ", u." + USER_EMAIL
+                + " FROM " + COLLABORATOR_TABLE + " c"
+                + " INNER JOIN " + USER_TABLE + " u ON"
+                + " u." + USER_ID + " = c." + COLLABORATOR_USER_ID
+                + " WHERE c." + COLLABORATOR_FINANCIAL_ACCOUNT_ID + " = ?"
+                + " ORDER BY u." + USER_NAME + ", " + USER_EMAIL;
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(select)) {
+            stmt.setLong(1, financialAccountId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                List<User> collaborators = new ArrayList<>();
+                while (rs.next()) {
+                    collaborators.add(new User(
+                            rs.getLong(COLLABORATOR_USER_ID),
+                            rs.getString(USER_NAME),
+                            rs.getString(USER_EMAIL),
+                            null));
+                }
+                return collaborators;
+            }
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not select collaborator ids of financial account", e);
+        }
+    }
+
+    public static void deleteCollaborator(Long collaboratorUserId, Long financialAccountId) throws ServerException {
+        String delete = "DELETE FROM " + COLLABORATOR_TABLE +
+                " WHERE " + COLLABORATOR_USER_ID + " = ?" +
+                " AND " + COLLABORATOR_FINANCIAL_ACCOUNT_ID + " = ?";
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(delete)) {
+            stmt.setLong(1, collaboratorUserId);
+            stmt.setLong(2, financialAccountId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not delete collaborator", e);
         }
     }
 }

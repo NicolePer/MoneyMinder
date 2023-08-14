@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import static at.nicoleperak.server.database.CollaboratorsOperations.*;
 import static at.nicoleperak.server.database.DatabaseUtils.*;
 import static at.nicoleperak.server.database.TransactionsOperations.*;
 import static at.nicoleperak.server.database.UsersOperations.*;
@@ -79,7 +80,8 @@ public class FinancialAccountsOperations {
                             null);
                     financialAccount.setOwner(owner);
                     financialAccount.setTransactions(selectListOfTransactions(financialAccountId));
-                    //TODO for later: Expand for Collaborators, Financial Goals, Recurring TransactionOrders
+                    financialAccount.setCollaborators(selectListOfCollaborators(financialAccountId));
+                    //TODO for later: Expand for Financial Goals, Recurring TransactionOrders
                     return financialAccount;
                 } else {
                     throw new ServerException(404, "Financial account with id " + financialAccountId + " does not exist");
@@ -99,7 +101,9 @@ public class FinancialAccountsOperations {
                 + " FROM " + FINANCIAL_ACCOUNT_TABLE + " f"
                 + " LEFT JOIN " + TRANSACTION_TABLE + " t"
                 + " ON t." + TRANSACTION_FINANCIAL_ACCOUNT_ID + " = f." + FINANCIAL_ACCOUNT_ID
-                + " WHERE f." + FINANCIAL_ACCOUNT_OWNER_ID + " = ?"
+                + " LEFT JOIN " + COLLABORATOR_TABLE + " c"
+                + " ON c." + COLLABORATOR_FINANCIAL_ACCOUNT_ID + " = f." + FINANCIAL_ACCOUNT_ID
+                + " WHERE c." + COLLABORATOR_USER_ID + " = ?"
                 + " GROUP BY f." + FINANCIAL_ACCOUNT_ID;
         try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(select)) {
@@ -115,7 +119,6 @@ public class FinancialAccountsOperations {
                             null,
                             null,
                             null));
-                    //TODO for later: Expand for Collaborators
                 }
                 return new FinancialAccountsList(financialAccounts);
             }
