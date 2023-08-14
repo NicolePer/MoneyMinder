@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static java.time.LocalDate.*;
+import static java.util.regex.Pattern.*;
+
 public class Validation {
     public static void assertUserInputLengthIsValid(String input, String fieldName, int charMin, int charMax) throws ClientException {
         int inputLength = input != null ? input.length() : 0;
@@ -25,7 +28,7 @@ public class Validation {
 
 
     public static void assertEmailIsValid(String email) throws ClientException {
-        Pattern validEmailPattern = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Pattern validEmailPattern = compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", CASE_INSENSITIVE);
         Matcher matcher = validEmailPattern.matcher(email);
         if (!matcher.find()) {
             throw new ClientException("Please enter valid email address");
@@ -49,8 +52,14 @@ public class Validation {
     }
 
     public static void assertDateIsInPast(LocalDate date) throws ClientException {
-        if(date.isAfter(LocalDate.now())){
+        if(date.isAfter(now())){
             throw new ClientException("Date cannot be in the future");
+        }
+    }
+
+    public static void assertDateIsInTheFuture(LocalDate date) throws ClientException {
+        if(date.isBefore(now())){
+            throw new ClientException("End date must be in the future");
         }
     }
 

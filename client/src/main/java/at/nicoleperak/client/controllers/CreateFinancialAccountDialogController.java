@@ -1,7 +1,6 @@
 package at.nicoleperak.client.controllers;
 
 import at.nicoleperak.client.ClientException;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -10,6 +9,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.Validation.assertUserInputLengthIsValid;
+import static javafx.event.ActionEvent.*;
+import static javafx.scene.control.ButtonType.*;
 
 public class CreateFinancialAccountDialogController implements Initializable {
 
@@ -30,8 +31,8 @@ public class CreateFinancialAccountDialogController implements Initializable {
         validateUserInputsOnFinish();
     }
     public void validateUserInputsOnFinish() {
-        Button finish = (Button) dialogPane.lookupButton(ButtonType.FINISH);
-        finish.addEventFilter(ActionEvent.ACTION, f -> {
+        Button finish = (Button) dialogPane.lookupButton(FINISH);
+        finish.addEventFilter(ACTION, f -> {
             String title = financialAccountTitleField.getText();
             String description = financialAccountDescriptionField.getText();
             try {

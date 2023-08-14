@@ -1,27 +1,25 @@
 package at.nicoleperak.client.controllers;
 
-import at.nicoleperak.client.Client;
 import at.nicoleperak.client.ClientException;
-import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.shared.User;
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
 
 import java.io.IOException;
 
+import static at.nicoleperak.client.Client.*;
 import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.SIGN_UP_SCREEN;
+import static at.nicoleperak.client.LoadingUtils.loadLoggedInUser;
 import static at.nicoleperak.client.Redirection.redirectToFinancialAccountsOverviewScreen;
 import static at.nicoleperak.client.Validation.assertEmailIsValid;
 import static at.nicoleperak.client.Validation.assertUserInputLengthIsValid;
+import static javafx.scene.control.Alert.AlertType.*;
+import static javafx.scene.paint.Color.*;
 
 public class WelcomeScreenController {
-    private static final Jsonb jsonb = JsonbBuilder.create();
 
     @FXML
     private TextField emailField;
@@ -42,10 +40,10 @@ public class WelcomeScreenController {
     protected void onSignUpLinkClicked(ActionEvent event) {
         try {
             Scene scene = loadScene(SIGN_UP_SCREEN);
-            Client.getStage().setScene(scene);
+            getStage().setScene(scene);
             scene.getRoot().requestFocus();
         } catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+            new Alert(ERROR, e.getMessage()).showAndWait();
         }
     }
 
@@ -62,24 +60,18 @@ public class WelcomeScreenController {
             saveLoggedInUser(loggedInUser);
             redirectToFinancialAccountsOverviewScreen();
         } catch (ClientException e) {
-            alertMessageLabel.setTextFill(Color.RED);
+            alertMessageLabel.setTextFill(RED);
             alertMessageLabel.setText(e.getMessage());
         }
     }
 
     private static void saveLoggedInUser(User loggedInUser) {
-        Client.setLoggedInUser(loggedInUser);
-    }
-
-    private static User loadLoggedInUser() throws ClientException {
-        String jsonResponse = ServiceFunctions.get("users");
-        return jsonb.fromJson(jsonResponse, User.class);
+        setLoggedInUser(loggedInUser);
     }
 
     private void saveUserCredentials(User user) {
-        Client.setUserCredentials(user);
+        setUserCredentials(user);
     }
-
 
     public void setWelcomeScreenAlertMessageLabelText(String message) {
         alertMessageLabel.setText(message);

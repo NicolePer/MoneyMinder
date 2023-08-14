@@ -4,6 +4,7 @@ import at.nicoleperak.shared.Transaction;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -14,6 +15,7 @@ import java.io.IOException;
 
 import static at.nicoleperak.client.FXMLLocation.TRANSACTION_DETAILS_TILE;
 import static at.nicoleperak.client.factories.TransactionDetailsTileFactory.buildTransactionDetailsTile;
+import static javafx.scene.control.Alert.AlertType.*;
 
 public class TransactionTileController {
 
@@ -39,14 +41,13 @@ public class TransactionTileController {
     @FXML @SuppressWarnings("unused")
     void onTransactionTileClicked(MouseEvent event) {
         try {
-            ObservableList<javafx.scene.Node> transactionTileList = transactionsPane.getChildren();
-            int transactionTileIndex = transactionTileList.indexOf(transactionTile);
-            FXMLLoader transactionDetailsTileLoader = new FXMLLoader();
-            transactionDetailsTileLoader.setLocation(getClass().getResource(TRANSACTION_DETAILS_TILE.getLocation()));
-            VBox transactionDetailsTile = buildTransactionDetailsTile(transaction, transactionDetailsTileLoader, transactionsPane);
-            transactionTileList.set(transactionTileIndex, transactionDetailsTile);
+            ObservableList<Node> transactionTileList = transactionsPane.getChildren();
+            int tileIndex = transactionTileList.indexOf(transactionTile);
+            FXMLLoader loader = TRANSACTION_DETAILS_TILE.getLoader();
+            VBox transactionDetailsTile = buildTransactionDetailsTile(transaction, loader, transactionsPane);
+            transactionTileList.set(tileIndex, transactionDetailsTile);
         } catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+            new Alert(ERROR, e.getMessage()).showAndWait();
         }
     }
 

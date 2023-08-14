@@ -1,4 +1,7 @@
 package at.nicoleperak.client;
+
+import javafx.fxml.FXMLLoader;
+
 public enum FXMLLocation {
     CREATE_FINANCIAL_ACCOUNT_FORM("/fxml/create-financial-account-form.fxml"),
     CREATE_FINANCIAL_ACCOUNT_TILE("/fxml/create-financial-account-tile.fxml"),
@@ -10,7 +13,10 @@ public enum FXMLLocation {
     TRANSACTION_FORM("/fxml/transaction-form.fxml"),
     TRANSACTION_TILE("/fxml/transaction-tile.fxml"),
     WELCOME_SCREEN("/fxml/welcome-screen.fxml"),
-    COLLABORATOR_BOX("/fxml/collaborator-box.fxml");
+    COLLABORATOR_BOX("/fxml/collaborator-box.fxml"),
+    RECURRING_TRANSACTION_FORM("/fxml/recurring-transaction-form.fxml"),
+    RECURRING_TRANSACTION_BOX("/fxml/recurring-transaction-order-box.fxml");
+
 
     private final String location;
 
@@ -20,5 +26,11 @@ public enum FXMLLocation {
 
     public String getLocation() {
         return location;
+    }
+
+    public FXMLLoader getLoader() {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource(location));
+        return loader;
     }
 }

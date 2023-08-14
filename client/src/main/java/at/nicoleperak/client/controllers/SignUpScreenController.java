@@ -1,10 +1,7 @@
 package at.nicoleperak.client.controllers;
 
 import at.nicoleperak.client.ClientException;
-import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.shared.User;
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -14,10 +11,11 @@ import javafx.scene.layout.AnchorPane;
 
 
 import static at.nicoleperak.client.Redirection.redirectToWelcomeScreen;
+import static at.nicoleperak.client.ServiceFunctions.*;
+import static at.nicoleperak.client.ServiceFunctions.jsonb;
 import static at.nicoleperak.client.Validation.*;
 
 public class SignUpScreenController {
-    private static final Jsonb jsonb = JsonbBuilder.create();
 
     @FXML
     private TextField emailField;
@@ -45,7 +43,7 @@ public class SignUpScreenController {
         String username = usernameField.getText();
         String email = emailField.getText();
         String password = passwordField.getText();
-        String retypedPassword =retypePasswordField.getText();
+        String retypedPassword = retypePasswordField.getText();
         try {
             assertUserInputLengthIsValid(username, "username", 1, 255);
             assertUserInputLengthIsValid(email, "email address", 4, 255);
@@ -54,8 +52,8 @@ public class SignUpScreenController {
             assertPasswordsMatch(password, retypedPassword);
             signUpUser(new User(null, username, email, password));
             redirectToWelcomeScreen("Your account has been successfully created!", alertMessageLabel);
-        } catch (ClientException clientException) {
-            alertMessageLabel.setText(clientException.getMessage());
+        } catch (ClientException e) {
+            alertMessageLabel.setText(e.getMessage());
         }
     }
 
@@ -70,7 +68,7 @@ public class SignUpScreenController {
     }
 
     private static void signUpUser(User newUser) throws ClientException {
-        ServiceFunctions.post("users", jsonb.toJson(newUser), false);
+        post("users", jsonb.toJson(newUser), false);
     }
 
     private void showAlertIfPasswordsDiffer() {

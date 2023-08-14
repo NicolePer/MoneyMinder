@@ -72,10 +72,9 @@ CREATE TABLE recurring_transaction_orders (
  transaction_partner VARCHAR(255) NOT NULL,
  category_id BIGINT REFERENCES categories(id) NOT NULL,
  note VARCHAR(1000),
- last_date DATE NOT NULL,
  next_date DATE NOT NULL,
  end_date DATE,
- interval SMALLINT NOT NULL,
+ order_interval SMALLINT NOT NULL,
  financial_account_id BIGINT REFERENCES financial_accounts(id) NOT NULL
  );
 

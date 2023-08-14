@@ -6,6 +6,9 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -32,13 +35,13 @@ public class Client extends Application {
             primaryStage.show();
             scene.getRoot().requestFocus();
         } catch (IOException e) {
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
         }
     }
 
     public static Scene loadScene(FXMLLocation fxmlLocation) throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(Client.class.getResource(fxmlLocation.getLocation()));
+        FXMLLoader loader = fxmlLocation.getLoader();
         Parent root = loader.load();
         return new Scene(root);
     }
@@ -47,6 +50,12 @@ public class Client extends Application {
         loader.setLocation(Client.class.getResource(fxmlLocation.getLocation()));
         Parent root = loader.load();
         return new Scene(root);
+    }
+
+    public static Dialog<ButtonType> getDialog(DialogPane dialogPane) {
+        Dialog<ButtonType> dialog = new Dialog<>();
+        dialog.setDialogPane(dialogPane);
+        return dialog;
     }
 
     public static User getLoggedInUser() {
@@ -76,4 +85,5 @@ public class Client extends Application {
     public static void setSelectedFinancialAccount(FinancialAccount selectedFinancialAccount) {
         Client.selectedFinancialAccount = selectedFinancialAccount;
     }
+
 }

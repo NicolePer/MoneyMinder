@@ -2,11 +2,8 @@ package at.nicoleperak.client.controllers;
 
 import at.nicoleperak.client.Client;
 import at.nicoleperak.client.ClientException;
-import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.shared.FinancialAccount;
 import at.nicoleperak.shared.FinancialAccountsList;
-import jakarta.json.bind.Jsonb;
-import jakarta.json.bind.JsonbBuilder;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,11 +22,12 @@ import java.util.ResourceBundle;
 import static at.nicoleperak.client.FXMLLocation.CREATE_FINANCIAL_ACCOUNT_TILE;
 import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNT_TILE;
 import static at.nicoleperak.client.Redirection.redirectToWelcomeScreen;
+import static at.nicoleperak.client.ServiceFunctions.*;
+import static at.nicoleperak.client.ServiceFunctions.jsonb;
 import static at.nicoleperak.client.factories.FinancialAccountTileFactory.buildFinancialAccountTile;
 
 public class FinancialAccountsOverviewScreenController implements Initializable {
 
-    private static final Jsonb jsonb = JsonbBuilder.create();
 
     @FXML
     private MenuItem accountSettingsMenuItem;
@@ -60,13 +58,12 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
 
     private void showFinancialAccounts() {
         try {
-            String jsonResponse = ServiceFunctions.get("financial-accounts");
+            String jsonResponse = get("financial-accounts");
             FinancialAccountsList financialAccountsList = jsonb.fromJson(jsonResponse, FinancialAccountsList.class);
             List<FinancialAccount> financialAccounts = financialAccountsList.getFinancialAccounts();
             for (FinancialAccount financialAccount : financialAccounts) {
-                FXMLLoader financialAccountTileLoader = new FXMLLoader();
-                financialAccountTileLoader.setLocation(getClass().getResource(FINANCIAL_ACCOUNT_TILE.getLocation()));
-                Parent accountTile = buildFinancialAccountTile(financialAccount, financialAccountTileLoader);
+                FXMLLoader loader = FINANCIAL_ACCOUNT_TILE.getLoader();
+                Parent accountTile = buildFinancialAccountTile(financialAccount, loader);
                 financialAccountsTilePane.getChildren().add(accountTile);
             }
             showCreateFinancialAccountTile();
@@ -76,8 +73,7 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
     }
 
     private void showCreateFinancialAccountTile() throws IOException {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(CREATE_FINANCIAL_ACCOUNT_TILE.getLocation()));
+        FXMLLoader loader = CREATE_FINANCIAL_ACCOUNT_TILE.getLoader();
         Parent createAccountTile = loader.load();
         financialAccountsTilePane.getChildren().add(createAccountTile);
     }

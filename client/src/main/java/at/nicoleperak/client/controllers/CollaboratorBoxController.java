@@ -1,7 +1,6 @@
 package at.nicoleperak.client.controllers;
 
 import at.nicoleperak.client.ClientException;
-import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.shared.User;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -10,7 +9,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
+import static at.nicoleperak.client.ServiceFunctions.*;
 import static at.nicoleperak.client.controllers.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
+import static javafx.scene.control.Alert.AlertType.*;
 
 public class CollaboratorBoxController {
 
@@ -20,7 +21,6 @@ public class CollaboratorBoxController {
 
     @FXML
     private ImageView deleteCollaboratorIcon;
-
 
     @FXML
     private GridPane collaboratorBox;
@@ -34,11 +34,11 @@ public class CollaboratorBoxController {
     @FXML
     void onDeleteCollaboratorIconClicked(MouseEvent event) {
         try {
-            ServiceFunctions.delete("financial-accounts/" + financialAccountId + "/collaborators/" + collaborator.getId());
-            new Alert(Alert.AlertType.INFORMATION, collaborator.getEmail() + " successfully removed as collaborator").showAndWait();
+            delete("financial-accounts/" + financialAccountId + "/collaborators/" + collaborator.getId());
+            new Alert(INFORMATION, collaborator.getEmail() + " successfully removed as collaborator").showAndWait();
             reloadFinancialAccountDetailsScreen();
         } catch (ClientException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+            new Alert(ERROR, e.getMessage()).showAndWait();
         }
     }
 

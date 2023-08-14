@@ -11,20 +11,22 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import static at.nicoleperak.client.Client.getStage;
 import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN;
 import static at.nicoleperak.client.FXMLLocation.WELCOME_SCREEN;
+import static javafx.scene.control.Alert.AlertType.*;
 
 public class Redirection {
 
     public static void redirectToFinancialAccountsOverviewScreen() {
         try {
-            Stage stage = Client.getStage();
+            Stage stage = getStage();
             Scene scene = loadScene(FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN);
             stage.setScene(scene);
             centerStage(stage);
         } catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+            new Alert(ERROR, e.getMessage()).showAndWait();
         }
     }
 
@@ -34,7 +36,7 @@ public class Redirection {
             Scene scene = loadScene(WELCOME_SCREEN, loader);
             WelcomeScreenController welcomeScreen = loader.getController();
             welcomeScreen.setWelcomeScreenAlertMessageLabelText(successMessage);
-            Client.getStage().setScene(scene);
+            getStage().setScene(scene);
         } catch (IOException e) {
             alertMessageLabel.setText(e.getMessage());
         }
@@ -42,13 +44,13 @@ public class Redirection {
 
     public static void redirectToWelcomeScreen() {
         try {
-            Stage stage = Client.getStage();
+            Stage stage = getStage();
             FXMLLoader loader = new FXMLLoader();
             Scene scene = loadScene(WELCOME_SCREEN, loader);
             stage.setScene(scene);
             centerStage(stage);
         } catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+            new Alert(ERROR, e.getMessage()).showAndWait();
         }
     }
 

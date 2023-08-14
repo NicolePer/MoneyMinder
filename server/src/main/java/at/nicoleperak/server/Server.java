@@ -8,14 +8,16 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.sun.net.httpserver.HttpServer.create;
+
 public class Server {
 
     public static void main(String[] args) {
         try {
             InetAddress inet = InetAddress.getByName("localhost");
-            InetSocketAddress addr = new InetSocketAddress(inet, 4712);
+            InetSocketAddress address = new InetSocketAddress(inet, 4712);
 
-            HttpServer server = HttpServer.create(addr, 0);
+            HttpServer server = create(address, 0);
             server.createContext("/", new EndpointsHandler());
 
             server.setExecutor(Executors.newCachedThreadPool());

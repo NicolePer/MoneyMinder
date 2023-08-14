@@ -10,29 +10,35 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Base64;
+
+import static at.nicoleperak.client.Client.getUserCredentials;
+import static java.net.http.HttpClient.newHttpClient;
+import static java.net.http.HttpRequest.BodyPublishers;
+import static java.net.http.HttpRequest.newBuilder;
+import static java.net.http.HttpResponse.BodyHandlers;
+import static java.util.Base64.getEncoder;
 
 public class ServiceFunctions {
+    public static final Jsonb jsonb = JsonbBuilder.create();
     private static final String SERVER_URI = "http://localhost:4712/";
-    private static final Jsonb jsonb = JsonbBuilder.create();
 
     public static void post(String path, String jsonString, boolean authenticated) throws ClientException {
         String uriS = SERVER_URI + path;
         try {
             URI uri = new URI(uriS);
-            HttpClient client = HttpClient.newHttpClient();
+            HttpClient client = newHttpClient();
             HttpRequest request;
             if (authenticated) {
-                request = HttpRequest.newBuilder(uri)
-                        .POST(HttpRequest.BodyPublishers.ofString(jsonString))
+                request = newBuilder(uri)
+                        .POST(BodyPublishers.ofString(jsonString))
                         .header("Authorization", getBasicAuthenticationHeader())
                         .build();
             } else {
-                request = HttpRequest.newBuilder(uri)
-                        .POST(HttpRequest.BodyPublishers.ofString(jsonString))
+                request = newBuilder(uri)
+                        .POST(BodyPublishers.ofString(jsonString))
                         .build();
             }
-            HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+            HttpResponse<byte[]> response = client.send(request, BodyHandlers.ofByteArray());
             int statusCode = response.statusCode();
             if (statusCode != 201) {
                 String jsonResponse = new String(response.body());
@@ -48,12 +54,12 @@ public class ServiceFunctions {
         String uriS = SERVER_URI + path;
         try {
             URI uri = new URI(uriS);
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder(uri)
+            HttpClient client = newHttpClient();
+            HttpRequest request = newBuilder(uri)
                     .GET()
                     .header("Authorization", getBasicAuthenticationHeader())
                     .build();
-            HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+            HttpResponse<byte[]> response = client.send(request, BodyHandlers.ofByteArray());
             int statusCode = response.statusCode();
             String jsonResponse = new String(response.body());
             if (statusCode == 200) {
@@ -67,16 +73,16 @@ public class ServiceFunctions {
         }
     }
 
-    public static void put (String path, String jsonString) throws ClientException {
+    public static void put(String path, String jsonString) throws ClientException {
         String uriS = SERVER_URI + path;
         try {
             URI uri = new URI(uriS);
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder(uri)
-                        .PUT(HttpRequest.BodyPublishers.ofString(jsonString))
-                        .header("Authorization", getBasicAuthenticationHeader())
-                        .build();
-            HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+            HttpClient client = newHttpClient();
+            HttpRequest request = newBuilder(uri)
+                    .PUT(BodyPublishers.ofString(jsonString))
+                    .header("Authorization", getBasicAuthenticationHeader())
+                    .build();
+            HttpResponse<byte[]> response = client.send(request, BodyHandlers.ofByteArray());
             int statusCode = response.statusCode();
             if (statusCode != 200) {
                 String jsonResponse = new String(response.body());
@@ -92,12 +98,12 @@ public class ServiceFunctions {
         String uriS = SERVER_URI + path;
         try {
             URI uri = new URI(uriS);
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder(uri)
+            HttpClient client = newHttpClient();
+            HttpRequest request = newBuilder(uri)
                     .DELETE()
                     .header("Authorization", getBasicAuthenticationHeader())
                     .build();
-            HttpResponse<byte[]> response = client.send(request, HttpResponse.BodyHandlers.ofByteArray());
+            HttpResponse<byte[]> response = client.send(request, BodyHandlers.ofByteArray());
             int statusCode = response.statusCode();
             if (statusCode != 204) {
                 String jsonResponse = new String(response.body());
@@ -110,9 +116,9 @@ public class ServiceFunctions {
     }
 
     private static String getBasicAuthenticationHeader() {
-        User userCredentials = Client.getUserCredentials();
+        User userCredentials = getUserCredentials();
         String credentials = userCredentials.getEmail() + ":" + userCredentials.getPassword();
-        return "Basic " + Base64.getEncoder().encodeToString(credentials.getBytes());
+        return "Basic " + getEncoder().encodeToString(credentials.getBytes());
     }
 }
 
