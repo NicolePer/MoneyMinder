@@ -11,8 +11,9 @@ import static at.nicoleperak.server.Validation.assertAuthenticatedUserIsCollabor
 import static at.nicoleperak.server.endpoints.AuthUtils.authenticate;
 import static at.nicoleperak.server.endpoints.EndpointUtils.*;
 import static at.nicoleperak.server.endpoints.HttpMethod.DELETE;
+import static java.lang.Long.*;
 
-public class DeleteRecurringTransactionOrder implements Endpoint {
+public class DeleteRecurringTransactionOrdersEndpoint implements Endpoint {
     @Override
     public boolean canHandle(HttpExchange exchange) {
         HttpMethod requestMethod = getRequestMethod(exchange);
@@ -23,7 +24,7 @@ public class DeleteRecurringTransactionOrder implements Endpoint {
 
     @Override
     public void handle(HttpExchange exchange) throws ServerException {
-        Long orderId = Long.parseLong(getPathSegments(exchange)[1]);
+        Long orderId = parseLong(getPathSegments(exchange)[1]);
         deleteOrder(exchange, orderId);
         setResponse(exchange, 204, "");
     }

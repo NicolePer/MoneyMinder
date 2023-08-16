@@ -17,13 +17,12 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.Format.convertIntoParsableDecimal;
-import static at.nicoleperak.client.LoadingUtils.*;
+import static at.nicoleperak.client.LoadingUtils.loadCategories;
 import static at.nicoleperak.client.Validation.*;
-import static at.nicoleperak.client.Validation.assertUserInputLengthIsValid;
 import static at.nicoleperak.shared.Category.CategoryType.Income;
-import static at.nicoleperak.shared.RecurringTransactionOrder.*;
-import static javafx.collections.FXCollections.*;
-import static javafx.scene.control.ButtonType.*;
+import static at.nicoleperak.shared.RecurringTransactionOrder.Interval;
+import static javafx.collections.FXCollections.observableArrayList;
+import static javafx.scene.control.ButtonType.FINISH;
 
 public class RecurringTransactionDialogController implements Initializable {
 
@@ -104,7 +103,11 @@ public class RecurringTransactionDialogController implements Initializable {
             expenseRadioButton.setSelected(true);
         }
         categoryComboBox.getSelectionModel().select(selectedRecurringTransaction.getCategory());
-        //datePicker.setValue(selectedRecurringTransaction.getDate());
+        intervalComboBox.setValue(selectedRecurringTransaction.getInterval());
+        nextDatePicker.setValue(selectedRecurringTransaction.getNextDate());
+        if (!selectedRecurringTransaction.getEndDate().equals(LocalDate.MAX)) {
+            endDatePicker.setValue(selectedRecurringTransaction.getEndDate());
+        }
         amountField.setText(selectedRecurringTransaction.getAmount().abs().toString());
         transactionPartnerField.setText(selectedRecurringTransaction.getTransactionPartner());
         descriptionField.setText(selectedRecurringTransaction.getDescription());

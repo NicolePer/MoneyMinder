@@ -14,6 +14,7 @@ import static at.nicoleperak.server.database.TransactionsOperations.insertTransa
 import static at.nicoleperak.server.endpoints.AuthUtils.authenticate;
 import static at.nicoleperak.server.endpoints.EndpointUtils.*;
 import static at.nicoleperak.server.endpoints.HttpMethod.POST;
+import static java.lang.Long.parseLong;
 
 public class PostTransactionsEndpoint implements Endpoint {
     @Override
@@ -26,7 +27,7 @@ public class PostTransactionsEndpoint implements Endpoint {
 
     @Override
     public void handle(HttpExchange exchange) throws ServerException {
-        Long financialAccountId = Long.parseLong(getPathSegments(exchange)[1]);
+        Long financialAccountId = parseLong(getPathSegments(exchange)[1]);
         createNewTransaction(exchange, financialAccountId);
         setResponse(exchange, 201, "");
     }

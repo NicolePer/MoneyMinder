@@ -90,8 +90,8 @@ public class RecurringTransactionOrdersOperations {
                 List<RecurringTransactionOrder> orders = new ArrayList<>();
                 while (rs.next()) {
                     LocalDate endDate;
-                    if (rs.getDate(RECURRING_TRANSACTION_ORDER_NEXT_DATE) != null) {
-                        endDate = rs.getDate(RECURRING_TRANSACTION_ORDER_NEXT_DATE).toLocalDate();
+                    if (rs.getDate(RECURRING_TRANSACTION_ORDER_END_DATE) != null) {
+                        endDate = rs.getDate(RECURRING_TRANSACTION_ORDER_END_DATE).toLocalDate();
                     } else {
                         endDate = LocalDate.MAX;
                     }
@@ -144,6 +144,38 @@ public class RecurringTransactionOrdersOperations {
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new ServerException(500, "Could not delete transaction", e);
+        }
+    }
+
+    public static void updateOrder(RecurringTransactionOrder order, Long orderId) throws ServerException {
+        String update = "UPDATE " + RECURRING_TRANSACTION_ORDER_TABLE + " SET "
+                + RECURRING_TRANSACTION_ORDER_DESCRIPTION + " = ?, "    // 1 DESCRIPTION
+                + RECURRING_TRANSACTION_ORDER_AMOUNT + " = ?, "         // 2 AMOUNT
+                + RECURRING_TRANSACTION_ORDER_NOTE + " = ?, "           // 3 NOTE
+                + RECURRING_TRANSACTION_ORDER_PARTNER + " = ?, "        // 4 TRANSACTION_PARTNER
+                + RECURRING_TRANSACTION_ORDER_CATEGORY_ID + " = ?, "    // 5 CATEGORY_ID
+                + RECURRING_TRANSACTION_ORDER_NEXT_DATE + " = ?, "      // 6 NEXT_DATE
+                + RECURRING_TRANSACTION_ORDER_END_DATE + " = ?, "       // 7 END_DATE
+                + RECURRING_TRANSACTION_ORDER_INTERVAL + " = ? "        // 8 INTERVAL
+                + " WHERE " + RECURRING_TRANSACTION_ORDER_ID + " = ?";  // 9 RECURRING_TRANSACTION_ORDER_ID
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(update)) {
+            stmt.setString(1, order.getDescription());
+            stmt.setBigDecimal(2, order.getAmount());
+            stmt.setString(3, order.getNote());
+            stmt.setString(4, order.getTransactionPartner());
+            stmt.setLong(5, order.getCategory().getId());
+            stmt.setDate(6, Date.valueOf(order.getNextDate()));
+            if (order.getEndDate() == null) {
+                stmt.setDate(7, null);
+            } else {
+                stmt.setDate(7, Date.valueOf(order.getEndDate()));
+            }
+            stmt.setInt(8, order.getInterval().ordinal());
+            stmt.setLong(9, orderId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not update " + order, e);
         }
     }
 }

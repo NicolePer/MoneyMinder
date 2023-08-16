@@ -112,14 +112,18 @@ public class TransactionDetailsTileController {
             Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
             if (result.isPresent() && result.get() == FINISH){
                 Transaction editedTransaction = buildTransaction(controller, false);
-                try {
-                    put("transactions/" + transaction.getId(), jsonb.toJson(editedTransaction));
-                    reloadFinancialAccountDetailsScreen();
-                } catch (ClientException e) {
-                    new Alert(ERROR, e.getMessage()).showAndWait();
-                }
+                putEditedTransaction(editedTransaction);
             }
         } catch (IOException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
+    private void putEditedTransaction(Transaction editedTransaction) {
+        try {
+            put("transactions/" + transaction.getId(), jsonb.toJson(editedTransaction));
+            reloadFinancialAccountDetailsScreen();
+        } catch (ClientException e) {
             new Alert(ERROR, e.getMessage()).showAndWait();
         }
     }

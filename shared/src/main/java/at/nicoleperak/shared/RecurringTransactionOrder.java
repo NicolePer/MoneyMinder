@@ -32,7 +32,9 @@ public class RecurringTransactionOrder {
         this.interval = interval;
     }
 
-    public enum Interval {monthly, quarterly, semiannual, yearly;
+    public enum Interval {
+        monthly, quarterly, semiannual, yearly;
+
         @Override
         public String toString() {
             return name();
@@ -126,3 +128,4 @@ public class RecurringTransactionOrder {
         this.interval = interval;
     }
 }
+

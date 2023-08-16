@@ -33,6 +33,10 @@ public class CollaboratorBoxController {
 
     @FXML
     void onDeleteCollaboratorIconClicked(MouseEvent event) {
+        removeCollaborator();
+    }
+
+    private void removeCollaborator() {
         try {
             delete("financial-accounts/" + financialAccountId + "/collaborators/" + collaborator.getId());
             new Alert(INFORMATION, collaborator.getEmail() + " successfully removed as collaborator").showAndWait();
