@@ -24,9 +24,9 @@ public class Server {
             server.setExecutor(Executors.newCachedThreadPool());
             server.start();
             System.out.println("server started - press enter to terminate");
-            try (RecurringTransactionsExecuterService scheduler = new RecurringTransactionsExecuterService()) {
-                scheduler.executeOutstandingRecurringTransactionOrders();
-                scheduler.start();
+            try (RecurringTransactionsExecuterService service = new RecurringTransactionsExecuterService()) {
+                service.executeOutstandingRecurringTransactionOrders();
+                service.scheduleService();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -36,7 +36,6 @@ public class Server {
             server.stop(0);
             ((ExecutorService) server.getExecutor()).shutdown();
         } catch (IOException e) {
-            //noinspection CallToPrintStackTrace
             e.printStackTrace();
         }
     }

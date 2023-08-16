@@ -23,7 +23,7 @@ public class RecurringTransactionsExecuterService implements AutoCloseable {
         this.executorService = Executors.newSingleThreadScheduledExecutor();
     }
 
-    public void start() {
+    public void scheduleService() {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Vienna"));
         LocalDate today = now.toLocalDate();
         LocalDate tomorrow = today.plusDays(1);
@@ -40,7 +40,7 @@ public class RecurringTransactionsExecuterService implements AutoCloseable {
                 TimeUnit.DAYS.toMinutes(1),
                 TimeUnit.MINUTES
         );
-        System.out.println("Scheduler started");
+        System.out.println("RecurringTransactionExecuter: recurring transaction execution scheduled");
     }
 
 
@@ -48,7 +48,7 @@ public class RecurringTransactionsExecuterService implements AutoCloseable {
         try {
             int executionCounter = 0;
             List<RecurringTransactionOrder> outstandingOrders = selectListOfOutstandingOrders();
-            System.out.println("RecurringTransactionScheduler: " + outstandingOrders.size() + " outstanding recurring transaction orders retrieved.");
+            System.out.println("RecurringTransactionExecuter: " + outstandingOrders.size() + " outstanding recurring transaction orders retrieved.");
             for (RecurringTransactionOrder order : outstandingOrders) {
                 try {
                     Transaction transaction = buildFromRecurringTransactionOrder(order);
@@ -64,10 +64,10 @@ public class RecurringTransactionsExecuterService implements AutoCloseable {
                     e.printStackTrace();
                 }
             }
-            System.out.println("RecurringTransactionScheduler: Execution finished at "
+            System.out.println("RecurringTransactionExecuter: Execution finished at "
                     + ZonedDateTime.now(ZoneId.of("Europe/Vienna"))
                     .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
-                    + "\n" + executionCounter + " orders executed.");
+                    + "\nRecurringTransactionExecuter: " + executionCounter + " orders executed.");
         } catch (ServerException e) {
             e.printStackTrace();
         }
