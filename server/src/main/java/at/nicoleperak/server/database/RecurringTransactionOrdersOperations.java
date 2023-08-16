@@ -3,17 +3,15 @@ package at.nicoleperak.server.database;
 import at.nicoleperak.server.ServerException;
 import at.nicoleperak.shared.Category;
 import at.nicoleperak.shared.RecurringTransactionOrder;
-import at.nicoleperak.shared.RecurringTransactionOrder.Interval;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static at.nicoleperak.server.database.CategoryOperations.*;
 import static at.nicoleperak.server.database.DatabaseUtils.*;
-import static at.nicoleperak.shared.Category.CategoryType;
+import static at.nicoleperak.shared.RecurringTransactionOrder.*;
 import static java.sql.DriverManager.getConnection;
 
 public class RecurringTransactionOrdersOperations {
@@ -91,17 +89,23 @@ public class RecurringTransactionOrdersOperations {
             try (ResultSet rs = stmt.executeQuery()) {
                 List<RecurringTransactionOrder> orders = new ArrayList<>();
                 while (rs.next()) {
+                    LocalDate endDate;
+                    if (rs.getDate(RECURRING_TRANSACTION_ORDER_NEXT_DATE) != null) {
+                        endDate = rs.getDate(RECURRING_TRANSACTION_ORDER_NEXT_DATE).toLocalDate();
+                    } else {
+                        endDate = LocalDate.MAX;
+                    }
                     orders.add(new RecurringTransactionOrder(
                             rs.getLong(RECURRING_TRANSACTION_ORDER_ID),
                             rs.getString(RECURRING_TRANSACTION_ORDER_DESCRIPTION),
                             rs.getBigDecimal(RECURRING_TRANSACTION_ORDER_AMOUNT),
                             new Category(rs.getLong(RECURRING_TRANSACTION_ORDER_CATEGORY_ID),
                                     rs.getString("category_title"),
-                                    CategoryType.values()[rs.getShort(CATEGORY_TYPE)]),
+                                    Category.CategoryType.values()[rs.getShort(CATEGORY_TYPE)]),
                             rs.getString(RECURRING_TRANSACTION_ORDER_PARTNER),
                             rs.getString(RECURRING_TRANSACTION_ORDER_NOTE),
                             rs.getDate(RECURRING_TRANSACTION_ORDER_NEXT_DATE).toLocalDate(),
-                            Objects.requireNonNullElse(rs.getDate(RECURRING_TRANSACTION_ORDER_END_DATE).toLocalDate(), LocalDate.MAX),
+                            endDate,
                             Interval.values()[rs.getShort(RECURRING_TRANSACTION_ORDER_INTERVAL)])
                     );
                 }
@@ -109,6 +113,37 @@ public class RecurringTransactionOrdersOperations {
             }
         } catch (SQLException e) {
             throw new ServerException(500, "Could not select recurring transaction orders", e);
+        }
+    }
+
+    public static Long selectFinancialAccountId(Long orderId) throws ServerException {
+        String select = "SELECT " + RECURRING_TRANSACTION_ORDER_FINANCIAL_ACCOUNT_ID
+                + " FROM " + RECURRING_TRANSACTION_ORDER_TABLE
+                + " WHERE " + RECURRING_TRANSACTION_ORDER_ID + " = ?";
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(select)) {
+            stmt.setLong(1, orderId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(RECURRING_TRANSACTION_ORDER_FINANCIAL_ACCOUNT_ID);
+                } else {
+                    throw new ServerException(404, "Recurring transaction order with id " + orderId + " does not exist");
+                }
+            }
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not select financial account id of recurring transaction order", e);
+        }
+    }
+
+    public static void deleteOrder(Long orderId) throws ServerException {
+        String delete = "DELETE FROM " + RECURRING_TRANSACTION_ORDER_TABLE +
+                " WHERE " + RECURRING_TRANSACTION_ORDER_ID + " = ?";
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(delete)) {
+            stmt.setLong(1, orderId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not delete transaction", e);
         }
     }
 }
