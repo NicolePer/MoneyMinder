@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 
 import static com.sun.net.httpserver.HttpServer.create;
 
+@SuppressWarnings("CallToPrintStackTrace")
 public class Server {
 
     public static void main(String[] args) {
@@ -23,6 +24,12 @@ public class Server {
             server.setExecutor(Executors.newCachedThreadPool());
             server.start();
             System.out.println("server started - press enter to terminate");
+            try (RecurringTransactionsExecuterService scheduler = new RecurringTransactionsExecuterService()) {
+                scheduler.executeOutstandingRecurringTransactionOrders();
+                scheduler.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             //noinspection ResultOfMethodCallIgnored
             System.in.read();
             System.out.println("server terminated");

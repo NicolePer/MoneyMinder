@@ -3,17 +3,22 @@ package at.nicoleperak.server.database;
 import at.nicoleperak.server.ServerException;
 import at.nicoleperak.shared.Category;
 import at.nicoleperak.shared.RecurringTransactionOrder;
+import at.nicoleperak.shared.Transaction;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static at.nicoleperak.server.database.CategoryOperations.*;
 import static at.nicoleperak.server.database.DatabaseUtils.*;
-import static at.nicoleperak.shared.RecurringTransactionOrder.*;
+import static at.nicoleperak.server.database.TransactionsOperations.*;
+import static at.nicoleperak.shared.RecurringTransactionOrder.Interval;
 import static java.sql.DriverManager.getConnection;
 
+@SuppressWarnings("CallToPrintStackTrace")
 public class RecurringTransactionOrdersOperations {
 
     protected static final String RECURRING_TRANSACTION_ORDER_TABLE = "recurring_transaction_orders";
@@ -176,6 +181,139 @@ public class RecurringTransactionOrdersOperations {
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new ServerException(500, "Could not update " + order, e);
+        }
+    }
+
+    public static List<RecurringTransactionOrder> selectListOfOutstandingOrders() throws ServerException {
+        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Vienna"));
+        LocalDate today = now.toLocalDate();
+        List<RecurringTransactionOrder> outstandingOrders = new ArrayList<>();
+        String select = "SELECT r." + RECURRING_TRANSACTION_ORDER_ID + ","
+                + RECURRING_TRANSACTION_ORDER_DESCRIPTION + ","
+                + RECURRING_TRANSACTION_ORDER_AMOUNT + ","
+                + RECURRING_TRANSACTION_ORDER_NOTE + ","
+                + RECURRING_TRANSACTION_ORDER_PARTNER + ","
+                + RECURRING_TRANSACTION_ORDER_NEXT_DATE + ","
+                + RECURRING_TRANSACTION_ORDER_END_DATE + ","
+                + RECURRING_TRANSACTION_ORDER_INTERVAL + ","
+                + RECURRING_TRANSACTION_ORDER_FINANCIAL_ACCOUNT_ID + ","
+                + RECURRING_TRANSACTION_ORDER_CATEGORY_ID
+                + ", c." + CATEGORY_TITLE + " AS category_title"
+                + ", c." + CATEGORY_TYPE
+                + " FROM " + RECURRING_TRANSACTION_ORDER_TABLE + " r"
+                + " INNER JOIN " + CATEGORY_TABLE + " c ON"
+                + " c." + CATEGORY_ID + " = r." + RECURRING_TRANSACTION_ORDER_CATEGORY_ID
+                + " WHERE r." + RECURRING_TRANSACTION_ORDER_NEXT_DATE + " <= ?"
+                + " ORDER BY " + RECURRING_TRANSACTION_ORDER_NEXT_DATE;
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(select)) {
+            stmt.setDate(1, Date.valueOf(today));
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    LocalDate endDate;
+                    if (rs.getDate(RECURRING_TRANSACTION_ORDER_END_DATE) != null) {
+                        endDate = rs.getDate(RECURRING_TRANSACTION_ORDER_END_DATE).toLocalDate();
+                    } else {
+                        endDate = LocalDate.MAX;
+                    }
+                    outstandingOrders.add(new RecurringTransactionOrder(
+                            rs.getLong(RECURRING_TRANSACTION_ORDER_ID),
+                            rs.getString(RECURRING_TRANSACTION_ORDER_DESCRIPTION),
+                            rs.getBigDecimal(RECURRING_TRANSACTION_ORDER_AMOUNT),
+                            new Category(rs.getLong(RECURRING_TRANSACTION_ORDER_CATEGORY_ID),
+                                    rs.getString("category_title"),
+                                    Category.CategoryType.values()[rs.getShort(CATEGORY_TYPE)]),
+                            rs.getString(RECURRING_TRANSACTION_ORDER_PARTNER),
+                            rs.getString(RECURRING_TRANSACTION_ORDER_NOTE),
+                            rs.getDate(RECURRING_TRANSACTION_ORDER_NEXT_DATE).toLocalDate(),
+                            endDate,
+                            Interval.values()[rs.getShort(RECURRING_TRANSACTION_ORDER_INTERVAL)])
+                    );
+                }
+                return outstandingOrders;
+            }
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not select list of outstanding recurring transaction orders", e);
+        }
+    }
+
+    public static void insertTransactionAndUpdateOrder(RecurringTransactionOrder order, Transaction transaction, Long financialAccountId) {
+        String update = "UPDATE " + RECURRING_TRANSACTION_ORDER_TABLE + " SET "
+                + RECURRING_TRANSACTION_ORDER_NEXT_DATE + " = ? "        // 1 NEXT_DATE
+                + " WHERE " + RECURRING_TRANSACTION_ORDER_ID + " = ?";   // 2 RECURRING_TRANSACTION_ORDER_ID
+        String insert = "INSERT INTO " + TRANSACTION_TABLE
+                + " (" + TRANSACTION_DESCRIPTION + "," + TRANSACTION_AMOUNT + ","
+                + TRANSACTION_DATE + "," + TRANSACTION_PARTNER + ","
+                + TRANSACTION_CATEGORY_ID + "," + TRANSACTION_NOTE + ","
+                + TRANSACTION_ADDED_AUTOMATICALLY + "," + TRANSACTION_FINANCIAL_ACCOUNT_ID
+                + ") VALUES(" +
+                "?," + // 1 DESCRIPTION
+                "?," + // 2 AMOUNT
+                "?," + // 3 DATE
+                "?," + // 4 TRANSACTION PARTNER
+                "?," + // 5 CATEGORY_ID
+                "?," + // 6 NOTE
+                "?," + // 7 ADDED_AUTOMATICALLY
+                "?)";  // 8 FINANCIAL_ACCOUNT_ID
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement updateStmt = conn.prepareStatement(update);
+             PreparedStatement insertStmt = conn.prepareStatement(insert)) {
+            conn.setAutoCommit(false);
+            updateStmt.setDate(1, Date.valueOf(order.getNextDate()));
+            updateStmt.setLong(2, order.getId());
+            updateStmt.executeUpdate();
+            insertStmt.setString(1, transaction.getDescription());
+            insertStmt.setBigDecimal(2, transaction.getAmount());
+            insertStmt.setDate(3, Date.valueOf(transaction.getDate()));
+            insertStmt.setString(4, transaction.getTransactionPartner());
+            insertStmt.setLong(5, transaction.getCategory().getId());
+            insertStmt.setString(6, transaction.getNote());
+            insertStmt.setBoolean(7, transaction.isAddedAutomatically());
+            insertStmt.setLong(8, financialAccountId);
+            insertStmt.executeUpdate();
+            conn.commit();
+            conn.setAutoCommit(true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void insertTransactionAndDeleteOrder(RecurringTransactionOrder order, Transaction transaction, Long financialAccountId) {
+        String delete = "DELETE FROM " + RECURRING_TRANSACTION_ORDER_TABLE
+                + " WHERE " + RECURRING_TRANSACTION_ORDER_ID + " = ?";   // 1 RECURRING_TRANSACTION_ORDER_ID
+        String insert = "INSERT INTO " + TRANSACTION_TABLE
+                + " (" + TRANSACTION_DESCRIPTION + "," + TRANSACTION_AMOUNT + ","
+                + TRANSACTION_DATE + "," + TRANSACTION_PARTNER + ","
+                + TRANSACTION_CATEGORY_ID + "," + TRANSACTION_NOTE + ","
+                + TRANSACTION_ADDED_AUTOMATICALLY + "," + TRANSACTION_FINANCIAL_ACCOUNT_ID
+                + ") VALUES(" +
+                "?," + // 1 DESCRIPTION
+                "?," + // 2 AMOUNT
+                "?," + // 3 DATE
+                "?," + // 4 TRANSACTION PARTNER
+                "?," + // 5 CATEGORY_ID
+                "?," + // 6 NOTE
+                "?," + // 7 ADDED_AUTOMATICALLY
+                "?)";  // 8 FINANCIAL_ACCOUNT_ID
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement deleteStmt = conn.prepareStatement(delete);
+             PreparedStatement insertStmt = conn.prepareStatement(insert)) {
+            conn.setAutoCommit(false);
+            deleteStmt.setLong(1, order.getId());
+            deleteStmt.executeUpdate();
+            insertStmt.setString(1, transaction.getDescription());
+            insertStmt.setBigDecimal(2, transaction.getAmount());
+            insertStmt.setDate(3, Date.valueOf(transaction.getDate()));
+            insertStmt.setString(4, transaction.getTransactionPartner());
+            insertStmt.setLong(5, transaction.getCategory().getId());
+            insertStmt.setString(6, transaction.getNote());
+            insertStmt.setBoolean(7, transaction.isAddedAutomatically());
+            insertStmt.setLong(8, financialAccountId);
+            insertStmt.executeUpdate();
+            conn.commit();
+            conn.setAutoCommit(true);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
