@@ -69,4 +69,50 @@ public class FinancialGoalsOperations {
             throw new ServerException(500, "Could not select financial goal", e);
         }
     }
+
+    public static Long selectFinancialAccountId(Long goalId) throws ServerException {
+        String select = "SELECT " + FINANCIAL_GOAL_FINANCIAL_ACCOUNT_ID
+                + " FROM " + FINANCIAL_GOAL_TABLE
+                + " WHERE " + FINANCIAL_GOAL_ID + " = ?";
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(select)) {
+            stmt.setLong(1, goalId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(TRANSACTION_FINANCIAL_ACCOUNT_ID);
+                } else {
+                    throw new ServerException(404, "Financial goal with id " + goalId + " does not exist");
+                }
+            }
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not select financial account id of financial goal", e);
+        }
+    }
+
+    public static void updateFinancialGoal(FinancialGoal goal, Long goalId) throws ServerException {
+        String update = "UPDATE " + FINANCIAL_GOAL_TABLE + " SET "
+                + FINANCIAL_GOAL_AMOUNT + " = ? "            // 1 AMOUNT
+                + " WHERE " + FINANCIAL_GOAL_ID + " = ?";     // 2 FINANCIAL_GOAL_ID
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(update)) {
+            stmt.setBigDecimal(1, goal.getGoalAmount());
+            stmt.setLong(2, goalId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not update financial goal", e);
+        }
+    }
+
+    public static void deleteFinancialGoal(Long goalId) throws ServerException {
+        String delete = "DELETE FROM " + FINANCIAL_GOAL_TABLE +
+                " WHERE " + FINANCIAL_GOAL_ID + " = ?";
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(delete)) {
+            stmt.setLong(1, goalId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not delete financial goal", e);
+        }
+    }
+
 }

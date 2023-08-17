@@ -41,4 +41,13 @@ public class FinancialGoal {
     public void setCurrentMonthsExpenses(BigDecimal currentMonthsExpenses) {
         this.currentMonthsExpenses = currentMonthsExpenses;
     }
+
+    @Override
+    public String toString() {
+        return "FinancialGoal{" +
+                "id=" + id +
+                ", goalAmount=" + goalAmount +
+                ", currentMonthsExpenses=" + currentMonthsExpenses +
+                '}';
+    }
 }

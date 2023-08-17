@@ -40,7 +40,6 @@ import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.Client.*;
 import static at.nicoleperak.client.FXMLLocation.*;
-import static at.nicoleperak.client.Format.convertIntoParsableDecimal;
 import static at.nicoleperak.client.Format.formatBalance;
 import static at.nicoleperak.client.LoadingUtils.loadCategories;
 import static at.nicoleperak.client.LoadingUtils.loadSelectedFinancialAccountDetails;
@@ -51,6 +50,7 @@ import static at.nicoleperak.client.ServiceFunctions.post;
 import static at.nicoleperak.client.Validation.assertDateIsInPast;
 import static at.nicoleperak.client.Validation.assertEmailIsValid;
 import static at.nicoleperak.client.factories.CollaboratorBoxFactory.buildCollaboratorBox;
+import static at.nicoleperak.client.factories.FinancialGoalFactory.buildFinancialGoal;
 import static at.nicoleperak.client.factories.RecurringTransactionOrderBoxFactory.buildRecurringTransactionOrderBox;
 import static at.nicoleperak.client.factories.RecurringTransactionOrderFactory.buildRecurringTransactionOrder;
 import static at.nicoleperak.client.factories.TransactionFactory.buildTransaction;
@@ -224,6 +224,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             MonthlyGoalInfoBoxController controller = loader.getController();
             controller.getGoalLabel().setText(formatBalance(goal.getGoalAmount()));
             controller.getCurrentExpensesLabel().setText(formatBalance(goal.getCurrentMonthsExpenses().abs()));
+            controller.setGoal(goal);
             monthlyGoalBox.getChildren().add(monthlyGoalInfoBox);
             if (userIsOwner()) {
                 controller.getDeleteMonthlyGoalIcon().setVisible(true);
@@ -551,9 +552,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             SetMonthlyGoalDialogController controller = loader.getController();
             Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
             if (result.isPresent() && result.get() == FINISH) {
-                String amountString = convertIntoParsableDecimal(controller.getGoalTextField().getText());
-                BigDecimal amount = new BigDecimal(amountString);
-                FinancialGoal goal = new FinancialGoal(null, amount, null);
+                FinancialGoal goal = buildFinancialGoal(controller);
                 try {
                     post("financial_accounts/" + selectedFinancialAccount.getId() + "/financial-goals", jsonb.toJson(goal), true);
                     reloadFinancialAccountDetailsScreen();

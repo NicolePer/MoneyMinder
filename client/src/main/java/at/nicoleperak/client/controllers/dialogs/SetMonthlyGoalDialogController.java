@@ -1,6 +1,7 @@
 package at.nicoleperak.client.controllers.dialogs;
 
 import at.nicoleperak.client.ClientException;
+import at.nicoleperak.shared.FinancialGoal;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -45,6 +46,10 @@ public class SetMonthlyGoalDialogController implements Initializable {
                 f.consume();
             }
         });
+    }
+
+    public void setSelectedGoal(FinancialGoal goal) {
+        goalTextField.setText(goal.getGoalAmount().toString());
     }
 
 }
