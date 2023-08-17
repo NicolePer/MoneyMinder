@@ -68,15 +68,18 @@ public class EditFinancialAccountDialogController implements Initializable {
     }
 
     public void onOwnerComboBoxSelectionChanged() {
-        ownerComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue)
-                -> new Alert(CONFIRMATION,
-                """
-                        If you change the owner of the financial account, you will no longer be able to
-                        \tedit the financial account,\s
-                        \tset/remove monthly goals and\s
-                        \tadd/remove collaborators.
-
-                        You will remain collaborator of this financial account.""").showAndWait());
+        ownerComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.getId().equals(financialAccount.getOwner().getId())) {
+                new Alert(CONFIRMATION,
+                        """
+                                If you change the owner of the financial account, you will no longer be able to
+                                \tedit the financial account,\s
+                                \tset/remove monthly goals and\s
+                                \tadd/remove collaborators.
+                                        
+                                You will remain collaborator of this financial account.""").showAndWait();
+            }
+        });
     }
 
     public Label getAlertMessageLabel() {
