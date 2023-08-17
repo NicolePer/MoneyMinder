@@ -6,28 +6,32 @@ import at.nicoleperak.shared.Transaction;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import static at.nicoleperak.server.TransactionFactory.buildFromRecurringTransactionOrder;
 import static at.nicoleperak.server.database.RecurringTransactionOrdersOperations.*;
 import static at.nicoleperak.shared.RecurringTransactionOrder.Interval;
+import static java.time.ZonedDateTime.now;
+import static java.time.ZonedDateTime.of;
+import static java.util.concurrent.TimeUnit.DAYS;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 @SuppressWarnings("CallToPrintStackTrace")
-public class RecurringTransactionsExecuterService implements AutoCloseable {
+public class RecurringTransactionsExecutorService implements AutoCloseable {
     private final ScheduledExecutorService executorService;
 
-    public RecurringTransactionsExecuterService() {
+    public RecurringTransactionsExecutorService() {
         this.executorService = Executors.newSingleThreadScheduledExecutor();
     }
 
     public void scheduleService() {
-        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Vienna"));
+        ZonedDateTime now = now(ZoneId.of("Europe/Vienna"));
         LocalDate today = now.toLocalDate();
         LocalDate tomorrow = today.plusDays(1);
-        ZonedDateTime startOfTomorrow = ZonedDateTime.of(tomorrow, LocalTime.MIN, ZoneId.of("Europe/Vienna"));
+        ZonedDateTime startOfTomorrow = of(tomorrow, LocalTime.MIN, ZoneId.of("Europe/Vienna"));
         Duration d = Duration.between(now, startOfTomorrow);
         long minutesUnitStartOfTomorrow = d.toMinutes();
         executorService.scheduleAtFixedRate(() -> {
@@ -36,20 +40,24 @@ public class RecurringTransactionsExecuterService implements AutoCloseable {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }, minutesUnitStartOfTomorrow,
-                TimeUnit.DAYS.toMinutes(1),
-                TimeUnit.MINUTES
+                },
+                minutesUnitStartOfTomorrow,
+                DAYS.toMinutes(1),
+                MINUTES
         );
-        System.out.println("RecurringTransactionExecuter: recurring transaction execution scheduled");
+        System.out.println("RecurringTransactionExecutor: recurring transaction execution scheduled");
     }
-
 
     public void executeOutstandingRecurringTransactionOrders() {
         try {
+            int outstandingOrderCounter = 0;
             int executionCounter = 0;
             List<RecurringTransactionOrder> outstandingOrders = selectListOfOutstandingOrders();
-            System.out.println("RecurringTransactionExecuter: " + outstandingOrders.size() + " outstanding recurring transaction orders retrieved.");
-            for (RecurringTransactionOrder order : outstandingOrders) {
+            LinkedList<RecurringTransactionOrder> queue = new LinkedList<>(outstandingOrders);
+            while (queue.peek() != null) {
+                System.out.println("RecurringTransactionExecutor: " + queue.size() + " outstanding recurring transaction orders retrieved");
+                outstandingOrderCounter += queue.size();
+                RecurringTransactionOrder order = queue.remove();
                 try {
                     Transaction transaction = buildFromRecurringTransactionOrder(order);
                     Long financialAccountId = selectFinancialAccountId(order.getId());
@@ -58,16 +66,21 @@ public class RecurringTransactionsExecuterService implements AutoCloseable {
                         insertTransactionAndDeleteOrder(order, transaction, financialAccountId);
                     } else {
                         insertTransactionAndUpdateOrder(order, transaction, financialAccountId);
+                        if (isOutstanding(order)) {
+                            queue.add(order);
+                        }
                     }
                     executionCounter++;
                 } catch (ServerException e) {
                     e.printStackTrace();
+                    System.out.println("Could not execute order " + order.getId());
                 }
             }
-            System.out.println("RecurringTransactionExecuter: Execution finished at "
-                    + ZonedDateTime.now(ZoneId.of("Europe/Vienna"))
+            System.out.println("RecurringTransactionExecutor: Execution finished at "
+                    + now(ZoneId.of("Europe/Vienna"))
                     .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM))
-                    + "\nRecurringTransactionExecuter: " + executionCounter + " orders executed.");
+                    + "\nRecurringTransactionExecutor: " + executionCounter + "/"
+                    + outstandingOrderCounter + " orders executed.");
         } catch (ServerException e) {
             e.printStackTrace();
         }
@@ -91,21 +104,25 @@ public class RecurringTransactionsExecuterService implements AutoCloseable {
         }
     }
 
-    @Override
-    public void close() throws Exception {
-        executorService.shutdown();
-    }
-
-    public static void checkForOutstandingExecution(RecurringTransactionOrder order) {
-        LocalDate nextDate = order.getNextDate();
-        ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Vienna"));
-        LocalDate today = now.toLocalDate();
-        if (nextDate.isBefore(today) || nextDate.isEqual(today)) {
-            try (RecurringTransactionsExecuterService executerService = new RecurringTransactionsExecuterService()) {
-                executerService.executeOutstandingRecurringTransactionOrders();
+    public static void executeIfOrderIsOutstanding(RecurringTransactionOrder order) {
+        if (isOutstanding(order)) {
+            try (RecurringTransactionsExecutorService executorService = new RecurringTransactionsExecutorService()) {
+                executorService.executeOutstandingRecurringTransactionOrders();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static boolean isOutstanding(RecurringTransactionOrder order) {
+        LocalDate nextDate = order.getNextDate();
+        ZonedDateTime now = now(ZoneId.of("Europe/Vienna"));
+        LocalDate today = now.toLocalDate();
+        return nextDate.isBefore(today) || nextDate.isEqual(today);
+    }
+
+    @Override
+    public void close() {
+        executorService.shutdown();
     }
 }

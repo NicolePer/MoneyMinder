@@ -13,6 +13,7 @@ import static com.sun.net.httpserver.HttpServer.create;
 @SuppressWarnings("CallToPrintStackTrace")
 public class Server {
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void main(String[] args) {
         try {
             InetAddress inet = InetAddress.getByName("localhost");
@@ -24,14 +25,13 @@ public class Server {
             server.setExecutor(Executors.newCachedThreadPool());
             server.start();
             System.out.println("server started - press enter to terminate");
-            try (RecurringTransactionsExecuterService service = new RecurringTransactionsExecuterService()) {
-                service.executeOutstandingRecurringTransactionOrders();
-                service.scheduleService();
+            try (RecurringTransactionsExecutorService executor = new RecurringTransactionsExecutorService()) {
+                executor.executeOutstandingRecurringTransactionOrders();
+                executor.scheduleService();
+                System.in.read();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            //noinspection ResultOfMethodCallIgnored
-            System.in.read();
             System.out.println("server terminated");
             server.stop(0);
             ((ExecutorService) server.getExecutor()).shutdown();

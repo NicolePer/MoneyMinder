@@ -1,6 +1,6 @@
 package at.nicoleperak.server.endpoints.recurringtransactionorders;
 
-import at.nicoleperak.server.RecurringTransactionsExecuterService;
+import at.nicoleperak.server.RecurringTransactionsExecutorService;
 import at.nicoleperak.server.ServerException;
 import at.nicoleperak.server.database.RecurringTransactionOrdersOperations;
 import at.nicoleperak.server.endpoints.Endpoint;
@@ -43,7 +43,7 @@ public class PutRecurringTransactionOrdersEndpoint implements Endpoint {
             String jsonString = new String(exchange.getRequestBody().readAllBytes());
             RecurringTransactionOrder order = jsonb.fromJson(jsonString, RecurringTransactionOrder.class);
             updateOrder(order, orderId);
-            RecurringTransactionsExecuterService.checkForOutstandingExecution(order);
+            RecurringTransactionsExecutorService.executeIfOrderIsOutstanding(order);
         } catch (IOException e) {
             throw new ServerException(400, "Could not read request body", e);
         }

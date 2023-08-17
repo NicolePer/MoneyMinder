@@ -237,7 +237,7 @@ public class RecurringTransactionOrdersOperations {
         }
     }
 
-    public static void insertTransactionAndUpdateOrder(RecurringTransactionOrder order, Transaction transaction, Long financialAccountId) {
+    public static void insertTransactionAndUpdateOrder(RecurringTransactionOrder order, Transaction transaction, Long financialAccountId) throws ServerException {
         String update = "UPDATE " + RECURRING_TRANSACTION_ORDER_TABLE + " SET "
                 + RECURRING_TRANSACTION_ORDER_NEXT_DATE + " = ? "        // 1 NEXT_DATE
                 + " WHERE " + RECURRING_TRANSACTION_ORDER_ID + " = ?";   // 2 RECURRING_TRANSACTION_ORDER_ID
@@ -274,11 +274,11 @@ public class RecurringTransactionOrdersOperations {
             conn.commit();
             conn.setAutoCommit(true);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ServerException(500, "Could not insert transaction and update order " + order, e);
         }
     }
 
-    public static void insertTransactionAndDeleteOrder(RecurringTransactionOrder order, Transaction transaction, Long financialAccountId) {
+    public static void insertTransactionAndDeleteOrder(RecurringTransactionOrder order, Transaction transaction, Long financialAccountId) throws ServerException {
         String delete = "DELETE FROM " + RECURRING_TRANSACTION_ORDER_TABLE
                 + " WHERE " + RECURRING_TRANSACTION_ORDER_ID + " = ?";   // 1 RECURRING_TRANSACTION_ORDER_ID
         String insert = "INSERT INTO " + TRANSACTION_TABLE
@@ -313,7 +313,7 @@ public class RecurringTransactionOrdersOperations {
             conn.commit();
             conn.setAutoCommit(true);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new ServerException(500, "Could not insert transaction and delete order " + order, e);
         }
     }
 }
