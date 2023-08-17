@@ -1,8 +1,10 @@
 package at.nicoleperak.client.controllers.screens;
 
 import at.nicoleperak.client.ClientException;
+import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.client.controllers.controls.MonthlyGoalHeaderController;
 import at.nicoleperak.client.controllers.controls.MonthlyGoalInfoBoxController;
+import at.nicoleperak.client.controllers.dialogs.EditFinancialAccountDialogController;
 import at.nicoleperak.client.controllers.dialogs.RecurringTransactionDialogController;
 import at.nicoleperak.client.controllers.dialogs.SetMonthlyGoalDialogController;
 import at.nicoleperak.client.controllers.dialogs.TransactionDialogController;
@@ -50,6 +52,7 @@ import static at.nicoleperak.client.ServiceFunctions.post;
 import static at.nicoleperak.client.Validation.assertDateIsInPast;
 import static at.nicoleperak.client.Validation.assertEmailIsValid;
 import static at.nicoleperak.client.factories.CollaboratorBoxFactory.buildCollaboratorBox;
+import static at.nicoleperak.client.factories.FinancialAccountFactory.buildFinancialAccount;
 import static at.nicoleperak.client.factories.FinancialGoalFactory.buildFinancialGoal;
 import static at.nicoleperak.client.factories.RecurringTransactionOrderBoxFactory.buildRecurringTransactionOrderBox;
 import static at.nicoleperak.client.factories.RecurringTransactionOrderFactory.buildRecurringTransactionOrder;
@@ -77,6 +80,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private Category selectedCategory;
     private LocalDate selectedDateFrom;
     private LocalDate selectedDateTo;
+
     @FXML
     private MenuItem accountSettingsMenuItem;
 
@@ -93,7 +97,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private VBox headerVBox;
 
     @FXML
-    private TitledPane collaboratorsTitledPane;
+    private Button editAccountButton;
 
     @FXML
     private VBox collaboratorsPane;
@@ -105,16 +109,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private ImageView downloadIcon;
 
     @FXML
-    private Button resetFiltersButton;
-
-    @FXML
     private Label financialAccountTitleLabel;
-
-    @FXML
-    private ImageView goBackButton;
-
-    @FXML
-    private ImageView addCollaboratorIcon;
 
     @FXML
     private TextField collaboratorEmailTextField;
@@ -124,9 +119,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     private DatePicker dateToDatePicker;
-
-    @FXML
-    private GridPane goalStatusBar;
 
     @FXML
     private MenuItem helpMenuItem;
@@ -153,20 +145,18 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private VBox monthlyGoalBox;
 
     @FXML
-    private RadioButton expensesRadioButton;
-
-    @FXML
-    private ImageView searchIcon;
-
-    @FXML
-    private Accordion sideBarAccordion;
-    @FXML
     private Button setGoalButton;
-
-    @FXML
-    private Button newTransactionButton;
     @FXML
     private TextField searchField;
+
+    @FXML
+    private Label financialAccountInfoOwnerLabel;
+
+    @FXML
+    private Label financialAccountInfoDescriptionLabel;
+
+    @FXML
+    private Label financialAccountInfoTitleLabel;
 
     @FXML
     private ComboBox<Category> categoryComboBox;
@@ -202,57 +192,23 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         showCollaborators();
         showRecurringTransactionOrders();
         showMonthlyGoal();
+        showInfo();
     }
 
-    private void showMonthlyGoal() {
-        if (financialGoalIsNotSet()) {
-            if (userIsOwner()) {
-                setGoalButton.setVisible(true);
-            }
-        } else {
-            FinancialGoal goal = selectedFinancialAccount.getFinancialGoal();
-            showMonthlyGoalInfobox(goal);
-            showMonthlyGoalHeader(goal);
+    private void showInfo() {
+        if (userIsOwner()) {
+            editAccountButton.setVisible(true);
         }
+        financialAccountInfoTitleLabel.setText(selectedFinancialAccount.getTitle());
+        financialAccountInfoDescriptionLabel.setText(selectedFinancialAccount.getDescription());
+        financialAccountInfoOwnerLabel.setText(selectedFinancialAccount.getOwner().getUsername() + " ("
+                + selectedFinancialAccount.getOwner().getEmail() + ")");
     }
 
-    private void showMonthlyGoalInfobox(FinancialGoal goal) {
-        try {
-            monthlyGoalBox.getChildren().clear();
-            FXMLLoader loader = MONTHLY_GOAL_INFOBOX.getLoader();
-            VBox monthlyGoalInfoBox = loader.load();
-            MonthlyGoalInfoBoxController controller = loader.getController();
-            controller.getGoalLabel().setText(formatBalance(goal.getGoalAmount()));
-            controller.getCurrentExpensesLabel().setText(formatBalance(goal.getCurrentMonthsExpenses().abs()));
-            controller.setGoal(goal);
-            monthlyGoalBox.getChildren().add(monthlyGoalInfoBox);
-            if (userIsOwner()) {
-                controller.getDeleteMonthlyGoalIcon().setVisible(true);
-                controller.getEditMonthlyGoalIcon().setVisible(true);
-            }
-        } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
-        }
+    @FXML
+    void onEditAccountButtonClicked(ActionEvent event) {
+        showEditFinancialAccountDialog();
     }
-
-    private void showMonthlyGoalHeader(FinancialGoal goal) {
-        double currentMonthsExpenses = goal.getCurrentMonthsExpenses().abs().doubleValue();
-        double goalAmount = goal.getGoalAmount().doubleValue();
-        double divisor = currentMonthsExpenses / goalAmount;
-        int goalStatusInPercent = (int) Math.round(divisor * 100);
-        try {
-            FXMLLoader loader = MONTHLY_GOAL_HEADER.getLoader();
-            GridPane monthlyGoalHeader = loader.load();
-            MonthlyGoalHeaderController controller = loader.getController();
-            controller.getPercentageLabel().setText(goalStatusInPercent + " %");
-            controller.getProgressBar().setProgress(divisor);
-            controller.setProgressBarColor(divisor);
-            headerVBox.getChildren().add(1, monthlyGoalHeader);
-        } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
-        }
-    }
-
 
     @FXML
     protected void onGoBackButtonClicked(MouseEvent event) {
@@ -566,11 +522,86 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     }
 
 
+    private void showMonthlyGoal() {
+        if (financialGoalIsNotSet()) {
+            if (userIsOwner()) {
+                setGoalButton.setVisible(true);
+            }
+        } else {
+            FinancialGoal goal = selectedFinancialAccount.getFinancialGoal();
+            showMonthlyGoalInfobox(goal);
+            showMonthlyGoalHeader(goal);
+        }
+    }
+
+    private void showMonthlyGoalInfobox(FinancialGoal goal) {
+        try {
+            monthlyGoalBox.getChildren().clear();
+            FXMLLoader loader = MONTHLY_GOAL_INFOBOX.getLoader();
+            VBox monthlyGoalInfoBox = loader.load();
+            MonthlyGoalInfoBoxController controller = loader.getController();
+            controller.getGoalLabel().setText(formatBalance(goal.getGoalAmount()));
+            controller.getCurrentExpensesLabel().setText(formatBalance(goal.getCurrentMonthsExpenses().abs()));
+            controller.setGoal(goal);
+            monthlyGoalBox.getChildren().add(monthlyGoalInfoBox);
+            if (userIsOwner()) {
+                controller.getDeleteMonthlyGoalIcon().setVisible(true);
+                controller.getEditMonthlyGoalIcon().setVisible(true);
+            }
+        } catch (IOException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
+    private void showMonthlyGoalHeader(FinancialGoal goal) {
+        double currentMonthsExpenses = goal.getCurrentMonthsExpenses().abs().doubleValue();
+        double goalAmount = goal.getGoalAmount().doubleValue();
+        double divisor = currentMonthsExpenses / goalAmount;
+        int goalStatusInPercent = (int) Math.round(divisor * 100);
+        try {
+            FXMLLoader loader = MONTHLY_GOAL_HEADER.getLoader();
+            GridPane monthlyGoalHeader = loader.load();
+            MonthlyGoalHeaderController controller = loader.getController();
+            controller.getPercentageLabel().setText(goalStatusInPercent + " %");
+            controller.getProgressBar().setProgress(divisor);
+            controller.setProgressBarColor(divisor);
+            headerVBox.getChildren().add(1, monthlyGoalHeader);
+        } catch (IOException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
     private boolean userIsOwner() {
         return selectedFinancialAccount.getOwner().getId().equals(getLoggedInUser().getId());
     }
 
     private boolean financialGoalIsNotSet() {
         return selectedFinancialAccount.getFinancialGoal() == null;
+    }
+
+    private void showEditFinancialAccountDialog() {
+        try {
+            FXMLLoader loader = EDIT_FINANCIAL_ACCOUNT_FORM.getLoader();
+            DialogPane dialogPane = loader.load();
+            EditFinancialAccountDialogController controller = loader.getController();
+            controller.setFinancialAccount(selectedFinancialAccount);
+            Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
+            if (result.isPresent() && result.get() == FINISH) {
+                FinancialAccount editedAccount = buildFinancialAccount(controller);
+                putEditedFinancialAccount(editedAccount);
+            }
+        } catch (IOException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
+    private void putEditedFinancialAccount(FinancialAccount editedAccount) {
+        try {
+            ServiceFunctions.put("financial-accounts/" + selectedFinancialAccount.getId(), jsonb.toJson(editedAccount));
+            new Alert(INFORMATION, "Financial account successfully updated").showAndWait();
+            reloadFinancialAccountDetailsScreen();
+        } catch (ClientException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
     }
 }

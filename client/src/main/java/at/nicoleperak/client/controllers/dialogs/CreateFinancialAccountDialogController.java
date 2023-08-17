@@ -47,6 +47,7 @@ public class CreateFinancialAccountDialogController implements Initializable {
             }
         });
     }
+
     public TextField getFinancialAccountDescriptionField() {
         return financialAccountDescriptionField;
     }

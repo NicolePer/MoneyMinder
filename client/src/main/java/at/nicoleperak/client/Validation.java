@@ -1,6 +1,7 @@
 package at.nicoleperak.client;
 
 import at.nicoleperak.shared.Category;
+import at.nicoleperak.shared.User;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ToggleGroup;
 
@@ -9,8 +10,9 @@ import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.time.LocalDate.*;
-import static java.util.regex.Pattern.*;
+import static java.time.LocalDate.now;
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.compile;
 
 public class Validation {
     public static void assertUserInputLengthIsValid(String input, String fieldName, int charMin, int charMax) throws ClientException {
@@ -69,8 +71,14 @@ public class Validation {
         }
     }
 
-    public static void assertCategoryIsSelected(ComboBox<Category> categories) throws ClientException {
-        if(categories.getSelectionModel().getSelectedItem() == null){
+    public static void assertOwnerIsSelected(ComboBox<User> comboBox) throws ClientException {
+        if (comboBox.getSelectionModel().getSelectedItem() == null) {
+            throw new ClientException("Please select owner");
+        }
+    }
+
+    public static void assertCategoryIsSelected(ComboBox<Category> comboBox) throws ClientException {
+        if (comboBox.getSelectionModel().getSelectedItem() == null) {
             throw new ClientException("Please select category");
         }
     }

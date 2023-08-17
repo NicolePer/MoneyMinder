@@ -3,6 +3,7 @@ package at.nicoleperak.client.controllers.controls;
 import at.nicoleperak.client.Client;
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.client.controllers.dialogs.CreateFinancialAccountDialogController;
+import at.nicoleperak.client.factories.FinancialAccountFactory;
 import at.nicoleperak.shared.FinancialAccount;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -53,7 +54,7 @@ public class CreateFinancialAccountTileController{
             CreateFinancialAccountDialogController controller = loader.getController();
             Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
             if (result.isPresent() && result.get() == FINISH) {
-                    FinancialAccount financialAccount = buildFinancialAccountObject(controller);
+                FinancialAccount financialAccount = FinancialAccountFactory.buildFinancialAccount(controller);
                     try {
                         post("financial-accounts", jsonb.toJson(financialAccount), true);
                         reloadFinancialAccountsOverviewScreen();
@@ -66,9 +67,4 @@ public class CreateFinancialAccountTileController{
         }
     }
 
-    private static FinancialAccount buildFinancialAccountObject(CreateFinancialAccountDialogController controller) {
-        String title = controller.getFinancialAccountTitleField().getText();
-        String description = controller.getFinancialAccountDescriptionField().getText();
-        return new FinancialAccount(title, description);
-    }
 }

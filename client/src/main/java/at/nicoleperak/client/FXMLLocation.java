@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 
 public enum FXMLLocation {
     CREATE_FINANCIAL_ACCOUNT_FORM("/fxml/create-financial-account-form.fxml"),
+    EDIT_FINANCIAL_ACCOUNT_FORM("/fxml/edit-financial-account-form.fxml"),
     CREATE_FINANCIAL_ACCOUNT_TILE("/fxml/create-financial-account-tile.fxml"),
     FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN("/fxml/financial-accounts-overview-screen.fxml"),
     FINANCIAL_ACCOUNT_DETAILS_SCREEN("/fxml/financial-account-details-screen.fxml"),

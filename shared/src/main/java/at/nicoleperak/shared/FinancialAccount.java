@@ -43,6 +43,19 @@ public class FinancialAccount {
         this.financialGoal = null;
     }
 
+    public FinancialAccount(String title, String description, User owner) {
+        this.id = null;
+        this.title = title;
+        this.description = description;
+        this.balance = null;
+        this.transactions = null;
+        this.owner = owner;
+        this.collaborators = null;
+        this.recurringTransactionOrders = null;
+        this.financialGoal = null;
+    }
+
+
     public Long getId() {
         return id;
     }

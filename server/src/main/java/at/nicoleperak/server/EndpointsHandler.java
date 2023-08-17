@@ -8,6 +8,7 @@ import at.nicoleperak.server.endpoints.collaborators.PostCollaboratorsEndpoint;
 import at.nicoleperak.server.endpoints.financialaccounts.GetFinancialAccountsEndpoint;
 import at.nicoleperak.server.endpoints.financialaccounts.GetFinancialAccountsListEndpoint;
 import at.nicoleperak.server.endpoints.financialaccounts.PostFinancialAccountsEndpoint;
+import at.nicoleperak.server.endpoints.financialaccounts.PutFinancialAccountsEndpoint;
 import at.nicoleperak.server.endpoints.financialgoals.DeleteFinancialGoalsEndpoint;
 import at.nicoleperak.server.endpoints.financialgoals.PostFinancialGoalsEndpoint;
 import at.nicoleperak.server.endpoints.financialgoals.PutFinancialGoalsEndpoint;
@@ -47,7 +48,8 @@ public class EndpointsHandler implements HttpHandler {
             new PutRecurringTransactionOrdersEndpoint(),
             new PostFinancialGoalsEndpoint(),
             new DeleteFinancialGoalsEndpoint(),
-            new PutFinancialGoalsEndpoint()
+            new PutFinancialGoalsEndpoint(),
+            new PutFinancialAccountsEndpoint()
     );
 
     @Override

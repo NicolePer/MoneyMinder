@@ -148,4 +148,21 @@ public class FinancialAccountsOperations {
         }
     }
 
+    public static void updateFinancialAccount(FinancialAccount financialAccount, Long financialAccountId) throws ServerException {
+        String update = "UPDATE " + FINANCIAL_ACCOUNT_TABLE + " SET "
+                + FINANCIAL_ACCOUNT_TITLE + " = ?, "            // 1 TITLE
+                + FINANCIAL_ACCOUNT_DESCRIPTION + " = ?, "      // 2 DESCRIPTION
+                + FINANCIAL_ACCOUNT_OWNER_ID + " = ? "          // 3 OWNER_ID
+                + " WHERE " + FINANCIAL_ACCOUNT_ID + " = ?";    // 4 FINANCIAL_ACCOUNT_ID
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(update)) {
+            stmt.setString(1, financialAccount.getTitle());
+            stmt.setString(2, financialAccount.getDescription());
+            stmt.setLong(3, financialAccount.getOwner().getId());
+            stmt.setLong(4, financialAccountId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not update financial account", e);
+        }
+    }
 }
