@@ -1,30 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ButtonType?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.DialogPane?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
-<DialogPane fx:id="dialogPane" contentText="hello" expanded="true" stylesheets="@../css/Dialog.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.controllers.RecurringTransactionDialogController">
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<DialogPane fx:id="dialogPane" contentText="hello" expanded="true" stylesheets="@../css/dialog.css"
+            xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="at.nicoleperak.client.controllers.dialogs.RecurringTransactionDialogController">
    <content>
       <VBox alignment="CENTER">
          <HBox alignment="TOP_CENTER" spacing="80.0">
             <VBox.margin>
                <Insets bottom="20.0" />
             </VBox.margin>
-            <RadioButton fx:id="incomeRadioButton" mnemonicParsing="false" stylesheets="@../css/RadioButton.css" text="Income" textFill="#fbf9f8">
+             <RadioButton fx:id="incomeRadioButton" mnemonicParsing="false" stylesheets="@../css/radiobutton.css"
+                          text="Income" textFill="#fbf9f8">
                <toggleGroup>
                   <ToggleGroup fx:id="transactionTypeToggleGroup" />
                </toggleGroup>
@@ -32,7 +22,9 @@
                   <Font name="Source Sans 3 Medium" size="14.0" />
                </font>
             </RadioButton>
-            <RadioButton fx:id="expenseRadioButton" mnemonicParsing="false" stylesheets="@../css/RadioButton.css" text="Expense" textFill="#fbf9f8" toggleGroup="$transactionTypeToggleGroup" HBox.hgrow="ALWAYS">
+             <RadioButton fx:id="expenseRadioButton" mnemonicParsing="false" stylesheets="@../css/radiobutton.css"
+                          text="Expense" textFill="#fbf9f8" toggleGroup="$transactionTypeToggleGroup"
+                          HBox.hgrow="ALWAYS">
                <font>
                   <Font name="Source Sans 3 Medium" size="14.0" />
                </font>
@@ -92,7 +84,9 @@
                   <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </TextField>
-            <DatePicker fx:id="nextDatePicker" editable="false" promptText="Pick Date" style="-fx-background-color: #fbf9f8;" stylesheets="@../css/DatePicker.css" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+             <DatePicker fx:id="nextDatePicker" editable="false" promptText="Pick Date"
+                         style="-fx-background-color: #fbf9f8;" stylesheets="@../css/datepicker.css"
+                         GridPane.columnIndex="1" GridPane.rowIndex="2"/>
             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="58.0" layoutY="165.0" text="Category" textFill="#fbf9f8">
                <font>
                   <Font name="Source Sans 3 Medium" size="14.0" />
@@ -101,7 +95,9 @@
                   <Insets />
                </opaqueInsets>
             </Label>
-            <ComboBox fx:id="categoryComboBox" disable="true" promptText="Choose Category" style="-fx-background-color: #fbf9f8;" stylesheets="@../css/ComboBox.css" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
+             <ComboBox fx:id="categoryComboBox" disable="true" promptText="Choose Category"
+                       style="-fx-background-color: #fbf9f8;" stylesheets="@../css/combobox.css"
+                       GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="72.0" layoutY="215.0" text="Note (optional)" textFill="#fbf9f8" GridPane.rowIndex="7">
                <font>
                   <Font name="Source Sans 3 Medium" size="14.0" />
@@ -131,7 +127,8 @@
                   <Insets />
                </opaqueInsets>
             </Label>
-            <ComboBox fx:id="intervalComboBox" promptText="Choose Interval" style="-fx-background-color: #fbf9f8;" stylesheets="@../css/ComboBox.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+             <ComboBox fx:id="intervalComboBox" promptText="Choose Interval" style="-fx-background-color: #fbf9f8;"
+                       stylesheets="@../css/combobox.css" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="115.0" text="End Date (optional)" textFill="#fbf9f8" GridPane.rowIndex="3">
                <font>
                   <Font name="Source Sans 3 Medium" size="14.0" />
@@ -140,7 +137,9 @@
                   <Insets />
                </opaqueInsets>
             </Label>
-            <DatePicker fx:id="endDatePicker" editable="false" promptText="Pick Date" style="-fx-background-color: #fbf9f8;" stylesheets="@../css/DatePicker.css" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+             <DatePicker fx:id="endDatePicker" editable="false" promptText="Pick Date"
+                         style="-fx-background-color: #fbf9f8;" stylesheets="@../css/datepicker.css"
+                         GridPane.columnIndex="1" GridPane.rowIndex="3"/>
          </GridPane>
          <Label fx:id="alertMessageLabel" alignment="CENTER" textFill="RED">
             <VBox.margin>

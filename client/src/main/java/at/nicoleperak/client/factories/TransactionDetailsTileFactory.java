@@ -1,6 +1,6 @@
 package at.nicoleperak.client.factories;
 
-import at.nicoleperak.client.controllers.TransactionDetailsTileController;
+import at.nicoleperak.client.controllers.controls.TransactionDetailsTileController;
 import at.nicoleperak.shared.Transaction;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;

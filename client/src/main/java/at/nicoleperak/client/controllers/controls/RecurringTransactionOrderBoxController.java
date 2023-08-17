@@ -1,6 +1,7 @@
-package at.nicoleperak.client.controllers;
+package at.nicoleperak.client.controllers.controls;
 
 import at.nicoleperak.client.ClientException;
+import at.nicoleperak.client.controllers.dialogs.RecurringTransactionDialogController;
 import at.nicoleperak.shared.RecurringTransactionOrder;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,8 +19,8 @@ import java.util.Optional;
 import static at.nicoleperak.client.Client.getDialog;
 import static at.nicoleperak.client.FXMLLocation.RECURRING_TRANSACTION_FORM;
 import static at.nicoleperak.client.ServiceFunctions.*;
-import static at.nicoleperak.client.controllers.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
-import static at.nicoleperak.client.factories.RecurringTransactionOrderFactory.*;
+import static at.nicoleperak.client.controllers.screens.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
+import static at.nicoleperak.client.factories.RecurringTransactionOrderFactory.buildRecurringTransactionOrder;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import static javafx.scene.control.ButtonType.FINISH;

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import static at.nicoleperak.server.database.DatabaseUtils.*;
 import static java.sql.DriverManager.getConnection;
 
-public class CategoryOperations {
+public class CategoriesOperations {
     protected static final String CATEGORY_TABLE = "categories";
     protected static final String CATEGORY_ID = "id";
     protected static final String CATEGORY_TITLE = "title";

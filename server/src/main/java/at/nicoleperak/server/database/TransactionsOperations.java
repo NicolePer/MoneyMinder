@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static at.nicoleperak.server.database.CategoryOperations.*;
+import static at.nicoleperak.server.database.CategoriesOperations.*;
 import static at.nicoleperak.server.database.DatabaseUtils.*;
 import static java.sql.DriverManager.getConnection;
 

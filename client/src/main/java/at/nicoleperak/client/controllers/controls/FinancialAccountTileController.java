@@ -1,11 +1,13 @@
-package at.nicoleperak.client.controllers;
+package at.nicoleperak.client.controllers.controls;
 
 import at.nicoleperak.shared.FinancialAccount;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+
 import java.io.IOException;
 
 import static at.nicoleperak.client.Client.*;

@@ -1,6 +1,6 @@
 package at.nicoleperak.client;
 
-import at.nicoleperak.client.controllers.WelcomeScreenController;
+import at.nicoleperak.client.controllers.screens.WelcomeScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -15,7 +15,7 @@ import static at.nicoleperak.client.Client.getStage;
 import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN;
 import static at.nicoleperak.client.FXMLLocation.WELCOME_SCREEN;
-import static javafx.scene.control.Alert.AlertType.*;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 public class Redirection {
 

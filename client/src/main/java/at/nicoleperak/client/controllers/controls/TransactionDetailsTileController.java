@@ -1,8 +1,8 @@
-package at.nicoleperak.client.controllers;
+package at.nicoleperak.client.controllers.controls;
 
 import at.nicoleperak.client.ClientException;
+import at.nicoleperak.client.controllers.dialogs.TransactionDialogController;
 import at.nicoleperak.shared.Transaction;
-
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,15 +16,15 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.util.Optional;
 
-import static at.nicoleperak.client.Client.*;
-import static at.nicoleperak.client.FXMLLocation.*;
+import static at.nicoleperak.client.Client.getDialog;
+import static at.nicoleperak.client.FXMLLocation.TRANSACTION_FORM;
+import static at.nicoleperak.client.FXMLLocation.TRANSACTION_TILE;
 import static at.nicoleperak.client.ServiceFunctions.*;
-import static at.nicoleperak.client.ServiceFunctions.jsonb;
+import static at.nicoleperak.client.controllers.screens.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
 import static at.nicoleperak.client.factories.TransactionFactory.buildTransaction;
 import static at.nicoleperak.client.factories.TransactionTileFactory.buildTransactionTile;
-import static at.nicoleperak.client.controllers.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
-import static javafx.scene.control.Alert.AlertType.*;
-import static javafx.scene.control.ButtonType.*;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.ButtonType.FINISH;
 
 public class TransactionDetailsTileController {
 

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<HBox alignment="CENTER_LEFT" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="at.nicoleperak.client.controllers.controls.MonthlyGoalHeaderController">
+   <GridPane fx:id="goalStatusBar" style="-fx-background-color: #749AC1;">
+      <columnConstraints>
+         <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="59.0" minWidth="50.0" prefWidth="50.0"/>
+         <ColumnConstraints halignment="LEFT" hgrow="ALWAYS"/>
+         <ColumnConstraints halignment="RIGHT" hgrow="NEVER"/>
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints/>
+      </rowConstraints>
+      <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true"
+                 GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets bottom="10.0" top="10.0"/>
+         </GridPane.margin>
+         <Image url="@../icons/goal-icon.png"/>
+      </ImageView>
+      <Label fx:id="percentageLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="50%" textFill="#fbf9f8"
+             GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+         <font>
+            <Font name="Source Sans 3 SemiBold" size="24.0"/>
+         </font>
+         <GridPane.margin>
+            <Insets right="10.0"/>
+         </GridPane.margin>
+      </Label>
+      <HBox alignment="CENTER" spacing="30.0" GridPane.columnIndex="1" GridPane.halignment="CENTER"
+            GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
+         <Label alignment="CENTER" contentDisplay="CENTER" text="Monthly Goal" textFill="#fbf9f8"
+                HBox.hgrow="ALWAYS">
+            <font>
+               <Font name="Source Sans 3 Regular" size="24.0"/>
+            </font>
+            <padding>
+               <Insets left="10.0"/>
+            </padding>
+         </Label>
+         <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
+            <ProgressBar fx:id="progressBar" prefWidth="800.0" progress="0.53" style="-fx-accent: #3A6A95;"
+                         VBox.vgrow="ALWAYS"/>
+         </VBox>
+      </HBox>
+   </GridPane>
+</HBox>

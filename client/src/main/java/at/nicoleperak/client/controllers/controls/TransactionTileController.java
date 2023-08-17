@@ -1,4 +1,4 @@
-package at.nicoleperak.client.controllers;
+package at.nicoleperak.client.controllers.controls;
 
 import at.nicoleperak.shared.Transaction;
 import javafx.collections.ObservableList;
@@ -15,7 +15,7 @@ import java.io.IOException;
 
 import static at.nicoleperak.client.FXMLLocation.TRANSACTION_DETAILS_TILE;
 import static at.nicoleperak.client.factories.TransactionDetailsTileFactory.buildTransactionDetailsTile;
-import static javafx.scene.control.Alert.AlertType.*;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 public class TransactionTileController {
 

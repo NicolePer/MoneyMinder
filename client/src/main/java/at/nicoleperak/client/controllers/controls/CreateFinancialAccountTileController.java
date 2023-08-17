@@ -1,12 +1,15 @@
-package at.nicoleperak.client.controllers;
+package at.nicoleperak.client.controllers.controls;
 
 import at.nicoleperak.client.Client;
 import at.nicoleperak.client.ClientException;
+import at.nicoleperak.client.controllers.dialogs.CreateFinancialAccountDialogController;
 import at.nicoleperak.shared.FinancialAccount;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
@@ -17,10 +20,10 @@ import static at.nicoleperak.client.Client.getDialog;
 import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.CREATE_FINANCIAL_ACCOUNT_FORM;
 import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN;
-import static at.nicoleperak.client.ServiceFunctions.*;
 import static at.nicoleperak.client.ServiceFunctions.jsonb;
-import static javafx.scene.control.Alert.AlertType.*;
-import static javafx.scene.control.ButtonType.*;
+import static at.nicoleperak.client.ServiceFunctions.post;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.ButtonType.FINISH;
 
 @SuppressWarnings("unused")
 

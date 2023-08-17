@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
-<GridPane fx:id="transactionTile" alignment="CENTER" hgap="10.0" onMouseClicked="#onTransactionTileClicked" style="-fx-border-style: solid; -fx-border-width: 1; -fx-border-radius: 2; -fx-border-color: #3A6A95; -fx-background-color: #FBF9F8;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.controllers.TransactionTileController">
+<GridPane fx:id="transactionTile" alignment="CENTER" hgap="10.0" onMouseClicked="#onTransactionTileClicked"
+          style="-fx-border-style: solid; -fx-border-width: 1; -fx-border-radius: 2; -fx-border-color: #3A6A95; -fx-background-color: #FBF9F8;"
+          xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="at.nicoleperak.client.controllers.controls.TransactionTileController">
    <columnConstraints>
       <ColumnConstraints hgrow="ALWAYS" percentWidth="15.0" />
       <ColumnConstraints hgrow="ALWAYS" percentWidth="35.0" />

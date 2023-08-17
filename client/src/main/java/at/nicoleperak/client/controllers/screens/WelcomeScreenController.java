@@ -1,4 +1,4 @@
-package at.nicoleperak.client.controllers;
+package at.nicoleperak.client.controllers.screens;
 
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.shared.User;
@@ -10,14 +10,13 @@ import javafx.scene.control.*;
 import java.io.IOException;
 
 import static at.nicoleperak.client.Client.*;
-import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.SIGN_UP_SCREEN;
 import static at.nicoleperak.client.LoadingUtils.loadLoggedInUser;
 import static at.nicoleperak.client.Redirection.redirectToFinancialAccountsOverviewScreen;
 import static at.nicoleperak.client.Validation.assertEmailIsValid;
 import static at.nicoleperak.client.Validation.assertUserInputLengthIsValid;
-import static javafx.scene.control.Alert.AlertType.*;
-import static javafx.scene.paint.Color.*;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.paint.Color.RED;
 
 public class WelcomeScreenController {
 

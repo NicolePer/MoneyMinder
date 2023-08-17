@@ -1,6 +1,6 @@
 package at.nicoleperak.client.factories;
 
-import at.nicoleperak.client.controllers.TransactionDialogController;
+import at.nicoleperak.client.controllers.dialogs.TransactionDialogController;
 import at.nicoleperak.shared.Category;
 import at.nicoleperak.shared.Transaction;
 

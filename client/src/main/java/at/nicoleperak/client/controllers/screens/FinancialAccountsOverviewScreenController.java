@@ -1,4 +1,4 @@
-package at.nicoleperak.client.controllers;
+package at.nicoleperak.client.controllers.screens;
 
 import at.nicoleperak.client.Client;
 import at.nicoleperak.client.ClientException;
@@ -22,7 +22,7 @@ import java.util.ResourceBundle;
 import static at.nicoleperak.client.FXMLLocation.CREATE_FINANCIAL_ACCOUNT_TILE;
 import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNT_TILE;
 import static at.nicoleperak.client.Redirection.redirectToWelcomeScreen;
-import static at.nicoleperak.client.ServiceFunctions.*;
+import static at.nicoleperak.client.ServiceFunctions.get;
 import static at.nicoleperak.client.ServiceFunctions.jsonb;
 import static at.nicoleperak.client.factories.FinancialAccountTileFactory.buildFinancialAccountTile;
 

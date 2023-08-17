@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<DialogPane fx:id="dialogPane" expanded="true" stylesheets="@../css/dialog.css" xmlns="http://javafx.com/javafx/20.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="at.nicoleperak.client.controllers.dialogs.SetMonthlyGoalDialogController">
+   <content>
+      <VBox alignment="CENTER">
+         <GridPane hgap="20.0" vgap="20.0">
+            <columnConstraints>
+               <ColumnConstraints hgrow="ALWAYS"/>
+               <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Maximum Expenses" textFill="#fbf9f8"
+                   GridPane.halignment="LEFT">
+               <font>
+                  <Font name="Source Sans 3 Medium" size="14.0"/>
+               </font>
+               <opaqueInsets>
+                  <Insets/>
+               </opaqueInsets>
+            </Label>
+            <TextField fx:id="goalTextField" prefHeight="26.0" prefWidth="150.0" style="-fx-background-color: #FBF9F8;"
+                       GridPane.columnIndex="1">
+               <font>
+                  <Font name="Source Sans 3 Regular" size="13.0"/>
+               </font>
+            </TextField>
+         </GridPane>
+         <Label fx:id="alertMessageLabel" alignment="CENTER" textFill="#f3de8a">
+            <VBox.margin>
+               <Insets bottom="-10.0" top="10.0"/>
+            </VBox.margin>
+            <font>
+               <Font name="Source Sans 3 Regular" size="13.0"/>
+            </font>
+         </Label>
+      </VBox>
+   </content>
+   <header>
+      <HBox alignment="CENTER">
+         <padding>
+            <Insets bottom="10.0" top="10.0"/>
+         </padding>
+         <Label text="Set Monthly Goal" textFill="#fbf9f8">
+            <font>
+               <Font name="Source Sans 3 Medium" size="18.0"/>
+            </font>
+         </Label>
+      </HBox>
+   </header>
+   <padding>
+      <Insets left="10.0" right="10.0"/>
+   </padding>
+   <ButtonType fx:constant="FINISH"/>
+   <ButtonType fx:constant="CANCEL"/>
+</DialogPane>

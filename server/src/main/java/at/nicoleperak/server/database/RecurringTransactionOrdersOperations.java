@@ -12,7 +12,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static at.nicoleperak.server.database.CategoryOperations.*;
+import static at.nicoleperak.server.database.CategoriesOperations.*;
 import static at.nicoleperak.server.database.DatabaseUtils.*;
 import static at.nicoleperak.server.database.TransactionsOperations.*;
 import static at.nicoleperak.shared.RecurringTransactionOrder.Interval;

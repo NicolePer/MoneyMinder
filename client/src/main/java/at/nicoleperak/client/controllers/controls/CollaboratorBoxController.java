@@ -1,4 +1,4 @@
-package at.nicoleperak.client.controllers;
+package at.nicoleperak.client.controllers.controls;
 
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.shared.User;
@@ -9,9 +9,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
-import static at.nicoleperak.client.ServiceFunctions.*;
-import static at.nicoleperak.client.controllers.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
-import static javafx.scene.control.Alert.AlertType.*;
+import static at.nicoleperak.client.ServiceFunctions.delete;
+import static at.nicoleperak.client.controllers.screens.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 public class CollaboratorBoxController {
 

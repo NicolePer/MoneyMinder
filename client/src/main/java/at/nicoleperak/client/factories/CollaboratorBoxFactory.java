@@ -1,6 +1,6 @@
 package at.nicoleperak.client.factories;
 
-import at.nicoleperak.client.controllers.CollaboratorBoxController;
+import at.nicoleperak.client.controllers.controls.CollaboratorBoxController;
 import at.nicoleperak.shared.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;

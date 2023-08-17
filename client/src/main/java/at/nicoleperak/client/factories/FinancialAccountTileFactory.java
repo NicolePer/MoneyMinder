@@ -1,6 +1,6 @@
 package at.nicoleperak.client.factories;
 
-import at.nicoleperak.client.controllers.FinancialAccountTileController;
+import at.nicoleperak.client.controllers.controls.FinancialAccountTileController;
 import at.nicoleperak.shared.FinancialAccount;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

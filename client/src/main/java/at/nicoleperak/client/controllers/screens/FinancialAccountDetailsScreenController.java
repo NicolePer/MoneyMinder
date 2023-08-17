@@ -1,9 +1,11 @@
-package at.nicoleperak.client.controllers;
+package at.nicoleperak.client.controllers.screens;
 
-import at.nicoleperak.client.*;
+import at.nicoleperak.client.ClientException;
+import at.nicoleperak.client.controllers.dialogs.RecurringTransactionDialogController;
+import at.nicoleperak.client.controllers.dialogs.SetMonthlyGoalDialogController;
+import at.nicoleperak.client.controllers.dialogs.TransactionDialogController;
 import at.nicoleperak.client.factories.PieChartDataFactory;
 import at.nicoleperak.shared.*;
-import at.nicoleperak.shared.Category;
 import at.nicoleperak.shared.Category.CategoryType;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,7 +14,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.*;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
@@ -27,19 +31,23 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.Client.*;
-import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.*;
-import static at.nicoleperak.client.Format.*;
+import static at.nicoleperak.client.Format.convertIntoParsableDecimal;
+import static at.nicoleperak.client.Format.formatBalance;
 import static at.nicoleperak.client.LoadingUtils.loadCategories;
 import static at.nicoleperak.client.LoadingUtils.loadSelectedFinancialAccountDetails;
 import static at.nicoleperak.client.Redirection.redirectToFinancialAccountsOverviewScreen;
 import static at.nicoleperak.client.Redirection.redirectToWelcomeScreen;
-import static at.nicoleperak.client.ServiceFunctions.*;
 import static at.nicoleperak.client.ServiceFunctions.jsonb;
-import static at.nicoleperak.client.Validation.*;
+import static at.nicoleperak.client.ServiceFunctions.post;
+import static at.nicoleperak.client.Validation.assertDateIsInPast;
+import static at.nicoleperak.client.Validation.assertEmailIsValid;
 import static at.nicoleperak.client.factories.CollaboratorBoxFactory.buildCollaboratorBox;
 import static at.nicoleperak.client.factories.RecurringTransactionOrderBoxFactory.buildRecurringTransactionOrderBox;
 import static at.nicoleperak.client.factories.RecurringTransactionOrderFactory.buildRecurringTransactionOrder;
@@ -48,24 +56,25 @@ import static at.nicoleperak.client.factories.TransactionTileFactory.buildTransa
 import static at.nicoleperak.shared.Category.CategoryType.Expense;
 import static at.nicoleperak.shared.Category.CategoryType.Income;
 import static java.time.LocalDate.*;
-import static java.time.format.TextStyle.*;
-import static java.util.Locale.*;
-import static java.util.Objects.*;
-import static javafx.collections.FXCollections.*;
-import static javafx.scene.control.Alert.AlertType.*;
-import static javafx.scene.control.ButtonType.*;
-import static javafx.scene.input.KeyCode.*;
+import static java.time.format.TextStyle.FULL;
+import static java.util.Locale.US;
+import static java.util.Objects.requireNonNullElse;
+import static javafx.collections.FXCollections.observableArrayList;
+import static javafx.collections.FXCollections.reverse;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
+import static javafx.scene.control.ButtonType.FINISH;
+import static javafx.scene.input.KeyCode.ENTER;
 
 public class FinancialAccountDetailsScreenController implements Initializable {
 
+    ObservableList<Category> categoryObservableList = observableArrayList();
+    ObservableList<CategoryType> typeObservableList = observableArrayList();
     private FinancialAccount selectedFinancialAccount;
     private CategoryType selectedType;
     private Category selectedCategory;
     private LocalDate selectedDateFrom;
     private LocalDate selectedDateTo;
-    ObservableList<Category> categoryObservableList = observableArrayList();
-    ObservableList<CategoryType> typeObservableList = observableArrayList();
-
     @FXML
     private MenuItem accountSettingsMenuItem;
 
@@ -77,6 +86,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     private CategoryAxis categoryAxis;
+
+    @FXML
+    private VBox headerVBox;
 
     @FXML
     private TitledPane collaboratorsTitledPane;
@@ -136,6 +148,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private RadioButton incomeRadioButton;
 
     @FXML
+    private VBox monthlyGoalBox;
+
+    @FXML
     private RadioButton expensesRadioButton;
 
     @FXML
@@ -143,6 +158,8 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     private Accordion sideBarAccordion;
+    @FXML
+    private Button setGoalButton;
 
     @FXML
     private Button newTransactionButton;
@@ -161,6 +178,15 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     @FXML
     private Label userLabel;
 
+    public static void reloadFinancialAccountDetailsScreen() {
+        try {
+            Scene scene = loadScene(FINANCIAL_ACCOUNT_DETAILS_SCREEN);
+            getStage().setScene(scene);
+        } catch (IOException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         selectedFinancialAccount = getSelectedFinancialAccount();
@@ -174,7 +200,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         showCollaborators();
         showRecurringTransactionOrders();
     }
-
 
     @FXML
     protected void onGoBackButtonClicked(MouseEvent event) {
@@ -256,6 +281,11 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         showCreateRecurringTransactionOrderDialog();
     }
 
+    @FXML
+    void onSetGoalButtonClicked(ActionEvent event) {
+        showSetMonthlyGoalDialog();
+    }
+
     private void addCollaborator() {
         collaboratorAlertMessageLabel.setText("");
         String email = collaboratorEmailTextField.getText();
@@ -314,7 +344,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         transactionsPane.getChildren().clear();
         showTransactions(filteredTransactionList);
     }
-
 
     private void showTransactions(List<Transaction> transactions) {
         try {
@@ -384,7 +413,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
-
     private void showCreateTransactionDialog() {
         try {
             FXMLLoader loader = TRANSACTION_FORM.getLoader();
@@ -404,16 +432,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             new Alert(ERROR, e.getMessage()).showAndWait();
         }
     }
-
-    public static void reloadFinancialAccountDetailsScreen() {
-        try {
-            Scene scene = loadScene(FINANCIAL_ACCOUNT_DETAILS_SCREEN);
-            getStage().setScene(scene);
-        } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
-        }
-    }
-
 
     private void setLabels() {
         financialAccountTitleLabel.setText(selectedFinancialAccount.getTitle().toUpperCase());
@@ -472,5 +490,27 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         barChart.getData().addAll(incomeSeries, expenseSeries);
         reverse(months);
         categoryAxis.setCategories(months);
+    }
+
+    private void showSetMonthlyGoalDialog() {
+        try {
+            FXMLLoader loader = SET_MONTHLY_GOAL_FORM.getLoader();
+            DialogPane dialogPane = loader.load();
+            SetMonthlyGoalDialogController controller = loader.getController();
+            Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
+            if (result.isPresent() && result.get() == FINISH) {
+                String amountString = convertIntoParsableDecimal(controller.getGoalTextField().getText());
+                BigDecimal amount = new BigDecimal(amountString);
+                FinancialGoal goal = new FinancialGoal(null, amount);
+                try {
+                    post("financial_accounts/" + selectedFinancialAccount.getId() + "/financial-goals", jsonb.toJson(goal), true);
+                    reloadFinancialAccountDetailsScreen();
+                } catch (ClientException e) {
+                    new Alert(ERROR, e.getMessage()).showAndWait();
+                }
+            }
+        } catch (IOException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
     }
 }

@@ -1,18 +1,20 @@
-package at.nicoleperak.client.controllers;
+package at.nicoleperak.client.controllers.screens;
 
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.shared.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
-
 import static at.nicoleperak.client.Redirection.redirectToWelcomeScreen;
-import static at.nicoleperak.client.ServiceFunctions.*;
 import static at.nicoleperak.client.ServiceFunctions.jsonb;
+import static at.nicoleperak.client.ServiceFunctions.post;
 import static at.nicoleperak.client.Validation.*;
 
 public class SignUpScreenController {

@@ -15,7 +15,9 @@ public enum FXMLLocation {
     WELCOME_SCREEN("/fxml/welcome-screen.fxml"),
     COLLABORATOR_BOX("/fxml/collaborator-box.fxml"),
     RECURRING_TRANSACTION_FORM("/fxml/recurring-transaction-form.fxml"),
-    RECURRING_TRANSACTION_BOX("/fxml/recurring-transaction-order-box.fxml");
+    RECURRING_TRANSACTION_BOX("/fxml/recurring-transaction-order-box.fxml"),
+    MONTHLY_GOAL_HEADER("/fxml/monthly-goal-header.fxml"),
+    SET_MONTHLY_GOAL_FORM("/fxml/set-monthly-goal-form.fxml");
 
 
     private final String location;

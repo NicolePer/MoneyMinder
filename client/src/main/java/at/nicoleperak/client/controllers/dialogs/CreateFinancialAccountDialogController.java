@@ -1,16 +1,19 @@
-package at.nicoleperak.client.controllers;
+package at.nicoleperak.client.controllers.dialogs;
 
 import at.nicoleperak.client.ClientException;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.Validation.assertUserInputLengthIsValid;
-import static javafx.event.ActionEvent.*;
-import static javafx.scene.control.ButtonType.*;
+import static javafx.event.ActionEvent.ACTION;
+import static javafx.scene.control.ButtonType.FINISH;
 
 public class CreateFinancialAccountDialogController implements Initializable {
 

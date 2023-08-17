@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<VBox fx:id="monthlyGoalInfoBox" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="at.nicoleperak.client.controllers.controls.MonthlyGoalInfoBoxController">
+   <HBox alignment="CENTER_LEFT" spacing="10.0">
+      <Label text="Current Expenses:" textFill="#fbf9f8">
+         <font>
+            <Font name="Source Sans 3 Medium" size="14.0"/>
+         </font>
+      </Label>
+      <Label fx:id="currentExpensesLabel" layoutX="10.0" layoutY="10.0" text="1500€" textFill="#fbf9f8">
+         <font>
+            <Font name="Source Sans 3 Medium" size="14.0"/>
+         </font>
+      </Label>
+   </HBox>
+   <HBox alignment="CENTER_LEFT" spacing="10.0">
+      <VBox.margin>
+         <Insets/>
+      </VBox.margin>
+      <Label text="Goal: " textFill="#fbf9f8">
+         <font>
+            <Font name="Source Sans 3 Medium" size="14.0"/>
+         </font>
+      </Label>
+      <Label fx:id="goalLabel" layoutX="10.0" layoutY="10.0" text="3000€" textFill="#fbf9f8">
+         <font>
+            <Font name="Source Sans 3 Medium" size="14.0"/>
+         </font>
+      </Label>
+      <ImageView fx:id="editMonthlyGoalIcon" fitHeight="15.0" fitWidth="15.0"
+                 onMouseClicked="#onEditMonthlyGoalIconClicked" pickOnBounds="true" preserveRatio="true">
+         <cursor>
+            <Cursor fx:constant="HAND"/>
+         </cursor>
+         <Image url="@../icons/edit-icon-white.png"/>
+      </ImageView>
+      <ImageView fx:id="deleteMonthlyGoalIcon" fitHeight="15.0" fitWidth="15.0" layoutX="100.0" layoutY="13.0"
+                 onMouseClicked="#onDeleteMonthlyGoalIconClicked" pickOnBounds="true" preserveRatio="true">
+         <cursor>
+            <Cursor fx:constant="HAND"/>
+         </cursor>
+         <Image url="@../icons/delete-icon-white.png"/>
+      </ImageView>
+   </HBox>
+</VBox>

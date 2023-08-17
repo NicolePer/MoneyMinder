@@ -1,6 +1,6 @@
 package at.nicoleperak.client.factories;
 
-import at.nicoleperak.client.controllers.RecurringTransactionDialogController;
+import at.nicoleperak.client.controllers.dialogs.RecurringTransactionDialogController;
 import at.nicoleperak.shared.Category;
 import at.nicoleperak.shared.RecurringTransactionOrder;
 

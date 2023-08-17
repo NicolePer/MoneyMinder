@@ -81,7 +81,7 @@ CREATE TABLE recurring_transaction_orders (
 CREATE TABLE financial_goals (
  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
  amount NUMERIC NOT NULL,
- financial_account_id BIGINT REFERENCES financial_accounts(id) NOT NULL
+ financial_account_id BIGINT REFERENCES financial_accounts(id) UNIQUE NOT NULL
 );
 
 CREATE TABLE collaborators (

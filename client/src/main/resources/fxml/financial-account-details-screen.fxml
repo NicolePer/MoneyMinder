@@ -1,38 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.control.Accordion?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.MenuButton?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: #FBF9F8;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.nicoleperak.client.controllers.FinancialAccountDetailsScreenController">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="800.0" prefWidth="1280.0" style="-fx-background-color: #FBF9F8;"
+      xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="at.nicoleperak.client.controllers.screens.FinancialAccountDetailsScreenController">
    <HBox alignment="CENTER" spacing="2.0" style="-fx-background-color: #3A6A95;">
       <padding>
          <Insets bottom="5.0" left="9.0" right="7.0" top="5.0" />
@@ -88,106 +69,153 @@
    <BorderPane VBox.vgrow="ALWAYS">
       <right>
          <VBox style="-fx-background-color: #749AC1;" BorderPane.alignment="CENTER">
-            <Region prefHeight="48.0" style="-fx-background-color: #749AC1;" />
-            <Accordion fx:id="sideBarAccordion" stylesheets="@../css/Accordion.css">
-               <panes>
-                  <TitledPane animated="false" text="Recurring Transactions">
-                     <font>
-                        <Font name="Source Sans 3 Regular" size="15.0" />
-                     </font>
-                     <VBox spacing="5.0" style="-fx-background-color: #749AC1;">
-                        <padding>
-                           <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                        </padding>
-                        <VBox fx:id="recurringTransactionOrdersPane" spacing="5.0" />
-                        <HBox alignment="CENTER_LEFT">
-                           <Button mnemonicParsing="false" onAction="#onAddRecurringTransactionsOrderClicked" style="-fx-background-color: #FBF9F8;" text="Add Order" textFill="#3a6a95">
-                              <font>
-                                 <Font name="Source Sans 3 Medium" size="14.0" />
-                              </font>
-                              <cursor>
-                                 <Cursor fx:constant="HAND" />
-                              </cursor>
-                              <opaqueInsets>
-                                 <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
-                              </opaqueInsets>
-                              <graphic>
-                                 <ImageView fitHeight="20.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-                                    <Image url="@../icons/add-icon-color-50.png" />
-                                 </ImageView>
-                              </graphic>
-                              <HBox.margin>
-                                 <Insets top="5.0" />
-                              </HBox.margin>
-                           </Button>
-                        </HBox>
-                     </VBox>
-                  </TitledPane>
-                  <TitledPane animated="false" text="Monthly Goal">
-                     <font>
-                        <Font name="Source Sans 3 Regular" size="15.0" />
-                     </font>
-                  </TitledPane>
-                  <TitledPane animated="false" layoutX="10.0" layoutY="86.0" text="Info">
-                     <font>
-                        <Font name="Source Sans 3 Regular" size="15.0" />
-                     </font>
-                  </TitledPane>
-                  <TitledPane fx:id="collaboratorsTitledPane" animated="false" text="Collaborators">
-                     <font>
-                        <Font name="Source Sans 3 Regular" size="15.0" />
-                     </font>
-                     <VBox fx:id="collaboratorsPane" spacing="5.0" style="-fx-background-color: #749AC1;">
-                        <padding>
-                           <Insets bottom="10.0" left="10.0" right="10.0" top="20.0" />
-                        </padding>
-                        <HBox spacing="5.0">
-                           <VBox.margin>
-                              <Insets bottom="10.0" top="-5.0" />
-                           </VBox.margin>
-                           <Label text="Add Collaborator:" textFill="#fbf9f8" wrapText="true">
-                              <font>
-                                 <Font name="Source Sans 3 Medium" size="14.0" />
-                              </font>
-                              <opaqueInsets>
-                                 <Insets />
-                              </opaqueInsets>
-                              <HBox.margin>
-                                 <Insets bottom="-7.0" />
-                              </HBox.margin>
-                           </Label>
-                        </HBox>
-                        <HBox spacing="5.0">
-                           <TextField fx:id="collaboratorEmailTextField" onKeyPressed="#onEnterKeyPressedInCollaboratorsEmailTextField" promptText="E-Mail" style="-fx-background-color: #fbf9f8;" HBox.hgrow="ALWAYS">
-                              <font>
-                                 <Font name="Source Sans 3 Regular" size="14.0" />
-                              </font>
-                           </TextField>
-                           <ImageView fx:id="addCollaboratorIcon" fitHeight="25.0" fitWidth="25.0" onMouseClicked="#onAddCollaboratorIconClicked" pickOnBounds="true" preserveRatio="true">
-                              <cursor>
-                                 <Cursor fx:constant="HAND" />
-                              </cursor>
-                              <Image url="@../icons/add-icon-white.png" />
-                           </ImageView>
-                        </HBox>
-                        <HBox>
-                           <Label fx:id="collaboratorAlertMessageLabel" alignment="CENTER" maxWidth="196.0" textFill="#f3de8a" wrapText="true">
-                              <font>
-                                 <Font name="Source Sans 3 Regular" size="13.0" />
-                              </font>
-                              <opaqueInsets>
-                                 <Insets />
-                              </opaqueInsets>
-                           </Label>
-                        </HBox>
-                     </VBox>
-                  </TitledPane>
-               </panes>
-            </Accordion>
+             <Region maxHeight="48.0" minHeight="48.0" prefHeight="48.0" style="-fx-background-color: #749AC1;"/>
+             <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+                 <content>
+                     <Accordion fx:id="sideBarAccordion" stylesheets="@../css/accordion.css">
+                         <panes>
+                             <TitledPane animated="false" layoutX="10.0" layoutY="86.0" text="Info">
+                                 <font>
+                                     <Font name="Source Sans 3 Regular" size="15.0"/>
+                                 </font>
+                             </TitledPane>
+                             <TitledPane animated="false" text="Recurring Transactions">
+                                 <font>
+                                     <Font name="Source Sans 3 Regular" size="15.0"/>
+                                 </font>
+                                 <VBox spacing="5.0" style="-fx-background-color: #749AC1;">
+                                     <padding>
+                                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                     </padding>
+                                     <VBox fx:id="recurringTransactionOrdersPane" spacing="5.0"/>
+                                     <HBox alignment="CENTER_LEFT">
+                                         <Button mnemonicParsing="false"
+                                                 onAction="#onAddRecurringTransactionsOrderClicked"
+                                                 style="-fx-background-color: #FBF9F8;" text="Add Order"
+                                                 textFill="#3a6a95">
+                                             <font>
+                                                 <Font name="Source Sans 3 Medium" size="14.0"/>
+                                             </font>
+                                             <cursor>
+                                                 <Cursor fx:constant="HAND"/>
+                                             </cursor>
+                                             <opaqueInsets>
+                                                 <Insets bottom="1.0" left="1.0" right="1.0" top="1.0"/>
+                                             </opaqueInsets>
+                                             <graphic>
+                                                 <ImageView fitHeight="20.0" fitWidth="15.0" pickOnBounds="true"
+                                                            preserveRatio="true">
+                                                     <Image url="@../icons/add-icon-color-50.png"/>
+                                                 </ImageView>
+                                             </graphic>
+                                             <HBox.margin>
+                                                 <Insets bottom="10.0" top="5.0"/>
+                                             </HBox.margin>
+                                         </Button>
+                                     </HBox>
+                                 </VBox>
+                             </TitledPane>
+                             <TitledPane fx:id="collaboratorsTitledPane" animated="false" text="Collaborators">
+                                 <font>
+                                     <Font name="Source Sans 3 Regular" size="15.0"/>
+                                 </font>
+                                 <VBox fx:id="collaboratorsPane" spacing="5.0" style="-fx-background-color: #749AC1;">
+                                     <padding>
+                                         <Insets bottom="10.0" left="10.0" right="10.0" top="20.0"/>
+                                     </padding>
+                                     <HBox spacing="5.0">
+                                         <VBox.margin>
+                                             <Insets bottom="10.0" top="-5.0"/>
+                                         </VBox.margin>
+                                         <Label text="Add Collaborator:" textFill="#fbf9f8" wrapText="true">
+                                             <font>
+                                                 <Font name="Source Sans 3 Medium" size="14.0"/>
+                                             </font>
+                                             <opaqueInsets>
+                                                 <Insets/>
+                                             </opaqueInsets>
+                                             <HBox.margin>
+                                                 <Insets bottom="-7.0"/>
+                                             </HBox.margin>
+                                         </Label>
+                                     </HBox>
+                                     <HBox spacing="5.0">
+                                         <TextField fx:id="collaboratorEmailTextField"
+                                                    onKeyPressed="#onEnterKeyPressedInCollaboratorsEmailTextField"
+                                                    promptText="E-Mail" style="-fx-background-color: #fbf9f8;"
+                                                    HBox.hgrow="ALWAYS">
+                                             <font>
+                                                 <Font name="Source Sans 3 Regular" size="14.0"/>
+                                             </font>
+                                         </TextField>
+                                         <ImageView fx:id="addCollaboratorIcon" fitHeight="25.0" fitWidth="25.0"
+                                                    onMouseClicked="#onAddCollaboratorIconClicked" pickOnBounds="true"
+                                                    preserveRatio="true">
+                                             <cursor>
+                                                 <Cursor fx:constant="HAND"/>
+                                             </cursor>
+                                             <Image url="@../icons/add-icon-white.png"/>
+                                         </ImageView>
+                                     </HBox>
+                                     <HBox>
+                                         <Label fx:id="collaboratorAlertMessageLabel" alignment="CENTER"
+                                                maxWidth="196.0" textFill="#f3de8a" wrapText="true">
+                                             <font>
+                                                 <Font name="Source Sans 3 Regular" size="13.0"/>
+                                             </font>
+                                             <opaqueInsets>
+                                                 <Insets/>
+                                             </opaqueInsets>
+                                         </Label>
+                                     </HBox>
+                                 </VBox>
+                             </TitledPane>
+                             <TitledPane animated="false" text="Monthly Goal" textFill="#fbf9f8">
+                                 <font>
+                                     <Font name="Source Sans 3 Regular" size="15.0"/>
+                                 </font>
+                                 <VBox fx:id="monthlyGoalBox" spacing="5.0" style="-fx-background-color: #749AC1;">
+                                     <padding>
+                                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+                                     </padding>
+                                     <HBox alignment="CENTER_LEFT">
+                                         <Button fx:id="setGoalButton" mnemonicParsing="false"
+                                                 onAction="#onSetGoalButtonClicked"
+                                                 style="-fx-background-color: #FBF9F8;" text="Set Goal"
+                                                 textFill="#3a6a95">
+                                             <font>
+                                                 <Font name="Source Sans 3 Medium" size="14.0"/>
+                                             </font>
+                                             <cursor>
+                                                 <Cursor fx:constant="HAND"/>
+                                             </cursor>
+                                             <opaqueInsets>
+                                                 <Insets bottom="1.0" left="1.0" right="1.0" top="1.0"/>
+                                             </opaqueInsets>
+                                             <HBox.margin>
+                                                 <Insets bottom="10.0" top="5.0"/>
+                                             </HBox.margin>
+                                             <graphic>
+                                                 <ImageView fitHeight="20.0" fitWidth="15.0"
+                                                            pickOnBounds="true" preserveRatio="true">
+                                                     <Image url="@../icons/add-icon-color-50.png"/>
+                                                 </ImageView>
+                                             </graphic>
+                                         </Button>
+                                     </HBox>
+                                 </VBox>
+                             </TitledPane>
+                         </panes>
+                     </Accordion>
+                 </content>
+                 <VBox.margin>
+                     <Insets/>
+                 </VBox.margin>
+             </ScrollPane>
          </VBox>
       </right>
       <top>
-         <VBox BorderPane.alignment="CENTER">
+          <VBox fx:id="headerVBox" BorderPane.alignment="CENTER">
             <GridPane style="-fx-background-color: #749AC1;">
                <columnConstraints>
                   <ColumnConstraints halignment="CENTER" hgrow="NEVER" maxWidth="59.0" minWidth="50.0" prefWidth="50.0" />
@@ -226,39 +254,9 @@
                   <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" />
                   <ColumnConstraints halignment="RIGHT" hgrow="NEVER" />
                </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints />
-               </rowConstraints>
                <VBox.margin>
                   <Insets />
                </VBox.margin>
-               <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                  <GridPane.margin>
-                     <Insets bottom="10.0" top="10.0" />
-                  </GridPane.margin>
-                  <Image url="@../icons/goal-icon.png" />
-               </ImageView>
-               <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="50%" textFill="#fbf9f8" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
-                  <font>
-                     <Font name="Source Sans 3 SemiBold" size="24.0" />
-                  </font>
-                  <GridPane.margin>
-                     <Insets right="10.0" />
-                  </GridPane.margin>
-               </Label>
-               <HBox alignment="CENTER" spacing="30.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
-                  <Label alignment="CENTER" contentDisplay="CENTER" text="Monthly Goal" textFill="#fbf9f8" HBox.hgrow="ALWAYS">
-                     <font>
-                        <Font name="Source Sans 3 Regular" size="24.0" />
-                     </font>
-                     <padding>
-                        <Insets left="10.0" />
-                     </padding>
-                  </Label>
-                  <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
-                     <ProgressBar prefWidth="800.0" progress="0.53" style="-fx-accent: #3A6A95;" VBox.vgrow="ALWAYS" />
-                  </VBox>
-               </HBox>
             </GridPane>
          </VBox>
       </top>
@@ -267,7 +265,8 @@
             <BorderPane.margin>
                <Insets />
             </BorderPane.margin>
-            <TabPane style="-fx-background-color: #FBF9F8; -fx-background: #FBF9F8;" stylesheets="@../css/TabPane.css" tabClosingPolicy="UNAVAILABLE" tabMinHeight="30.0" VBox.vgrow="ALWAYS">
+             <TabPane style="-fx-background-color: #FBF9F8; -fx-background: #FBF9F8;" stylesheets="@../css/tabpane.css"
+                      tabClosingPolicy="UNAVAILABLE" tabMinHeight="30.0" VBox.vgrow="ALWAYS">
                <Tab closable="false" text="TRANSACTIONS">
                   <VBox style="-fx-background-color: #FBF9F8;">
                      <HBox alignment="CENTER" spacing="20.0" style="-fx-background-color: #3A6A95;">
@@ -318,10 +317,18 @@
                         <padding>
                            <Insets bottom="15.0" left="10.0" right="10.0" />
                         </padding>
-                        <ComboBox fx:id="transactionTypeComboBox" onAction="#onTypeSelected" stylesheets="@../css/ComboBox.css" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="categoryComboBox" onAction="#onCategorySelected" stylesheets="@../css/ComboBox.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <DatePicker fx:id="dateFromDatePicker" onAction="#onDateSelected" promptText="DATE FROM" style="-fx-background-color: #FBF9F8;" stylesheets="@../css/DatePicker.css" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <DatePicker fx:id="dateToDatePicker" onAction="#onDateSelected" promptText="DATE TO" style="-fx-background-color: #FBF9F8;" stylesheets="@../css/DatePicker.css" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                         <ComboBox fx:id="transactionTypeComboBox" onAction="#onTypeSelected"
+                                   stylesheets="@../css/combobox.css" GridPane.rowIndex="1"/>
+                         <ComboBox fx:id="categoryComboBox" onAction="#onCategorySelected"
+                                   stylesheets="@../css/combobox.css" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                         <DatePicker fx:id="dateFromDatePicker" onAction="#onDateSelected" prefWidth="120.0"
+                                     promptText="DATE FROM" style="-fx-background-color: #FBF9F8;"
+                                     stylesheets="@../css/datepicker.css" GridPane.columnIndex="2"
+                                     GridPane.rowIndex="1"/>
+                         <DatePicker fx:id="dateToDatePicker" onAction="#onDateSelected" prefWidth="120.0"
+                                     promptText="DATE TO" style="-fx-background-color: #FBF9F8;"
+                                     stylesheets="@../css/datepicker.css" GridPane.columnIndex="3"
+                                     GridPane.rowIndex="1"/>
                         <Button fx:id="resetFiltersButton" mnemonicParsing="false" onAction="#onResetFiltersButtonClicked" style="-fx-background-color: #FBF9F8;" text="Reset Filters" textFill="#3a6a95" GridPane.columnIndex="4" GridPane.rowIndex="1">
                            <font>
                               <Font name="Source Sans 3 Medium" size="14.0" />
@@ -387,7 +394,8 @@
                         <padding>
                            <Insets bottom="10.0" top="10.0" />
                         </padding>
-                        <RadioButton fx:id="expensesRadioButton" mnemonicParsing="false" selected="true" stylesheets="@../css/RadioButton.css" text="Expenses" textFill="#3a6a95">
+                         <RadioButton fx:id="expensesRadioButton" mnemonicParsing="false" selected="true"
+                                      stylesheets="@../css/radiobutton.css" text="Expenses" textFill="#3a6a95">
                            <font>
                               <Font name="Source Sans 3 Medium" size="18.0" />
                            </font>
@@ -395,13 +403,15 @@
                               <ToggleGroup fx:id="pieChartToggleGroup" />
                            </toggleGroup>
                         </RadioButton>
-                        <RadioButton fx:id="incomeRadioButton" mnemonicParsing="false" stylesheets="@../css/RadioButton.css" text="Income" textFill="#3a6a95" toggleGroup="$pieChartToggleGroup">
+                         <RadioButton fx:id="incomeRadioButton" mnemonicParsing="false"
+                                      stylesheets="@../css/radiobutton.css" text="Income" textFill="#3a6a95"
+                                      toggleGroup="$pieChartToggleGroup">
                            <font>
                               <Font name="Source Sans 3 Medium" size="18.0" />
                            </font>
                         </RadioButton>
                      </HBox>
-                     <PieChart fx:id="pieChart" stylesheets="@../css/PieChart.css" VBox.vgrow="ALWAYS">
+                      <PieChart fx:id="pieChart" stylesheets="@../css/piechart.css" VBox.vgrow="ALWAYS">
                         <VBox.margin>
                            <Insets bottom="10.0" left="10.0" right="10.0" />
                         </VBox.margin>
@@ -409,7 +419,9 @@
                   </VBox>
                </Tab>
                <Tab closable="false" text="TRENDS">
-                  <BarChart fx:id="barChart" alternativeRowFillVisible="false" barGap="10.0" categoryGap="20.0" horizontalGridLinesVisible="false" style="-fx-background-color: #FBF9F8;" stylesheets="@../css/BarChart.css" verticalGridLinesVisible="false">
+                   <BarChart fx:id="barChart" alternativeRowFillVisible="false" barGap="10.0" categoryGap="20.0"
+                             horizontalGridLinesVisible="false" style="-fx-background-color: #FBF9F8;"
+                             stylesheets="@../css/barchart.css" verticalGridLinesVisible="false">
                      <xAxis>
                         <CategoryAxis fx:id="categoryAxis" side="BOTTOM" tickLabelFill="#3a6a95">
                            <tickLabelFont>

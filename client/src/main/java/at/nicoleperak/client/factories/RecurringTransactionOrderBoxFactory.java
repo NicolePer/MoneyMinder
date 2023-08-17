@@ -1,6 +1,6 @@
 package at.nicoleperak.client.factories;
 
-import at.nicoleperak.client.controllers.RecurringTransactionOrderBoxController;
+import at.nicoleperak.client.controllers.controls.RecurringTransactionOrderBoxController;
 import at.nicoleperak.shared.RecurringTransactionOrder;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.GridPane;
