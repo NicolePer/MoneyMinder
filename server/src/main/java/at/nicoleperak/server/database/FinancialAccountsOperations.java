@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import static at.nicoleperak.server.database.CollaboratorsOperations.*;
 import static at.nicoleperak.server.database.DatabaseUtils.*;
+import static at.nicoleperak.server.database.FinancialGoalsOperations.selectFinancialGoal;
 import static at.nicoleperak.server.database.RecurringTransactionOrdersOperations.selectListOfRecurringTransactionOrders;
 import static at.nicoleperak.server.database.TransactionsOperations.*;
 import static at.nicoleperak.server.database.UsersOperations.*;
@@ -83,7 +84,7 @@ public class FinancialAccountsOperations {
                     financialAccount.setTransactions(selectListOfTransactions(financialAccountId));
                     financialAccount.setCollaborators(selectListOfCollaborators(financialAccountId));
                     financialAccount.setRecurringTransactionOrders(selectListOfRecurringTransactionOrders(financialAccountId));
-                    //TODO for later: Expand for Financial Goals
+                    financialAccount.setFinancialGoal(selectFinancialGoal(financialAccountId));
                     return financialAccount;
                 } else {
                     throw new ServerException(404, "Financial account with id " + financialAccountId + " does not exist");

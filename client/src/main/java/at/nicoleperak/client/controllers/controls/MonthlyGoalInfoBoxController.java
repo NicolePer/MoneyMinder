@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 
 public class MonthlyGoalInfoBoxController {
 
@@ -21,9 +20,6 @@ public class MonthlyGoalInfoBoxController {
     private Label goalLabel;
 
     @FXML
-    private VBox monthlyGoalInfoBox;
-
-    @FXML
     void onDeleteMonthlyGoalIconClicked(MouseEvent event) {
 
     }
@@ -33,4 +29,19 @@ public class MonthlyGoalInfoBoxController {
 
     }
 
+    public Label getCurrentExpensesLabel() {
+        return currentExpensesLabel;
+    }
+
+    public Label getGoalLabel() {
+        return goalLabel;
+    }
+
+    public ImageView getDeleteMonthlyGoalIcon() {
+        return deleteMonthlyGoalIcon;
+    }
+
+    public ImageView getEditMonthlyGoalIcon() {
+        return editMonthlyGoalIcon;
+    }
 }

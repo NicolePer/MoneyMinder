@@ -6,11 +6,13 @@ import java.math.BigDecimal;
 public class FinancialGoal {
 
     private Long id;
-    private BigDecimal amount;
+    private BigDecimal goalAmount;
+    private BigDecimal currentMonthsExpenses;
 
-    public FinancialGoal(Long id, BigDecimal amount) {
+    public FinancialGoal(Long id, BigDecimal goalAmount, BigDecimal currentMonthsExpenses) {
         this.id = id;
-        this.amount = amount;
+        this.goalAmount = goalAmount;
+        this.currentMonthsExpenses = currentMonthsExpenses;
     }
 
     public FinancialGoal() {
@@ -24,11 +26,19 @@ public class FinancialGoal {
         this.id = id;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public BigDecimal getGoalAmount() {
+        return goalAmount;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setGoalAmount(BigDecimal goalAmount) {
+        this.goalAmount = goalAmount;
+    }
+
+    public BigDecimal getCurrentMonthsExpenses() {
+        return currentMonthsExpenses;
+    }
+
+    public void setCurrentMonthsExpenses(BigDecimal currentMonthsExpenses) {
+        this.currentMonthsExpenses = currentMonthsExpenses;
     }
 }

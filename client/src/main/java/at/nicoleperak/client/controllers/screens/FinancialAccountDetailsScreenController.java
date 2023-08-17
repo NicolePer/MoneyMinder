@@ -1,6 +1,8 @@
 package at.nicoleperak.client.controllers.screens;
 
 import at.nicoleperak.client.ClientException;
+import at.nicoleperak.client.controllers.controls.MonthlyGoalHeaderController;
+import at.nicoleperak.client.controllers.controls.MonthlyGoalInfoBoxController;
 import at.nicoleperak.client.controllers.dialogs.RecurringTransactionDialogController;
 import at.nicoleperak.client.controllers.dialogs.SetMonthlyGoalDialogController;
 import at.nicoleperak.client.controllers.dialogs.TransactionDialogController;
@@ -199,7 +201,57 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         setBarChart(6);
         showCollaborators();
         showRecurringTransactionOrders();
+        showMonthlyGoal();
     }
+
+    private void showMonthlyGoal() {
+        if (financialGoalIsNotSet()) {
+            if (userIsOwner()) {
+                setGoalButton.setVisible(true);
+            }
+        } else {
+            FinancialGoal goal = selectedFinancialAccount.getFinancialGoal();
+            showMonthlyGoalInfobox(goal);
+            showMonthlyGoalHeader(goal);
+        }
+    }
+
+    private void showMonthlyGoalInfobox(FinancialGoal goal) {
+        try {
+            monthlyGoalBox.getChildren().clear();
+            FXMLLoader loader = MONTHLY_GOAL_INFOBOX.getLoader();
+            VBox monthlyGoalInfoBox = loader.load();
+            MonthlyGoalInfoBoxController controller = loader.getController();
+            controller.getGoalLabel().setText(formatBalance(goal.getGoalAmount()));
+            controller.getCurrentExpensesLabel().setText(formatBalance(goal.getCurrentMonthsExpenses().abs()));
+            monthlyGoalBox.getChildren().add(monthlyGoalInfoBox);
+            if (userIsOwner()) {
+                controller.getDeleteMonthlyGoalIcon().setVisible(true);
+                controller.getEditMonthlyGoalIcon().setVisible(true);
+            }
+        } catch (IOException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
+    private void showMonthlyGoalHeader(FinancialGoal goal) {
+        double currentMonthsExpenses = goal.getCurrentMonthsExpenses().abs().doubleValue();
+        double goalAmount = goal.getGoalAmount().doubleValue();
+        double divisor = currentMonthsExpenses / goalAmount;
+        int goalStatusInPercent = (int) Math.round(divisor * 100);
+        try {
+            FXMLLoader loader = MONTHLY_GOAL_HEADER.getLoader();
+            GridPane monthlyGoalHeader = loader.load();
+            MonthlyGoalHeaderController controller = loader.getController();
+            controller.getPercentageLabel().setText(goalStatusInPercent + " %");
+            controller.getProgressBar().setProgress(divisor);
+            controller.setProgressBarColor(divisor);
+            headerVBox.getChildren().add(1, monthlyGoalHeader);
+        } catch (IOException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
 
     @FXML
     protected void onGoBackButtonClicked(MouseEvent event) {
@@ -501,7 +553,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             if (result.isPresent() && result.get() == FINISH) {
                 String amountString = convertIntoParsableDecimal(controller.getGoalTextField().getText());
                 BigDecimal amount = new BigDecimal(amountString);
-                FinancialGoal goal = new FinancialGoal(null, amount);
+                FinancialGoal goal = new FinancialGoal(null, amount, null);
                 try {
                     post("financial_accounts/" + selectedFinancialAccount.getId() + "/financial-goals", jsonb.toJson(goal), true);
                     reloadFinancialAccountDetailsScreen();
@@ -512,5 +564,14 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         } catch (IOException e) {
             new Alert(ERROR, e.getMessage()).showAndWait();
         }
+    }
+
+
+    private boolean userIsOwner() {
+        return selectedFinancialAccount.getOwner().getId().equals(getLoggedInUser().getId());
+    }
+
+    private boolean financialGoalIsNotSet() {
+        return selectedFinancialAccount.getFinancialGoal() == null;
     }
 }
