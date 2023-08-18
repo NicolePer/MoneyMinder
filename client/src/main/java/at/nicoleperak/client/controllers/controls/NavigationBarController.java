@@ -7,10 +7,7 @@ import at.nicoleperak.shared.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
@@ -46,7 +43,7 @@ public class NavigationBarController implements Initializable {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static void logout(String successMessage) {
+    public static void logout(String successMessage) {
         redirectToWelcomeScreen(successMessage);
         setLoggedInUser(null);
         setUserCredentials(null);
@@ -83,7 +80,10 @@ public class NavigationBarController implements Initializable {
             DialogPane dialogPane = loader.load();
             EditUserAccountDialogController controller = loader.getController();
             insertUserData(controller);
-            Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setDialogPane(dialogPane);
+            controller.setDialog(dialog);
+            Optional<ButtonType> result = dialog.showAndWait();
             if (result.isPresent() && result.get() == FINISH) {
                 putEditedUser(controller);
             }

@@ -13,13 +13,19 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.Client.getDialog;
+import static at.nicoleperak.client.Client.getLoggedInUser;
 import static at.nicoleperak.client.FXMLLocation.CHANGE_PASSWORD_FORM;
+import static at.nicoleperak.client.ServiceFunctions.delete;
 import static at.nicoleperak.client.Validation.assertEmailIsValid;
 import static at.nicoleperak.client.Validation.assertUserInputLengthIsValid;
+import static at.nicoleperak.client.controllers.controls.NavigationBarController.logout;
+import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.ButtonType.FINISH;
+import static javafx.scene.control.ButtonType.*;
 
 public class EditUserAccountDialogController implements Initializable {
+
+    private Dialog<ButtonType> dialog;
 
     @FXML
     private Label alertMessageLabel;
@@ -34,6 +40,22 @@ public class EditUserAccountDialogController implements Initializable {
     private TextField usernameTextField;
 
     private String password = null;
+
+    private void deleteUserAccount() {
+        new Alert(CONFIRMATION, "Are you sure you want to delete your user account?")
+                .showAndWait()
+                .ifPresent(response -> {
+                    if (response == OK) {
+                        try {
+                            delete("users/" + getLoggedInUser().getId());
+                            dialog.setResult(CANCEL);
+                            logout("User account successfully deleted.");
+                        } catch (ClientException e) {
+                            new Alert(ERROR, e.getMessage()).showAndWait();
+                        }
+                    }
+                });
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -56,6 +78,11 @@ public class EditUserAccountDialogController implements Initializable {
     @FXML
     void onChangePasswordButtonClicked() {
         showChangePasswordField();
+    }
+
+    @FXML
+    void onDeleteAccountButtonClicked() {
+        deleteUserAccount();
     }
 
     private void showChangePasswordField() {
@@ -90,5 +117,9 @@ public class EditUserAccountDialogController implements Initializable {
 
     public String getPassword() {
         return password;
+    }
+
+    public void setDialog(Dialog<ButtonType> dialog) {
+        this.dialog = dialog;
     }
 }

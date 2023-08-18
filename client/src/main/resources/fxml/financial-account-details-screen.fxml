@@ -28,7 +28,7 @@
                              <font>
                                  <Font name="Source Sans 3 Regular" size="15.0"/>
                              </font>
-                             <VBox spacing="10.0" style="-fx-background-color: #749AC1;">
+                             <VBox spacing="5.0" style="-fx-background-color: #749AC1;">
                                  <padding>
                                      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
                                  </padding>
@@ -102,9 +102,9 @@
                                          </opaqueInsets>
                                      </Label>
                                  </GridPane>
-                                 <HBox alignment="CENTER_LEFT">
+                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
                                      <Button fx:id="editAccountButton" mnemonicParsing="false"
-                                             onAction="#onEditAccountButtonClicked"
+                                             onAction="#onEditAccountButtonClicked" prefWidth="130.0"
                                              style="-fx-background-color: #FBF9F8;" text="Edit Account"
                                              textFill="#3a6a95" visible="false">
                                          <font>
@@ -126,15 +126,27 @@
                                              </ImageView>
                                          </graphic>
                                      </Button>
+                                     <Button fx:id="deleteAccountButton" mnemonicParsing="false"
+                                             onAction="#onDeleteAccountButtonClicked"
+                                             style="-fx-background-color: #749AC1; -fx-border-color: #3a6a95; -fx-border-radius: 3;"
+                                             text="Delete Account" textFill="#fbf9f8" visible="false">
+                                         <font>
+                                             <Font name="Source Sans 3 Medium" size="14.0"/>
+                                         </font>
+                                         <cursor>
+                                             <Cursor fx:constant="HAND"/>
+                                         </cursor>
+                                         <opaqueInsets>
+                                             <Insets bottom="1.0" left="1.0" right="1.0" top="1.0"/>
+                                         </opaqueInsets>
+                                         <graphic>
+                                             <ImageView fitHeight="20.0" fitWidth="15.0" pickOnBounds="true"
+                                                        preserveRatio="true">
+                                                 <Image url="@../icons/delete-icon-white.png"/>
+                                             </ImageView>
+                                         </graphic>
+                                     </Button>
                                  </HBox>
-                                 <Hyperlink fx:id="deleteFinancialAccountLink"
-                                            onAction="#onDeleteFinancialAccountLinkClicked"
-                                            text="Delete Financial Account Permanently" textFill="WHITE"
-                                            underline="true" visible="false">
-                                     <font>
-                                         <Font name="Source Sans 3 Regular" size="13.0"/>
-                                     </font>
-                                 </Hyperlink>
                              </VBox>
                          </TitledPane>
                          <TitledPane animated="false" text="Recurring Transactions">

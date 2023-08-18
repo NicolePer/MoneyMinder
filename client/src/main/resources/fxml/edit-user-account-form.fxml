@@ -3,6 +3,8 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 <DialogPane fx:id="dialogPane" expanded="true" stylesheets="@../css/dialog.css" xmlns="http://javafx.com/javafx/20.0.1"
@@ -29,7 +31,7 @@
                         <Insets/>
                     </opaqueInsets>
                 </Label>
-                <TextField fx:id="usernameTextField" prefHeight="26.0" prefWidth="300.0"
+                <TextField fx:id="usernameTextField" prefHeight="26.0" prefWidth="250.0"
                            style="-fx-background-color: #FBF9F8;" GridPane.columnIndex="1">
                     <font>
                         <Font name="Source Sans 3 Regular" size="13.0"/>
@@ -44,26 +46,45 @@
                         <Insets/>
                     </opaqueInsets>
                 </Label>
-                <TextField fx:id="emailTextField" layoutX="91.0" layoutY="12.0" prefHeight="26.0" prefWidth="300.0"
+                <TextField fx:id="emailTextField" layoutX="91.0" layoutY="12.0" prefHeight="26.0" prefWidth="250.0"
                            style="-fx-background-color: #FBF9F8;" GridPane.columnIndex="1" GridPane.halignment="LEFT"
                            GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
                     <font>
                         <Font name="Source Sans 3 Regular" size="13.0"/>
                     </font>
                 </TextField>
-                <Button mnemonicParsing="false" onAction="#onChangePasswordButtonClicked"
-                        style="-fx-background-color: #FBF9F8;" text="Change Password" textFill="#3a6a95"
-                        GridPane.columnIndex="1" GridPane.rowIndex="2">
-                    <font>
-                        <Font name="Source Sans 3 Medium" size="14.0"/>
-                    </font>
-                    <cursor>
-                        <Cursor fx:constant="HAND"/>
-                    </cursor>
-                    <opaqueInsets>
-                        <Insets bottom="1.0" left="1.0" right="1.0" top="1.0"/>
-                    </opaqueInsets>
-                </Button>
+                <HBox spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                    <Button mnemonicParsing="false" onAction="#onChangePasswordButtonClicked"
+                            style="-fx-background-color: #FBF9F8;" text="Change Password" textFill="#3a6a95">
+                        <font>
+                            <Font name="Source Sans 3 Medium" size="14.0"/>
+                        </font>
+                        <cursor>
+                            <Cursor fx:constant="HAND"/>
+                        </cursor>
+                        <opaqueInsets>
+                            <Insets bottom="1.0" left="1.0" right="1.0" top="1.0"/>
+                        </opaqueInsets>
+                    </Button>
+                    <Button mnemonicParsing="false" onAction="#onDeleteAccountButtonClicked"
+                            style="-fx-background-color: #3a6a95; -fx-border-color: #fbf9f8; -fx-border-radius: 3;"
+                            text="Delete Account" textFill="#fbf9f8">
+                        <font>
+                            <Font name="Source Sans 3 Medium" size="14.0"/>
+                        </font>
+                        <cursor>
+                            <Cursor fx:constant="HAND"/>
+                        </cursor>
+                        <opaqueInsets>
+                            <Insets bottom="1.0" left="1.0" right="1.0" top="1.0"/>
+                        </opaqueInsets>
+                        <graphic>
+                            <ImageView fitHeight="20.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                <Image url="@../icons/delete-icon-white.png"/>
+                            </ImageView>
+                        </graphic>
+                    </Button>
+                </HBox>
             </GridPane>
             <Label fx:id="alertMessageLabel" alignment="CENTER" textFill="#f3de8a" wrapText="true">
                 <VBox.margin>

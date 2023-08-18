@@ -8,7 +8,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static at.nicoleperak.server.database.CollaboratorsOperations.*;
 import static at.nicoleperak.server.database.DatabaseUtils.*;
+import static at.nicoleperak.server.database.FinancialAccountsOperations.*;
+import static at.nicoleperak.server.database.FinancialGoalsOperations.FINANCIAL_GOAL_FINANCIAL_ACCOUNT_ID;
+import static at.nicoleperak.server.database.FinancialGoalsOperations.FINANCIAL_GOAL_TABLE;
+import static at.nicoleperak.server.database.RecurringTransactionOrdersOperations.RECURRING_TRANSACTION_ORDER_FINANCIAL_ACCOUNT_ID;
+import static at.nicoleperak.server.database.RecurringTransactionOrdersOperations.RECURRING_TRANSACTION_ORDER_TABLE;
+import static at.nicoleperak.server.database.TransactionsOperations.TRANSACTION_FINANCIAL_ACCOUNT_ID;
+import static at.nicoleperak.server.database.TransactionsOperations.TRANSACTION_TABLE;
 import static java.sql.DriverManager.getConnection;
 
 public class UsersOperations {
@@ -102,33 +110,67 @@ public class UsersOperations {
         }
     }
 
-//    public static void deleteUser(Long userId) throws ServerException {
-//        String deleteAllAssdociatedCollaborators = "DELETE FROM " + RECURRING_TRANSACTION_ORDER_TABLE
-//                + " WHERE " + RECURRING_TRANSACTION_ORDER_FINANCIAL_ACCOUNT_ID + " = ?";    // stmt1: 1 FINANCIAL_ACCOUNT_ID
-//        String deleteAllAssociatedTransactions = "DELETE FROM " + TRANSACTION_TABLE
-//                + " WHERE " + TRANSACTION_FINANCIAL_ACCOUNT_ID + " = ?";                    //stmt2: 1 FINANCIAL_ACCOUNT_ID
-//        String deleteAllAssociatedCollaborators = "DELETE FROM " + COLLABORATOR_TABLE
-//                + " WHERE " + COLLABORATOR_USER_ID + " = ?";                             //stmt3: 1 USER_ID
-//        String deleteAssociatedFinancialGoal = "DELETE FROM " + FINANCIAL_GOAL_TABLE
-//                + " WHERE " + FINANCIAL_GOAL_FINANCIAL_ACCOUNT_ID + " = ?";
-//        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);         //stmt4: 1 FINANCIAL_ACCOUNT_ID
-//             PreparedStatement stmt1 = conn.prepareStatement(deleteAllAssociatedRecurringTransactionOrders);
-//             PreparedStatement stmt2 = conn.prepareStatement(deleteAllAssociatedTransactions);
-//             PreparedStatement stmt3 = conn.prepareStatement(deleteAllAssociatedCollaborators);
-//             PreparedStatement stmt4 = conn.prepareStatement(deleteAssociatedFinancialGoal)) {
-//            conn.setAutoCommit(false);
-//            stmt1.setLong(1, financialAccountId);
-//            stmt1.executeUpdate();
-//            stmt2.setLong(1, financialAccountId);
-//            stmt2.executeUpdate();
-//            stmt3.setLong(1, financialAccountId);
-//            stmt3.executeUpdate();
-//            stmt4.setLong(1, financialAccountId);
-//            stmt4.executeUpdate();
-//            conn.commit();
-//            conn.setAutoCommit(true);
-//        } catch (SQLException e) {
-//            throw new ServerException(500, "Could not delete financial account with id " + financialAccountId, e);
-//        }
-//    }
+    public static void deleteUser(Long userId) throws ServerException {
+        String deleteUserFromCollaboratorsTable =
+                "DELETE FROM " + COLLABORATOR_TABLE
+                        + " WHERE " + COLLABORATOR_USER_ID + " = ?";                                //stmt1: 1 USER_ID
+        String deleteAllRecurringTransactionOrdersFromFinancialAccountsWhereUserIsOwner =
+                "DELETE FROM " + RECURRING_TRANSACTION_ORDER_TABLE + " r"
+                        + " WHERE r." + RECURRING_TRANSACTION_ORDER_FINANCIAL_ACCOUNT_ID
+                        + " IN (SELECT f." + FINANCIAL_ACCOUNT_ID
+                        + " FROM " + FINANCIAL_ACCOUNT_TABLE + " f"
+                        + " WHERE f." + FINANCIAL_ACCOUNT_OWNER_ID + " = ?)";                         //stmt2: 1 USER_ID
+        String deleteAllTransactionsFromFinancialAccountsWhereUserIsOwner =
+                "DELETE FROM " + TRANSACTION_TABLE + " t"
+                        + " WHERE t." + TRANSACTION_FINANCIAL_ACCOUNT_ID
+                        + " IN (SELECT f." + FINANCIAL_ACCOUNT_ID
+                        + " FROM " + FINANCIAL_ACCOUNT_TABLE + " f"
+                        + " WHERE f." + FINANCIAL_ACCOUNT_OWNER_ID + " = ?)";                         //stmt3: 1 USER_ID
+        String deleteAlCollaboratorsOfFinancialAccountsWhereUserIsOwner =
+                "DELETE FROM " + COLLABORATOR_TABLE + " c"
+                        + " WHERE c." + COLLABORATOR_FINANCIAL_ACCOUNT_ID
+                        + " IN (SELECT f." + FINANCIAL_ACCOUNT_ID
+                        + " FROM " + FINANCIAL_ACCOUNT_TABLE + " f"
+                        + " WHERE f." + FINANCIAL_ACCOUNT_OWNER_ID + " = ?)";                         //stmt4: 1 USER_ID
+        String deleteAllFinancialGoalsFromFinancialAccountsWhereUserIsOwner =
+                "DELETE FROM " + FINANCIAL_GOAL_TABLE + " g"
+                        + " WHERE g." + FINANCIAL_GOAL_FINANCIAL_ACCOUNT_ID
+                        + " IN (SELECT f." + FINANCIAL_ACCOUNT_ID
+                        + " FROM " + FINANCIAL_ACCOUNT_TABLE + " f"
+                        + " WHERE f." + FINANCIAL_ACCOUNT_OWNER_ID + " = ?)";                         //stmt5: 1 USER_ID
+        String deleteAllFinancialAccountsWhereUserIsOwner =
+                "DELETE FROM " + FINANCIAL_ACCOUNT_TABLE
+                        + " WHERE " + FINANCIAL_ACCOUNT_OWNER_ID + " = ?";                         //stmt6: 1 USER_ID
+        String deleteUser =
+                "DELETE FROM " + USER_TABLE
+                        + " WHERE " + USER_ID + " = ?";                                                     //stmt7: 1 USER_ID
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt1 = conn.prepareStatement(deleteUserFromCollaboratorsTable);
+             PreparedStatement stmt2 = conn.prepareStatement(deleteAllRecurringTransactionOrdersFromFinancialAccountsWhereUserIsOwner);
+             PreparedStatement stmt3 = conn.prepareStatement(deleteAllTransactionsFromFinancialAccountsWhereUserIsOwner);
+             PreparedStatement stmt4 = conn.prepareStatement(deleteAlCollaboratorsOfFinancialAccountsWhereUserIsOwner);
+             PreparedStatement stmt5 = conn.prepareStatement(deleteAllFinancialGoalsFromFinancialAccountsWhereUserIsOwner);
+             PreparedStatement stmt6 = conn.prepareStatement(deleteAllFinancialAccountsWhereUserIsOwner);
+             PreparedStatement stmt7 = conn.prepareStatement(deleteUser)) {
+            conn.setAutoCommit(false);
+            stmt1.setLong(1, userId);
+            stmt1.executeUpdate();
+            stmt2.setLong(1, userId);
+            stmt2.executeUpdate();
+            stmt3.setLong(1, userId);
+            stmt3.executeUpdate();
+            stmt4.setLong(1, userId);
+            stmt4.executeUpdate();
+            stmt5.setLong(1, userId);
+            stmt5.executeUpdate();
+            stmt6.setLong(1, userId);
+            stmt6.executeUpdate();
+            stmt7.setLong(1, userId);
+            stmt7.executeUpdate();
+            conn.commit();
+            conn.setAutoCommit(true);
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not delete user", e);
+        }
+    }
 }

@@ -1,12 +1,14 @@
 package at.nicoleperak.server.endpoints.users;
 
 import at.nicoleperak.server.ServerException;
+import at.nicoleperak.server.database.UsersOperations;
 import at.nicoleperak.server.endpoints.Endpoint;
 import at.nicoleperak.server.endpoints.HttpMethod;
 import at.nicoleperak.shared.User;
 import com.sun.net.httpserver.HttpExchange;
 
 import static at.nicoleperak.server.Validation.assertUserIdEqualsCurrentUserId;
+import static at.nicoleperak.server.Validation.assertUserIsNotOwnerOfAnySharedFinancialAccounts;
 import static at.nicoleperak.server.endpoints.AuthUtils.authenticate;
 import static at.nicoleperak.server.endpoints.EndpointUtils.*;
 import static at.nicoleperak.server.endpoints.HttpMethod.DELETE;
@@ -31,9 +33,7 @@ public class DeleteUsersEndpoint implements Endpoint {
     private void deleteUser(HttpExchange exchange, Long userId) throws ServerException {
         User currentUser = authenticate(exchange);
         assertUserIdEqualsCurrentUserId(userId, currentUser.getId());
-        //UsersOperations.deleteUser(userId);
-        // DELETE ALL FINANCIAL ACCOUNTS WERE USER IS OWNER
-        // DELETE ALL COLLABORATORS ASSOCIATED WITH USER
-        // DELETE USER
+        assertUserIsNotOwnerOfAnySharedFinancialAccounts(userId);
+        UsersOperations.deleteUser(userId);
     }
 }

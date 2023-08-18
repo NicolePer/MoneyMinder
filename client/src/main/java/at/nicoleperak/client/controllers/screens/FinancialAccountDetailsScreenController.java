@@ -129,7 +129,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private VBox monthlyGoalBox;
 
     @FXML
-    private Hyperlink deleteFinancialAccountLink;
+    private Button deleteAccountButton;
 
     @FXML
     private Button setGoalButton;
@@ -267,7 +267,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     }
 
     @FXML
-    void onDeleteFinancialAccountLinkClicked() {
+    void onDeleteAccountButtonClicked() {
         deleteFinancialAccount();
     }
 
@@ -465,7 +465,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private void showInfo() {
         if (userIsOwner()) {
             editAccountButton.setVisible(true);
-            deleteFinancialAccountLink.setVisible(true);
+            deleteAccountButton.setVisible(true);
         }
         financialAccountInfoTitleLabel
                 .setText(selectedFinancialAccount.getTitle());
@@ -611,7 +611,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     }
 
     private void deleteFinancialAccount() {
-        new Alert(CONFIRMATION, "Are you sure you want to delete the financial account?")
+        new Alert(CONFIRMATION, "Are you sure you want to delete the financial account?\nIt will be permanently deleted, even for other collaborators.")
                 .showAndWait()
                 .ifPresent(response -> {
                     if (response == ButtonType.OK) {

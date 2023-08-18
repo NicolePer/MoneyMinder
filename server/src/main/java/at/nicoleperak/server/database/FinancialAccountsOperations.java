@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import static at.nicoleperak.server.database.CollaboratorsOperations.*;
 import static at.nicoleperak.server.database.DatabaseUtils.*;
@@ -193,6 +194,28 @@ public class FinancialAccountsOperations {
             conn.setAutoCommit(true);
         } catch (SQLException e) {
             throw new ServerException(500, "Could not delete financial account with id " + financialAccountId, e);
+        }
+    }
+
+    public static List<Long> selectListOfSharedFinancialAccountIdsWhereUserIsOwner(Long ownerId) throws ServerException {
+        List<Long> financialAccountIds = new ArrayList<>();
+        String select = "SELECT DISTINCT f." + FINANCIAL_ACCOUNT_ID + " FROM " + FINANCIAL_ACCOUNT_TABLE + " f"
+                + " INNER JOIN " + COLLABORATOR_TABLE + " c"
+                + " ON c." + COLLABORATOR_FINANCIAL_ACCOUNT_ID + " = f." + FINANCIAL_ACCOUNT_ID
+                + " AND c." + COLLABORATOR_USER_ID + " != ?"                // 1 OWNER_USER_ID
+                + " WHERE f." + FINANCIAL_ACCOUNT_OWNER_ID + " = ?";        // 2 OWNER_USER_ID
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
+             PreparedStatement stmt = conn.prepareStatement(select)) {
+            stmt.setLong(1, ownerId);
+            stmt.setLong(2, ownerId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    financialAccountIds.add(rs.getLong(FINANCIAL_ACCOUNT_ID));
+                }
+                return financialAccountIds;
+            }
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not select financial account ids", e);
         }
     }
 }
