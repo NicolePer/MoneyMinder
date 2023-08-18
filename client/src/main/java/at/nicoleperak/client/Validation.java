@@ -28,7 +28,6 @@ public class Validation {
         }
     }
 
-
     public static void assertEmailIsValid(String email) throws ClientException {
         Pattern validEmailPattern = compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", CASE_INSENSITIVE);
         Matcher matcher = validEmailPattern.matcher(email);
@@ -48,25 +47,25 @@ public class Validation {
     }
 
     public static void assertDateIsNotNull(LocalDate date) throws ClientException {
-        if(date == null){
+        if (date == null) {
             throw new ClientException("Please select date");
         }
     }
 
     public static void assertDateIsInPast(LocalDate date) throws ClientException {
-        if(date.isAfter(now())){
+        if (date.isAfter(now())) {
             throw new ClientException("Date cannot be in the future");
         }
     }
 
     public static void assertDateIsInTheFuture(LocalDate date) throws ClientException {
-        if(date.isBefore(now())){
+        if (date.isBefore(now())) {
             throw new ClientException("End date must be in the future");
         }
     }
 
     public static void assertRadioButtonIsSelected(ToggleGroup toggleGroup) throws ClientException {
-        if(toggleGroup.selectedToggleProperty().getValue() == null) {
+        if (toggleGroup.selectedToggleProperty().getValue() == null) {
             throw new ClientException("Please select income or expense");
         }
     }
@@ -83,11 +82,10 @@ public class Validation {
         }
     }
 
-
     public static void assertAmountIsBigDecimal(String amount) throws ClientException {
-        try{
+        try {
             new BigDecimal(amount);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new ClientException("Please enter valid number for amount");
         }
     }

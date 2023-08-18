@@ -9,9 +9,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -29,13 +26,6 @@ public class RecurringTransactionOrderBoxController {
 
     private RecurringTransactionOrder order;
 
-    private Long financialAccountId;
-    @FXML
-    private ImageView deleteRecurringTransactionOrderIcon;
-
-    @FXML
-    private ImageView editRecurringTransactionOrderIcon;
-
     @FXML
     private Label orderDescriptionLabel;
 
@@ -43,17 +33,13 @@ public class RecurringTransactionOrderBoxController {
     private Label orderIntervalLabel;
 
     @FXML
-    private GridPane recurringTransactionOrderBox;
-
-    @FXML
-    void onDeleteRecurringTransactionOrderClicked(MouseEvent event) {
+    void onDeleteRecurringTransactionOrderClicked() {
         removeRecurringTransactionOrder();
     }
 
     @FXML
-    void onEditRecurringTransactionOrderIconClicked(MouseEvent event) {
+    void onEditRecurringTransactionOrderIconClicked() {
         showEditRecurringTransactionOrderDialog();
-
     }
 
     private void removeRecurringTransactionOrder() {
@@ -66,6 +52,7 @@ public class RecurringTransactionOrderBoxController {
             new Alert(ERROR, e.getMessage()).showAndWait();
         }
     }
+
     private void showEditRecurringTransactionOrderDialog() {
         try {
             FXMLLoader loader = RECURRING_TRANSACTION_FORM.getLoader();
@@ -73,7 +60,7 @@ public class RecurringTransactionOrderBoxController {
             RecurringTransactionDialogController controller = loader.getController();
             controller.setSelectedRecurringTransaction(order);
             Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
-            if (result.isPresent() && result.get() == FINISH){
+            if (result.isPresent() && result.get() == FINISH) {
                 RecurringTransactionOrder editedOrder = buildRecurringTransactionOrder(controller);
                 putEditedRecurringTransactionOrder(editedOrder);
             }
@@ -99,15 +86,7 @@ public class RecurringTransactionOrderBoxController {
         return orderIntervalLabel;
     }
 
-    public RecurringTransactionOrder getOrder() {
-        return order;
-    }
-
     public void setOrder(RecurringTransactionOrder order) {
         this.order = order;
-    }
-
-    public void setFinancialAccountId(Long financialAccountId) {
-        this.financialAccountId = financialAccountId;
     }
 }

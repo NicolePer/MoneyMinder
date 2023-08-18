@@ -7,7 +7,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
@@ -38,8 +37,8 @@ public class TransactionTileController {
     @FXML
     private GridPane transactionTile;
 
-    @FXML @SuppressWarnings("unused")
-    void onTransactionTileClicked(MouseEvent event) {
+    @FXML
+    void onTransactionTileClicked() {
         try {
             ObservableList<Node> transactionTileList = transactionsPane.getChildren();
             int tileIndex = transactionTileList.indexOf(transactionTile);

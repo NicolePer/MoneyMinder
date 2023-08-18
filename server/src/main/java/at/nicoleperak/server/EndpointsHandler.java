@@ -15,8 +15,10 @@ import at.nicoleperak.server.endpoints.recurringtransactionorders.PutRecurringTr
 import at.nicoleperak.server.endpoints.transactions.DeleteTransactionsEndpoint;
 import at.nicoleperak.server.endpoints.transactions.PostTransactionsEndpoint;
 import at.nicoleperak.server.endpoints.transactions.PutTransactionsEndpoint;
+import at.nicoleperak.server.endpoints.users.DeleteUsersEndpoint;
 import at.nicoleperak.server.endpoints.users.GetUsersEndpoint;
 import at.nicoleperak.server.endpoints.users.PostUsersEndpoint;
+import at.nicoleperak.server.endpoints.users.PutUsersEndpoint;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -47,7 +49,9 @@ public class EndpointsHandler implements HttpHandler {
             new DeleteFinancialGoalsEndpoint(),
             new PutFinancialGoalsEndpoint(),
             new PutFinancialAccountsEndpoint(),
-            new DeleteFinancialAccountsEndpoint()
+            new DeleteFinancialAccountsEndpoint(),
+            new PutUsersEndpoint(),
+            new DeleteUsersEndpoint()
     );
 
     @Override

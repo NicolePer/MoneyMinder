@@ -8,7 +8,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.ColumnConstraints;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -22,6 +21,9 @@ import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.event.ActionEvent.ACTION;
 
 public class TransactionDialogController implements Initializable {
+
+    private final ObservableList<Category> categoryObservableList = observableArrayList();
+    private Transaction selectedTransaction;
 
     @FXML
     private Label alertMessageLabel;
@@ -48,9 +50,6 @@ public class TransactionDialogController implements Initializable {
     private RadioButton incomeRadioButton;
 
     @FXML
-    private ColumnConstraints labelColumnConstraints;
-
-    @FXML
     private TextArea noteArea;
 
     @FXML
@@ -64,34 +63,6 @@ public class TransactionDialogController implements Initializable {
 
     @FXML
     private Label headerTextLabel;
-
-    private final ObservableList<Category> categoryObservableList = observableArrayList();
-
-    public TextField getAmountField() {
-        return amountField;
-    }
-
-    public ComboBox<?> getCategoryComboBox() {
-        return categoryComboBox;
-    }
-
-    public DatePicker getDatePicker() {
-        return datePicker;
-    }
-
-    public TextField getDescriptionField() {
-        return descriptionField;
-    }
-
-    public TextArea getNoteArea() {
-        return noteArea;
-    }
-
-    public TextField getTransactionPartnerField() {
-        return transactionPartnerField;
-    }
-
-    private Transaction selectedTransaction;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -140,7 +111,12 @@ public class TransactionDialogController implements Initializable {
         });
     }
 
-    @SuppressWarnings("unused")
+    public void setSelectedTransaction(Transaction selectedTransaction) {
+        this.selectedTransaction = selectedTransaction;
+        headerTextLabel.setText("Edit Transaction");
+        insertTransactionDetails();
+    }
+
     private void replaceTransactionPartnerLabelOnSelectionOfRadioButton(RadioButton radioButton, String labelText) {
         radioButton.selectedProperty().addListener((observableValue, aBoolean, t1) ->
                 transactionPartnerLabel.setText(labelText));
@@ -158,10 +134,27 @@ public class TransactionDialogController implements Initializable {
         });
     }
 
-    public void setSelectedTransaction(Transaction selectedTransaction) {
-        this.selectedTransaction = selectedTransaction;
-        headerTextLabel.setText("Edit Transaction");
-        insertTransactionDetails();
+    public TextField getAmountField() {
+        return amountField;
     }
 
+    public ComboBox<?> getCategoryComboBox() {
+        return categoryComboBox;
+    }
+
+    public DatePicker getDatePicker() {
+        return datePicker;
+    }
+
+    public TextField getDescriptionField() {
+        return descriptionField;
+    }
+
+    public TextArea getNoteArea() {
+        return noteArea;
+    }
+
+    public TextField getTransactionPartnerField() {
+        return transactionPartnerField;
+    }
 }

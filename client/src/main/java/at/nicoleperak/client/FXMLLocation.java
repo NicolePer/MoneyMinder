@@ -2,7 +2,9 @@ package at.nicoleperak.client;
 
 import javafx.fxml.FXMLLoader;
 
-public enum FXMLLocation {
+public enum
+
+FXMLLocation {
     CREATE_FINANCIAL_ACCOUNT_FORM("/fxml/create-financial-account-form.fxml"),
     EDIT_FINANCIAL_ACCOUNT_FORM("/fxml/edit-financial-account-form.fxml"),
     CREATE_FINANCIAL_ACCOUNT_TILE("/fxml/create-financial-account-tile.fxml"),
@@ -19,7 +21,10 @@ public enum FXMLLocation {
     RECURRING_TRANSACTION_BOX("/fxml/recurring-transaction-order-box.fxml"),
     MONTHLY_GOAL_HEADER("/fxml/monthly-goal-header.fxml"),
     MONTHLY_GOAL_INFOBOX("/fxml/monthly-goal-infobox.fxml"),
-    SET_MONTHLY_GOAL_FORM("/fxml/set-monthly-goal-form.fxml");
+    SET_MONTHLY_GOAL_FORM("/fxml/set-monthly-goal-form.fxml"),
+    NAVIGATION_BAR("/fxml/navigation-bar.fxml"),
+    EDIT_USER_ACCOUNT_FORM("/fxml/edit-user-account-form.fxml"),
+    CHANGE_PASSWORD_FORM("/fxml/change-password-form.fxml");
 
 
     private final String location;

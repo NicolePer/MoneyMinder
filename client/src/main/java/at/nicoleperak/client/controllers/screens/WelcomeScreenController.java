@@ -2,10 +2,12 @@ package at.nicoleperak.client.controllers.screens;
 
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.shared.User;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
@@ -27,16 +29,10 @@ public class WelcomeScreenController {
     private PasswordField passwordField;
 
     @FXML
-    private Button signInButton;
-
-    @FXML
-    private Hyperlink signUpLink;
-
-    @FXML
     private Label alertMessageLabel;
 
-    @FXML @SuppressWarnings("unused")
-    protected void onSignUpLinkClicked(ActionEvent event) {
+    @FXML
+    protected void onSignUpLinkClicked() {
         try {
             Scene scene = loadScene(SIGN_UP_SCREEN);
             getStage().setScene(scene);
@@ -46,8 +42,8 @@ public class WelcomeScreenController {
         }
     }
 
-    @FXML @SuppressWarnings("unused")
-    protected void onSignInButtonClicked(ActionEvent event) {
+    @FXML
+    protected void onSignInButtonClicked() {
         String email = emailField.getText();
         String password = passwordField.getText();
         try {

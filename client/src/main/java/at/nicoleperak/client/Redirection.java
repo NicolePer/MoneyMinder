@@ -42,6 +42,20 @@ public class Redirection {
         }
     }
 
+    public static void redirectToWelcomeScreen(String successMessage) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            Scene scene = loadScene(WELCOME_SCREEN, loader);
+            WelcomeScreenController welcomeScreen = loader.getController();
+            welcomeScreen.setWelcomeScreenAlertMessageLabelText(successMessage);
+            Stage stage = getStage();
+            stage.setScene(scene);
+            centerStage(stage);
+        } catch (IOException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
     public static void redirectToWelcomeScreen() {
         try {
             Stage stage = getStage();

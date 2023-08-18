@@ -37,7 +37,9 @@
                   <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </TextField>
-            <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="password" style="-fx-background-color: #FBF9F8;" text="test1234">
+             <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                            minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="password"
+                            style="-fx-background-color: #FBF9F8;" text="12345678">
                <font>
                   <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
@@ -46,7 +48,9 @@
       </HBox>
       <VBox spacing="5.0" VBox.vgrow="NEVER">
          <HBox alignment="CENTER">
-            <Button fx:id="signInButton" alignment="CENTER" cache="true" mnemonicParsing="false" onAction="#onSignInButtonClicked" prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #FBF9F8;" text="Sign In" textAlignment="JUSTIFY" textFill="#3a6a95">
+             <Button alignment="CENTER" cache="true" mnemonicParsing="false" onAction="#onSignInButtonClicked"
+                     prefHeight="26.0" prefWidth="121.0" style="-fx-background-color: #FBF9F8;" text="Sign In"
+                     textAlignment="JUSTIFY" textFill="#3a6a95">
                <font>
                   <Font name="Source Sans 3 Medium" size="13.0" />
                </font>
@@ -63,7 +67,7 @@
                <font>
                   <Font name="Source Sans 3 Regular" size="13.0" />
                </font></Label>
-            <Hyperlink fx:id="signUpLink" onAction="#onSignUpLinkClicked" text="Sign up" textFill="WHITE" underline="true">
+             <Hyperlink onAction="#onSignUpLinkClicked" text="Sign up" textFill="WHITE" underline="true">
                <font>
                   <Font name="Source Sans 3 Regular" size="13.0" />
                </font>

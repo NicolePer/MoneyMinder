@@ -49,7 +49,10 @@
                   <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </PasswordField>
-            <PasswordField fx:id="retypePasswordField" layoutX="10.0" layoutY="113.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyTyped="#onKeyPressedInRetypedPasswordField" prefHeight="28.0" prefWidth="270.0" promptText="retype password" style="-fx-background-color: #FBF9F8;">
+             <PasswordField fx:id="retypePasswordField" layoutX="10.0" layoutY="113.0" maxHeight="-Infinity"
+                            maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                            onKeyTyped="#onKeyTypedInRetypedPasswordField" prefHeight="28.0" prefWidth="270.0"
+                            promptText="retype password" style="-fx-background-color: #FBF9F8;">
                <font>
                   <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
@@ -71,7 +74,8 @@
       </VBox>
       <VBox spacing="5.0">
          <HBox alignment="CENTER">
-            <Button fx:id="signUpButton" alignment="CENTER" cache="true" mnemonicParsing="false" onAction="#onSignUpButtonClicked" style="-fx-background-color: #FBF9F8;" text="Sign Up" textAlignment="JUSTIFY" textFill="#3a6a95">
+             <Button alignment="CENTER" cache="true" mnemonicParsing="false" onAction="#onSignUpButtonClicked"
+                     style="-fx-background-color: #FBF9F8;" text="Sign Up" textAlignment="JUSTIFY" textFill="#3a6a95">
                <font>
                   <Font name="Source Sans 3 Medium" size="13.0" />
                </font>
@@ -88,7 +92,9 @@
          </HBox>
       </VBox>
    </VBox>
-   <AnchorPane fx:id="goBackButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onGoBackButtonClicked" prefHeight="37.0" prefWidth="37.0" GridPane.halignment="LEFT" GridPane.valignment="TOP">
+    <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                onMouseClicked="#onGoBackButtonClicked" prefHeight="37.0" prefWidth="37.0" GridPane.halignment="LEFT"
+                GridPane.valignment="TOP">
       <cursor>
          <Cursor fx:constant="HAND" />
       </cursor>

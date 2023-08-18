@@ -27,4 +27,10 @@ public class Validation {
         }
     }
 
+    public static void assertUserIdEqualsCurrentUserId(Long userId, Long currentUserId) throws ServerException {
+        if (!userId.equals(currentUserId)) {
+            throw new ServerException(401, "User is not authorized to access the requested user account");
+        }
+    }
+
 }

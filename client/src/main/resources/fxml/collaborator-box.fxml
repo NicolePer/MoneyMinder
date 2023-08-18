@@ -7,7 +7,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<GridPane fx:id="collaboratorBox" hgap="15.0" style="-fx-background-color: #3A6A95; -fx-background-radius: 5;"
+<GridPane hgap="15.0" style="-fx-background-color: #3A6A95; -fx-background-radius: 5;"
           xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="at.nicoleperak.client.controllers.controls.CollaboratorBoxController">
     <columnConstraints>
@@ -23,21 +23,21 @@
     </padding>
     <Label fx:id="collaboratorUserNameLabel" text="User1234" textFill="#fbf9f8">
         <font>
-          <Font name="Source Sans 3 Medium" size="13.0"/>
+            <Font name="Source Sans 3 Medium" size="13.0"/>
         </font>
     </Label>
     <ImageView fx:id="deleteCollaboratorIcon" fitHeight="15.0" fitWidth="15.0"
                onMouseClicked="#onDeleteCollaboratorIconClicked" pickOnBounds="true" preserveRatio="true"
                visible="false" GridPane.columnIndex="2">
         <cursor>
-          <Cursor fx:constant="HAND"/>
+            <Cursor fx:constant="HAND"/>
         </cursor>
         <Image url="@../icons/delete-icon-white.png"/>
     </ImageView>
     <Label fx:id="collaboratorEmailLabel" layoutX="10.0" layoutY="15.0" text="user@blabllabla.at" textFill="#fbf9f8"
            GridPane.columnIndex="1">
         <font>
-          <Font name="Source Sans 3 Medium" size="13.0"/>
+            <Font name="Source Sans 3 Medium" size="13.0"/>
         </font>
     </Label>
 </GridPane>

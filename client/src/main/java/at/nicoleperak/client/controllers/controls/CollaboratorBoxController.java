@@ -6,8 +6,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 
 import static at.nicoleperak.client.ServiceFunctions.delete;
 import static at.nicoleperak.client.controllers.screens.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
@@ -24,16 +22,13 @@ public class CollaboratorBoxController {
     private ImageView deleteCollaboratorIcon;
 
     @FXML
-    private GridPane collaboratorBox;
-
-    @FXML
     private Label collaboratorEmailLabel;
 
     @FXML
     private Label collaboratorUserNameLabel;
 
     @FXML
-    void onDeleteCollaboratorIconClicked(MouseEvent event) {
+    void onDeleteCollaboratorIconClicked() {
         removeCollaborator();
     }
 

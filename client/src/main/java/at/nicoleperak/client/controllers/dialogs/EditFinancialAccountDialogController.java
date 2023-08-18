@@ -20,7 +20,7 @@ import static javafx.scene.control.ButtonType.FINISH;
 
 public class EditFinancialAccountDialogController implements Initializable {
 
-    FinancialAccount financialAccount;
+    private FinancialAccount financialAccount;
 
     @FXML
     private Label alertMessageLabel;
@@ -41,15 +41,6 @@ public class EditFinancialAccountDialogController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         validateUserInputsOnFinish();
         onOwnerComboBoxSelectionChanged();
-    }
-
-
-    private void insertFinancialAccount() {
-        financialAccountDescriptionField.setText(financialAccount.getDescription());
-        financialAccountTitleField.setText(financialAccount.getTitle());
-        ObservableList<User> collaborators = FXCollections.observableArrayList(financialAccount.getCollaborators());
-        ownerComboBox.setItems(collaborators);
-        ownerComboBox.getSelectionModel().select(financialAccount.getOwner());
     }
 
     public void validateUserInputsOnFinish() {
@@ -83,6 +74,14 @@ public class EditFinancialAccountDialogController implements Initializable {
         });
     }
 
+    private void insertFinancialAccount() {
+        financialAccountDescriptionField.setText(financialAccount.getDescription());
+        financialAccountTitleField.setText(financialAccount.getTitle());
+        ObservableList<User> collaborators = FXCollections.observableArrayList(financialAccount.getCollaborators());
+        ownerComboBox.setItems(collaborators);
+        ownerComboBox.getSelectionModel().select(financialAccount.getOwner());
+    }
+
     public Label getAlertMessageLabel() {
         return alertMessageLabel;
     }
@@ -107,5 +106,4 @@ public class EditFinancialAccountDialogController implements Initializable {
         this.financialAccount = financialAccount;
         insertFinancialAccount();
     }
-
 }

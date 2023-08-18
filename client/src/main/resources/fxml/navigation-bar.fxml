@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<HBox fx:id="navigationBarBox" alignment="CENTER" spacing="2.0" style="-fx-background-color: #3A6A95;"
+      xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="at.nicoleperak.client.controllers.controls.NavigationBarController">
+    <padding>
+        <Insets bottom="5.0" left="9.0" right="7.0" top="5.0"/>
+    </padding>
+    <ImageView fx:id="goBackIcon" fitHeight="25.0" fitWidth="25.0" onMouseClicked="#onGoBackIconClicked"
+               pickOnBounds="true" preserveRatio="true">
+        <cursor>
+            <Cursor fx:constant="HAND"/>
+        </cursor>
+        <HBox.margin>
+            <Insets right="10.0"/>
+        </HBox.margin>
+        <Image url="@../icons/arrow-left-icon.png"/>
+    </ImageView>
+    <ImageView fitHeight="30.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+        <HBox.margin>
+            <Insets/>
+        </HBox.margin>
+        <Image url="@../icons/money-minder-icon.png"/>
+    </ImageView>
+    <Label text="MONEYMINDER" textFill="#fbf9f8">
+        <font>
+            <Font name="Source Sans Pro SemiBold" size="18.0"/>
+        </font>
+        <HBox.margin>
+            <Insets/>
+        </HBox.margin>
+    </Label>
+    <Region HBox.hgrow="ALWAYS"/>
+    <Label fx:id="userLabel" text="User123" textFill="#fbf9f8">
+        <font>
+            <Font name="Source Sans Pro SemiBold" size="13.0"/>
+        </font>
+        <HBox.margin>
+            <Insets/>
+        </HBox.margin>
+    </Label>
+    <MenuButton mnemonicParsing="false" style="-fx-background-color: transparent;">
+        <items>
+            <MenuItem mnemonicParsing="false" onAction="#onLogoutMenuItemClicked" text="Logout"/>
+            <MenuItem mnemonicParsing="false" onAction="#onUserAccountSettingsMenuItemClicked"
+                      text="User Account Settings"/>
+            <MenuItem mnemonicParsing="false" onAction="#onHelpMenuItemClicked" text="Help"/>
+        </items>
+        <graphic>
+            <ImageView fitHeight="30.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="@../icons/user-icon.png"/>
+            </ImageView>
+        </graphic>
+        <font>
+            <Font name="Source Sans 3 Regular" size="13.0"/>
+        </font>
+    </MenuButton>
+</HBox>

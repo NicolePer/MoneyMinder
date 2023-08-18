@@ -19,14 +19,12 @@ public class FinancialAccountTileController extends GridPane {
     private Label financialAccountBalanceLabel;
 
     @FXML
-    private GridPane financialAccountTile;
-
-    @FXML
     private Label financialAccountTitleLabel;
 
     private FinancialAccount financialAccount;
 
-    @FXML @SuppressWarnings("unused")
+    @FXML
+    @SuppressWarnings("unused")
     protected void onFinancialAccountTileClicked(MouseEvent event) {
         try {
             setSelectedFinancialAccount(financialAccount);

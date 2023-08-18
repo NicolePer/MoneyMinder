@@ -11,8 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -26,25 +24,11 @@ import static at.nicoleperak.client.ServiceFunctions.post;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.ButtonType.FINISH;
 
-@SuppressWarnings("unused")
-
-public class CreateFinancialAccountTileController{
+public class CreateFinancialAccountTileController {
 
     @FXML
-    private GridPane createFinancialAccountTile;
-
-    @FXML
-    protected void onCreateFinancialAccountTileClicked(MouseEvent event) {
+    protected void onCreateFinancialAccountTileClicked() {
         showCreateFinancialAccountDialog();
-    }
-
-    private void reloadFinancialAccountsOverviewScreen() {
-        try {
-            Scene scene = loadScene(FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN);
-            Client.getStage().setScene(scene);
-        } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
-        }
     }
 
     private void showCreateFinancialAccountDialog() {
@@ -55,16 +39,20 @@ public class CreateFinancialAccountTileController{
             Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
             if (result.isPresent() && result.get() == FINISH) {
                 FinancialAccount financialAccount = FinancialAccountFactory.buildFinancialAccount(controller);
-                    try {
-                        post("financial-accounts", jsonb.toJson(financialAccount), true);
-                        reloadFinancialAccountsOverviewScreen();
-                    } catch (ClientException e) {
-                        new Alert(ERROR, e.getMessage()).showAndWait();
-                    }
-                }
-        } catch (IOException e) {
+                post("financial-accounts", jsonb.toJson(financialAccount), true);
+                reloadFinancialAccountsOverviewScreen();
+            }
+        } catch (IOException | ClientException e) {
             new Alert(ERROR, e.getMessage()).showAndWait();
         }
     }
 
+    private void reloadFinancialAccountsOverviewScreen() {
+        try {
+            Scene scene = loadScene(FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN);
+            Client.getStage().setScene(scene);
+        } catch (IOException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
+    }
 }

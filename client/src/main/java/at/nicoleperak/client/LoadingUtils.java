@@ -10,7 +10,7 @@ import javafx.scene.control.RadioButton;
 import static at.nicoleperak.client.ServiceFunctions.jsonb;
 import static at.nicoleperak.shared.Category.CategoryType.Expense;
 import static at.nicoleperak.shared.Category.CategoryType.Income;
-import static javafx.scene.control.Alert.AlertType.*;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 public class LoadingUtils {
 
@@ -53,6 +53,5 @@ public class LoadingUtils {
         }
         return jsonb.fromJson(jsonResponse, CategoryList.class);
     }
-
 
 }

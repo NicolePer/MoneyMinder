@@ -9,7 +9,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.layout.ColumnConstraints;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -64,9 +63,6 @@ public class RecurringTransactionDialogController implements Initializable {
     private ComboBox<Interval> intervalComboBox;
 
     @FXML
-    private ColumnConstraints labelColumnConstraints;
-
-    @FXML
     private DatePicker nextDatePicker;
 
     @FXML
@@ -88,30 +84,6 @@ public class RecurringTransactionDialogController implements Initializable {
         setIntervalComboBox();
         replaceTransactionPartnerLabelOnSelectionOfRadioButton(incomeRadioButton, "Source");
         replaceTransactionPartnerLabelOnSelectionOfRadioButton(expenseRadioButton, "Recipient");
-    }
-
-    private void setIntervalComboBox() {
-        final ObservableList<Interval> intervalList
-                = observableArrayList(List.of(Interval.values()));
-        intervalComboBox.setItems(intervalList);
-    }
-
-    private void insertRecurringTransactionOrder() {
-        if (selectedRecurringTransaction.getCategory().getType().equals(Income)) {
-            incomeRadioButton.setSelected(true);
-        } else {
-            expenseRadioButton.setSelected(true);
-        }
-        categoryComboBox.getSelectionModel().select(selectedRecurringTransaction.getCategory());
-        intervalComboBox.setValue(selectedRecurringTransaction.getInterval());
-        nextDatePicker.setValue(selectedRecurringTransaction.getNextDate());
-        if (!selectedRecurringTransaction.getEndDate().equals(LocalDate.MAX)) {
-            endDatePicker.setValue(selectedRecurringTransaction.getEndDate());
-        }
-        amountField.setText(selectedRecurringTransaction.getAmount().abs().toString());
-        transactionPartnerField.setText(selectedRecurringTransaction.getTransactionPartner());
-        descriptionField.setText(selectedRecurringTransaction.getDescription());
-        noteArea.setText(selectedRecurringTransaction.getNote());
     }
 
     public void validateUserInputsOnFinish() {
@@ -142,7 +114,6 @@ public class RecurringTransactionDialogController implements Initializable {
         });
     }
 
-    @SuppressWarnings("unused")
     private void replaceTransactionPartnerLabelOnSelectionOfRadioButton(RadioButton radioButton, String labelText) {
         radioButton.selectedProperty().addListener((observableValue, aBoolean, t1) ->
                 transactionPartnerLabel.setText(labelText));
@@ -160,12 +131,35 @@ public class RecurringTransactionDialogController implements Initializable {
         });
     }
 
-
     public void setSelectedRecurringTransaction(RecurringTransactionOrder selectedRecurringTransaction) {
         this.selectedRecurringTransaction = selectedRecurringTransaction;
         headerTextLabel.setText("Edit Recurring Transaction Order");
         nextDateLabel.setText("Next Date");
         insertRecurringTransactionOrder();
+    }
+
+    private void setIntervalComboBox() {
+        final ObservableList<Interval> intervalList
+                = observableArrayList(List.of(Interval.values()));
+        intervalComboBox.setItems(intervalList);
+    }
+
+    private void insertRecurringTransactionOrder() {
+        if (selectedRecurringTransaction.getCategory().getType().equals(Income)) {
+            incomeRadioButton.setSelected(true);
+        } else {
+            expenseRadioButton.setSelected(true);
+        }
+        categoryComboBox.getSelectionModel().select(selectedRecurringTransaction.getCategory());
+        intervalComboBox.setValue(selectedRecurringTransaction.getInterval());
+        nextDatePicker.setValue(selectedRecurringTransaction.getNextDate());
+        if (!selectedRecurringTransaction.getEndDate().equals(LocalDate.MAX)) {
+            endDatePicker.setValue(selectedRecurringTransaction.getEndDate());
+        }
+        amountField.setText(selectedRecurringTransaction.getAmount().abs().toString());
+        transactionPartnerField.setText(selectedRecurringTransaction.getTransactionPartner());
+        descriptionField.setText(selectedRecurringTransaction.getDescription());
+        noteArea.setText(selectedRecurringTransaction.getNote());
     }
 
     public Label getAlertMessageLabel() {

@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class RecurringTransactionOrderBoxFactory {
 
-    public static GridPane buildRecurringTransactionOrderBox(RecurringTransactionOrder order, Long financialAccountId,  FXMLLoader loader) throws IOException {
+    public static GridPane buildRecurringTransactionOrderBox(RecurringTransactionOrder order, FXMLLoader loader) throws IOException {
         GridPane recurringTransactionBox = loader.load();
         RecurringTransactionOrderBoxController controller = loader.getController();
         controller
@@ -20,8 +20,6 @@ public class RecurringTransactionOrderBoxFactory {
                 .setText(order.getInterval().name());
         controller
                 .setOrder(order);
-        controller
-                .setFinancialAccountId(financialAccountId);
         return recurringTransactionBox;
     }
 }

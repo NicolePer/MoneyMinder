@@ -8,7 +8,6 @@ import at.nicoleperak.client.controllers.dialogs.EditFinancialAccountDialogContr
 import at.nicoleperak.client.controllers.dialogs.RecurringTransactionDialogController;
 import at.nicoleperak.client.controllers.dialogs.SetMonthlyGoalDialogController;
 import at.nicoleperak.client.controllers.dialogs.TransactionDialogController;
-import at.nicoleperak.client.factories.PieChartDataFactory;
 import at.nicoleperak.shared.*;
 import at.nicoleperak.shared.Category.CategoryType;
 import javafx.collections.ObservableList;
@@ -24,10 +23,9 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -46,13 +44,13 @@ import static at.nicoleperak.client.Format.formatBalance;
 import static at.nicoleperak.client.LoadingUtils.loadCategories;
 import static at.nicoleperak.client.LoadingUtils.loadSelectedFinancialAccountDetails;
 import static at.nicoleperak.client.Redirection.redirectToFinancialAccountsOverviewScreen;
-import static at.nicoleperak.client.Redirection.redirectToWelcomeScreen;
 import static at.nicoleperak.client.ServiceFunctions.*;
 import static at.nicoleperak.client.Validation.assertDateIsInPast;
 import static at.nicoleperak.client.Validation.assertEmailIsValid;
 import static at.nicoleperak.client.factories.CollaboratorBoxFactory.buildCollaboratorBox;
 import static at.nicoleperak.client.factories.FinancialAccountFactory.buildFinancialAccount;
 import static at.nicoleperak.client.factories.FinancialGoalFactory.buildFinancialGoal;
+import static at.nicoleperak.client.factories.PieChartDataFactory.buildPieChartData;
 import static at.nicoleperak.client.factories.RecurringTransactionOrderBoxFactory.buildRecurringTransactionOrderBox;
 import static at.nicoleperak.client.factories.RecurringTransactionOrderFactory.buildRecurringTransactionOrder;
 import static at.nicoleperak.client.factories.TransactionFactory.buildTransaction;
@@ -80,7 +78,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private LocalDate selectedDateTo;
 
     @FXML
-    private MenuItem accountSettingsMenuItem;
+    private VBox screenPane;
 
     @FXML
     private Label balanceLabel;
@@ -104,9 +102,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private BarChart<String, Number> barChart;
 
     @FXML
-    private ImageView downloadIcon;
-
-    @FXML
     private Label financialAccountTitleLabel;
 
     @FXML
@@ -117,15 +112,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     private DatePicker dateToDatePicker;
-
-    @FXML
-    private MenuItem helpMenuItem;
-
-    @FXML
-    private MenuItem logoutMenuItem;
-
-    @FXML
-    private MenuButton menuButton;
 
     @FXML
     private PieChart pieChart;
@@ -147,6 +133,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     private Button setGoalButton;
+
     @FXML
     private TextField searchField;
 
@@ -168,9 +155,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     @FXML
     private VBox transactionsPane;
 
-    @FXML
-    private Label userLabel;
-
     public static void reloadFinancialAccountDetailsScreen() {
         try {
             Scene scene = loadScene(FINANCIAL_ACCOUNT_DETAILS_SCREEN);
@@ -184,52 +168,42 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         selectedFinancialAccount = getSelectedFinancialAccount();
         selectedFinancialAccount = loadSelectedFinancialAccountDetails(selectedFinancialAccount);
+        insertNavigationBar();
         showTransactions(selectedFinancialAccount.getTransactions());
-        setLabels();
-        setComboBoxes();
-        setPieChart();
-        resetPieChartOnChangesOfPieChartToggleGroup();
-        setBarChart(6);
+        showInfo();
         showCollaborators();
         showRecurringTransactionOrders();
         showMonthlyGoal();
-        showInfo();
-    }
-
-    private void showInfo() {
-        if (userIsOwner()) {
-            editAccountButton.setVisible(true);
-            deleteFinancialAccountLink.setVisible(true);
-        }
-        financialAccountInfoTitleLabel.setText(selectedFinancialAccount.getTitle());
-        financialAccountInfoDescriptionLabel.setText(selectedFinancialAccount.getDescription());
-        financialAccountInfoOwnerLabel.setText(selectedFinancialAccount.getOwner().getUsername() + " ("
-                + selectedFinancialAccount.getOwner().getEmail() + ")");
+        setLabels();
+        setComboBoxes();
+        setPieChart();
+        setBarChart(6);
+        resetPieChartOnChangesOfPieChartToggleGroup();
     }
 
     @FXML
-    void onEditAccountButtonClicked(ActionEvent event) {
+    void onEditAccountButtonClicked() {
         showEditFinancialAccountDialog();
     }
 
     @FXML
-    protected void onGoBackButtonClicked(MouseEvent event) {
-        redirectToFinancialAccountsOverviewScreen();
-    }
-
-    @FXML
-    void onNewTransactionButtonClicked(ActionEvent event) {
+    void onNewTransactionButtonClicked() {
         showCreateTransactionDialog();
     }
 
     @FXML
-    void onCategorySelected(ActionEvent event) {
+    void onDownloadIconClicked() {
+        //TODO create functionality
+    }
+
+    @FXML
+    void onCategorySelected() {
         selectedCategory = categoryComboBox.getSelectionModel().getSelectedItem();
         filterTransactions();
     }
 
     @FXML
-    void onTypeSelected(ActionEvent event) {
+    void onTypeSelected() {
         categoryComboBox.getSelectionModel().clearSelection();
         selectedCategory = null;
         CategoryList filteredList = loadCategories(transactionTypeComboBox.getSelectionModel().getSelectedItem());
@@ -243,8 +217,10 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         DatePicker datePicker = (DatePicker) event.getSource();
         try {
             assertDateIsInPast(datePicker.getValue());
-            selectedDateFrom = requireNonNullElse(dateFromDatePicker.getValue(), MIN.plusDays(1));
-            selectedDateTo = requireNonNullElse(dateToDatePicker.getValue(), MAX.minusDays(1));
+            selectedDateFrom = requireNonNullElse(dateFromDatePicker.getValue(),
+                    MIN.plusDays(1));
+            selectedDateTo = requireNonNullElse(dateToDatePicker.getValue(),
+                    MAX.minusDays(1));
             filterTransactions();
         } catch (ClientException e) {
             new Alert(ERROR, e.getMessage()).showAndWait();
@@ -252,7 +228,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     }
 
     @FXML
-    void onResetFiltersButtonClicked(ActionEvent event) {
+    void onResetFiltersButtonClicked() {
         reloadFinancialAccountDetailsScreen();
     }
 
@@ -264,19 +240,12 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     }
 
     @FXML
-    void onLogoutMenuItemClicked(ActionEvent event) {
-        redirectToWelcomeScreen();
-        setLoggedInUser(null);
-        setUserCredentials(null);
-    }
-
-    @FXML
-    void onSearchIconClicked(MouseEvent event) {
+    void onSearchIconClicked() {
         searchTransactions();
     }
 
     @FXML
-    void onAddCollaboratorIconClicked(MouseEvent event) {
+    void onAddCollaboratorIconClicked() {
         addCollaborator();
     }
 
@@ -288,53 +257,24 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     }
 
     @FXML
-    void onAddRecurringTransactionsOrderClicked(ActionEvent event) {
+    void onAddRecurringTransactionsOrderClicked() {
         showCreateRecurringTransactionOrderDialog();
     }
 
     @FXML
-    void onSetGoalButtonClicked(ActionEvent event) {
+    void onSetGoalButtonClicked() {
         showSetMonthlyGoalDialog();
     }
 
     @FXML
-    void onDeleteFinancialAccountLinkClicked(ActionEvent event) {
-        removeFinancialAccount();
-    }
-
-    private void removeFinancialAccount() {
-        new Alert(CONFIRMATION, "Are you sure you want to delete the financial account?")
-                .showAndWait()
-                .ifPresent(response -> {
-                    if (response == ButtonType.OK) {
-                        try {
-                            delete("financial-accounts/" + selectedFinancialAccount.getId());
-                            redirectToFinancialAccountsOverviewScreen();
-                        } catch (ClientException e) {
-                            new Alert(ERROR, e.getMessage()).showAndWait();
-                        }
-                    }
-                });
-    }
-
-    private void addCollaborator() {
-        collaboratorAlertMessageLabel.setText("");
-        String email = collaboratorEmailTextField.getText();
-        try {
-            assertEmailIsValid(email);
-            post("financial_accounts/" + selectedFinancialAccount.getId() + "/collaborators", jsonb.toJson(email), true);
-            new Alert(INFORMATION, "User successfully added as collaborator").showAndWait();
-            //TODO style Alert
-            reloadFinancialAccountDetailsScreen();
-        } catch (ClientException e) {
-            collaboratorAlertMessageLabel.setText(e.getMessage());
-        }
+    void onDeleteFinancialAccountLinkClicked() {
+        deleteFinancialAccount();
     }
 
     private void searchTransactions() {
         String query = searchField.getText();
-        List<Transaction> resultList = new ArrayList<>();
         List<String> searchTerms = List.of(query.toLowerCase().split("[\\s.,+]+"));
+        List<Transaction> resultList = new ArrayList<>();
         for (Transaction transaction : selectedFinancialAccount.getTransactions()) {
             String transactionNote = requireNonNullElse(transaction.getNote(), "");
             if (searchTerms.stream().anyMatch(transaction.getDescription().toLowerCase()::contains) ||
@@ -376,98 +316,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         showTransactions(filteredTransactionList);
     }
 
-    private void showTransactions(List<Transaction> transactions) {
-        try {
-            for (Transaction transaction : transactions) {
-                FXMLLoader loader = TRANSACTION_TILE.getLoader();
-                Parent transactionTile = buildTransactionTile(transaction, loader, transactionsPane);
-                transactionsPane.getChildren().add(transactionTile);
-            }
-        } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
-        }
-
-    }
-
-    private void showCollaborators() {
-        List<User> collaborators = selectedFinancialAccount.getCollaborators();
-        Long ownerId = selectedFinancialAccount.getOwner().getId();
-        boolean isOwner = getLoggedInUser().getId().equals(ownerId);
-        if (!isOwner) {
-            collaboratorsPane.getChildren().clear();
-        }
-        try {
-            for (User collaborator : collaborators) {
-                if (isOwner && collaborator.getId().equals(ownerId)) {
-                    continue;
-                }
-                FXMLLoader loader = COLLABORATOR_BOX.getLoader();
-                GridPane collaboratorBox = buildCollaboratorBox(collaborator, selectedFinancialAccount.getId(), isOwner, loader);
-                collaboratorsPane.getChildren().add(collaboratorBox);
-            }
-        } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
-            // TODO for later: Alertlabel?
-        }
-    }
-
-    private void showRecurringTransactionOrders() {
-        try {
-            List<RecurringTransactionOrder> orders = selectedFinancialAccount.getRecurringTransactionOrders();
-            for (RecurringTransactionOrder order : orders) {
-                FXMLLoader loader = RECURRING_TRANSACTION_BOX.getLoader();
-                GridPane ordersBox = buildRecurringTransactionOrderBox(order, selectedFinancialAccount.getId(), loader);
-                recurringTransactionOrdersPane.getChildren().add(ordersBox);
-            }
-        } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
-        }
-    }
-
-    private void showCreateRecurringTransactionOrderDialog() {
-        try {
-            FXMLLoader loader = RECURRING_TRANSACTION_FORM.getLoader();
-            DialogPane dialogPane = loader.load();
-            RecurringTransactionDialogController controller = loader.getController();
-            Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
-            if (result.isPresent() && result.get() == FINISH) {
-                RecurringTransactionOrder order = buildRecurringTransactionOrder(controller);
-                try {
-                    post("financial_accounts/" + selectedFinancialAccount.getId() + "/recurring-transactions", jsonb.toJson(order), true);
-                    reloadFinancialAccountDetailsScreen();
-                } catch (ClientException e) {
-                    new Alert(ERROR, e.getMessage()).showAndWait();
-                }
-            }
-        } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
-        }
-    }
-
-    private void showCreateTransactionDialog() {
-        try {
-            FXMLLoader loader = TRANSACTION_FORM.getLoader();
-            DialogPane dialogPane = loader.load();
-            TransactionDialogController controller = loader.getController();
-            Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
-            if (result.isPresent() && result.get() == FINISH) {
-                Transaction transaction = buildTransaction(controller, false);
-                try {
-                    post("financial_accounts/" + selectedFinancialAccount.getId() + "/transactions", jsonb.toJson(transaction), true);
-                    reloadFinancialAccountDetailsScreen();
-                } catch (ClientException e) {
-                    new Alert(ERROR, e.getMessage()).showAndWait();
-                }
-            }
-        } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
-        }
-    }
-
     private void setLabels() {
         financialAccountTitleLabel.setText(selectedFinancialAccount.getTitle().toUpperCase());
         balanceLabel.setText(formatBalance(selectedFinancialAccount.getBalance()));
-        userLabel.setText(getLoggedInUser().getUsername());
     }
 
     private void setComboBoxes() {
@@ -484,13 +335,14 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private void setPieChart() {
         CategoryType categoryType = pieChartToggleGroup.getSelectedToggle()
                 .equals(incomeRadioButton) ? Income : Expense;
-        pieChart.setData(PieChartDataFactory.buildPieChartData(selectedFinancialAccount.getTransactions(), categoryType));
+        pieChart.setData(buildPieChartData(selectedFinancialAccount.getTransactions(), categoryType));
     }
 
     private void resetPieChartOnChangesOfPieChartToggleGroup() {
         pieChartToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> setPieChart());
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void setBarChart(int numberOfMonths) {
         ObservableList<String> months = observableArrayList();
         List<Transaction> transactionList = selectedFinancialAccount.getTransactions();
@@ -518,31 +370,34 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             incomeSeries.getData().add(new Data<>(Month.of(currentMonthValue).getDisplayName(FULL, US), sumIncome.doubleValue()));
             expenseSeries.getData().add(new Data<>(Month.of(currentMonthValue).getDisplayName(FULL, US), sumExpenses.doubleValue()));
         }
+        //noinspection unchecked
         barChart.getData().addAll(incomeSeries, expenseSeries);
         reverse(months);
         categoryAxis.setCategories(months);
     }
 
-    private void showSetMonthlyGoalDialog() {
+    private void insertNavigationBar() {
         try {
-            FXMLLoader loader = SET_MONTHLY_GOAL_FORM.getLoader();
-            DialogPane dialogPane = loader.load();
-            SetMonthlyGoalDialogController controller = loader.getController();
-            Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
-            if (result.isPresent() && result.get() == FINISH) {
-                FinancialGoal goal = buildFinancialGoal(controller);
-                try {
-                    post("financial_accounts/" + selectedFinancialAccount.getId() + "/financial-goals", jsonb.toJson(goal), true);
-                    reloadFinancialAccountDetailsScreen();
-                } catch (ClientException e) {
-                    new Alert(ERROR, e.getMessage()).showAndWait();
-                }
-            }
+            FXMLLoader loader = NAVIGATION_BAR.getLoader();
+            HBox navigationBarBox = loader.load();
+            screenPane.getChildren().add(0, navigationBarBox);
         } catch (IOException e) {
             new Alert(ERROR, e.getMessage()).showAndWait();
         }
     }
 
+    private void showTransactions(List<Transaction> transactions) {
+        try {
+            for (Transaction transaction : transactions) {
+                FXMLLoader loader = TRANSACTION_TILE.getLoader();
+                Parent transactionTile = buildTransactionTile(transaction, loader, transactionsPane);
+                transactionsPane.getChildren().add(transactionTile);
+            }
+        } catch (IOException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
+
+    }
 
     private void showMonthlyGoal() {
         if (financialGoalIsNotSet()) {
@@ -553,6 +408,38 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             FinancialGoal goal = selectedFinancialAccount.getFinancialGoal();
             showMonthlyGoalInfobox(goal);
             showMonthlyGoalHeader(goal);
+        }
+    }
+
+    private void showCollaborators() {
+        List<User> collaborators = selectedFinancialAccount.getCollaborators();
+        if (!userIsOwner()) {
+            collaboratorsPane.getChildren().clear();
+        }
+        try {
+            for (User collaborator : collaborators) {
+                if (userIsOwner() && collaborator.getId().equals(selectedFinancialAccount.getOwner().getId())) {
+                    continue;
+                }
+                FXMLLoader loader = COLLABORATOR_BOX.getLoader();
+                GridPane collaboratorBox = buildCollaboratorBox(collaborator, selectedFinancialAccount.getId(), userIsOwner(), loader);
+                collaboratorsPane.getChildren().add(collaboratorBox);
+            }
+        } catch (IOException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
+    private void showRecurringTransactionOrders() {
+        try {
+            List<RecurringTransactionOrder> orders = selectedFinancialAccount.getRecurringTransactionOrders();
+            for (RecurringTransactionOrder order : orders) {
+                FXMLLoader loader = RECURRING_TRANSACTION_BOX.getLoader();
+                GridPane ordersBox = buildRecurringTransactionOrderBox(order, loader);
+                recurringTransactionOrdersPane.getChildren().add(ordersBox);
+            }
+        } catch (IOException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
         }
     }
 
@@ -575,6 +462,20 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    private void showInfo() {
+        if (userIsOwner()) {
+            editAccountButton.setVisible(true);
+            deleteFinancialAccountLink.setVisible(true);
+        }
+        financialAccountInfoTitleLabel
+                .setText(selectedFinancialAccount.getTitle());
+        financialAccountInfoDescriptionLabel
+                .setText(selectedFinancialAccount.getDescription());
+        financialAccountInfoOwnerLabel
+                .setText(selectedFinancialAccount.getOwner().getUsername()
+                        + " (" + selectedFinancialAccount.getOwner().getEmail() + ")");
+    }
+
     private void showMonthlyGoalHeader(FinancialGoal goal) {
         double currentMonthsExpenses = goal.getCurrentMonthsExpenses().abs().doubleValue();
         double goalAmount = goal.getGoalAmount().doubleValue();
@@ -593,12 +494,19 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
-    private boolean userIsOwner() {
-        return selectedFinancialAccount.getOwner().getId().equals(getLoggedInUser().getId());
-    }
-
-    private boolean financialGoalIsNotSet() {
-        return selectedFinancialAccount.getFinancialGoal() == null;
+    private void showCreateTransactionDialog() {
+        try {
+            FXMLLoader loader = TRANSACTION_FORM.getLoader();
+            DialogPane dialogPane = loader.load();
+            TransactionDialogController controller = loader.getController();
+            Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
+            if (result.isPresent() && result.get() == FINISH) {
+                Transaction transaction = buildTransaction(controller, false);
+                postTransaction(transaction);
+            }
+        } catch (IOException | ClientException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
     }
 
     private void showEditFinancialAccountDialog() {
@@ -612,18 +520,116 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                 FinancialAccount editedAccount = buildFinancialAccount(controller);
                 putEditedFinancialAccount(editedAccount);
             }
-        } catch (IOException e) {
+        } catch (IOException | ClientException e) {
             new Alert(ERROR, e.getMessage()).showAndWait();
         }
     }
 
-    private void putEditedFinancialAccount(FinancialAccount editedAccount) {
+    private void showSetMonthlyGoalDialog() {
         try {
-            ServiceFunctions.put("financial-accounts/" + selectedFinancialAccount.getId(), jsonb.toJson(editedAccount));
-            new Alert(INFORMATION, "Financial account successfully updated").showAndWait();
-            reloadFinancialAccountDetailsScreen();
-        } catch (ClientException e) {
+            FXMLLoader loader = SET_MONTHLY_GOAL_FORM.getLoader();
+            DialogPane dialogPane = loader.load();
+            SetMonthlyGoalDialogController controller = loader.getController();
+            Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
+            if (result.isPresent() && result.get() == FINISH) {
+                FinancialGoal goal = buildFinancialGoal(controller);
+                postFinancialGoal(goal);
+            }
+        } catch (IOException | ClientException e) {
             new Alert(ERROR, e.getMessage()).showAndWait();
         }
+    }
+
+    private void showCreateRecurringTransactionOrderDialog() {
+        try {
+            FXMLLoader loader = RECURRING_TRANSACTION_FORM.getLoader();
+            DialogPane dialogPane = loader.load();
+            RecurringTransactionDialogController controller = loader.getController();
+            Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
+            if (result.isPresent() && result.get() == FINISH) {
+                RecurringTransactionOrder order = buildRecurringTransactionOrder(controller);
+                postRecurringTransactionsOrder(order);
+            }
+        } catch (IOException | ClientException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
+    }
+
+    private void addCollaborator() {
+        try {
+            collaboratorAlertMessageLabel.setText("");
+            String email = collaboratorEmailTextField.getText();
+            postCollaborator(email);
+        } catch (ClientException e) {
+            collaboratorAlertMessageLabel.setText(e.getMessage());
+        }
+    }
+
+    private void postTransaction(Transaction transaction) throws ClientException {
+        post("financial_accounts/"
+                        + selectedFinancialAccount.getId()
+                        + "/transactions"
+                , jsonb.toJson(transaction)
+                , true);
+        reloadFinancialAccountDetailsScreen();
+    }
+
+    private void putEditedFinancialAccount(FinancialAccount editedAccount) throws ClientException {
+        ServiceFunctions.put("financial-accounts/"
+                        + selectedFinancialAccount.getId()
+                , jsonb.toJson(editedAccount));
+        new Alert(INFORMATION, "Financial account successfully updated").showAndWait();
+        reloadFinancialAccountDetailsScreen();
+    }
+
+    private void postFinancialGoal(FinancialGoal goal) throws ClientException {
+        post("financial_accounts/"
+                        + selectedFinancialAccount.getId()
+                        + "/financial-goals"
+                , jsonb.toJson(goal), true);
+        reloadFinancialAccountDetailsScreen();
+    }
+
+    private void postRecurringTransactionsOrder(RecurringTransactionOrder order) throws ClientException {
+        post("financial_accounts/"
+                        + selectedFinancialAccount.getId()
+                        + "/recurring-transactions"
+                , jsonb.toJson(order)
+                , true);
+        reloadFinancialAccountDetailsScreen();
+    }
+
+    private void postCollaborator(String email) throws ClientException {
+        assertEmailIsValid(email);
+        post("financial_accounts/"
+                        + selectedFinancialAccount.getId()
+                        + "/collaborators"
+                , jsonb.toJson(email)
+                , true);
+        new Alert(INFORMATION, "User successfully added as collaborator").showAndWait();
+        reloadFinancialAccountDetailsScreen();
+    }
+
+    private void deleteFinancialAccount() {
+        new Alert(CONFIRMATION, "Are you sure you want to delete the financial account?")
+                .showAndWait()
+                .ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        try {
+                            delete("financial-accounts/" + selectedFinancialAccount.getId());
+                            redirectToFinancialAccountsOverviewScreen();
+                        } catch (ClientException e) {
+                            new Alert(ERROR, e.getMessage()).showAndWait();
+                        }
+                    }
+                });
+    }
+
+    private boolean userIsOwner() {
+        return selectedFinancialAccount.getOwner().getId().equals(getLoggedInUser().getId());
+    }
+
+    private boolean financialGoalIsNotSet() {
+        return selectedFinancialAccount.getFinancialGoal() == null;
     }
 }

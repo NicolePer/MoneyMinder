@@ -4,13 +4,14 @@ import at.nicoleperak.client.ClientException;
 import at.nicoleperak.client.controllers.dialogs.TransactionDialogController;
 import at.nicoleperak.shared.Transaction;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -33,15 +34,6 @@ public class TransactionDetailsTileController {
 
     @FXML
     private Label transactionAddedLabel;
-
-    @FXML
-    private Button closeDetailsButton;
-
-    @FXML
-    private Button editTransactionButton;
-
-    @FXML
-    private Button removeTransactionButton;
 
     @FXML
     private Label transactionAmountLabel;
@@ -68,26 +60,22 @@ public class TransactionDetailsTileController {
     private VBox transactionDetailsTile;
 
     @FXML
-    @SuppressWarnings("unused")
-    void onCloseDetailsButtonClicked(ActionEvent event) {
+    void onCloseDetailsButtonClicked() {
         closeTransactionDetailsTile();
     }
 
     @FXML
-    @SuppressWarnings("unused")
-    void onEditTransactionButtonClicked(ActionEvent event) {
+    void onEditTransactionButtonClicked() {
         showEditTransactionDialog();
     }
 
     @FXML
-    @SuppressWarnings("unused")
-    void onRemoveTransactionButtonClicked(ActionEvent event) {
+    void onRemoveTransactionButtonClicked() {
         removeTransaction();
     }
 
     @FXML
-    @SuppressWarnings("unused")
-    void onTransactionOverviewTileClicked(MouseEvent event) {
+    void onTransactionOverviewTileClicked() {
         closeTransactionDetailsTile();
     }
 
@@ -110,22 +98,18 @@ public class TransactionDetailsTileController {
             TransactionDialogController controller = loader.getController();
             controller.setSelectedTransaction(transaction);
             Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
-            if (result.isPresent() && result.get() == FINISH){
+            if (result.isPresent() && result.get() == FINISH) {
                 Transaction editedTransaction = buildTransaction(controller, false);
                 putEditedTransaction(editedTransaction);
             }
-        } catch (IOException e) {
+        } catch (IOException | ClientException e) {
             new Alert(ERROR, e.getMessage()).showAndWait();
         }
     }
 
-    private void putEditedTransaction(Transaction editedTransaction) {
-        try {
-            put("transactions/" + transaction.getId(), jsonb.toJson(editedTransaction));
-            reloadFinancialAccountDetailsScreen();
-        } catch (ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
-        }
+    private void putEditedTransaction(Transaction editedTransaction) throws ClientException {
+        put("transactions/" + transaction.getId(), jsonb.toJson(editedTransaction));
+        reloadFinancialAccountDetailsScreen();
     }
 
     private void removeTransaction() {

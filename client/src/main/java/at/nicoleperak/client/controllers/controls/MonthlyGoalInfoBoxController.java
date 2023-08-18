@@ -10,7 +10,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -40,12 +39,12 @@ public class MonthlyGoalInfoBoxController {
     private Label goalLabel;
 
     @FXML
-    void onDeleteMonthlyGoalIconClicked(MouseEvent event) {
+    void onDeleteMonthlyGoalIconClicked() {
         removeMonthlyGoal();
     }
 
     @FXML
-    void onEditMonthlyGoalIconClicked(MouseEvent event) {
+    void onEditMonthlyGoalIconClicked() {
         showSetFinancialGoalDialog();
     }
 

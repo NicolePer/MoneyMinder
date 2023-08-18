@@ -1,36 +1,31 @@
 package at.nicoleperak.client.controllers.screens;
 
-import at.nicoleperak.client.Client;
 import at.nicoleperak.client.ClientException;
+import at.nicoleperak.client.controllers.controls.NavigationBarController;
 import at.nicoleperak.shared.FinancialAccount;
 import at.nicoleperak.shared.FinancialAccountsList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static at.nicoleperak.client.FXMLLocation.CREATE_FINANCIAL_ACCOUNT_TILE;
-import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNT_TILE;
-import static at.nicoleperak.client.Redirection.redirectToWelcomeScreen;
+import static at.nicoleperak.client.FXMLLocation.*;
 import static at.nicoleperak.client.ServiceFunctions.get;
 import static at.nicoleperak.client.ServiceFunctions.jsonb;
 import static at.nicoleperak.client.factories.FinancialAccountTileFactory.buildFinancialAccountTile;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 public class FinancialAccountsOverviewScreenController implements Initializable {
-
-
-    @FXML
-    private MenuItem accountSettingsMenuItem;
 
     @FXML
     private Label alertMessageLabel;
@@ -39,21 +34,24 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
     private TilePane financialAccountsTilePane;
 
     @FXML
-    private MenuItem helpMenuItem;
-
-    @FXML
-    private MenuItem logoutMenuItem;
-
-    @FXML
-    private MenuButton menuButton;
-
-    @FXML
-    private Label userLabel;
+    private VBox screenPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        userLabel.setText(Client.getLoggedInUser().getUsername());
+        insertNavigationBar();
         showFinancialAccounts();
+    }
+
+    private void insertNavigationBar() {
+        try {
+            FXMLLoader loader = NAVIGATION_BAR.getLoader();
+            HBox navigationBarBox = loader.load();
+            NavigationBarController controller = loader.getController();
+            controller.getNavigationBarBox().getChildren().remove(controller.getGoBackIcon());
+            screenPane.getChildren().add(0, navigationBarBox);
+        } catch (IOException e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
     }
 
     private void showFinancialAccounts() {
@@ -77,10 +75,4 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
         Parent createAccountTile = loader.load();
         financialAccountsTilePane.getChildren().add(createAccountTile);
     }
-
-    @FXML
-    void onLogoutMenuItemClicked(ActionEvent event) {
-        redirectToWelcomeScreen();
-    }
-
 }

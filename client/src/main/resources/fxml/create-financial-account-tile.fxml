@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.Cursor?>
@@ -8,36 +7,37 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<GridPane fx:id="createFinancialAccountTile" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
-          minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#onCreateFinancialAccountTileClicked"
-          prefHeight="240.0" prefWidth="240.0" style="-fx-background-radius: 5; -fx-background-color: f3de8a;"
-          xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+          onMouseClicked="#onCreateFinancialAccountTileClicked" prefHeight="240.0" prefWidth="240.0"
+          style="-fx-background-radius: 5; -fx-background-color: f3de8a;" xmlns="http://javafx.com/javafx/20.0.1"
+          xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="at.nicoleperak.client.controllers.controls.CreateFinancialAccountTileController">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints maxHeight="186.34861755371094" minHeight="10.0" prefHeight="137.43154907226562"
-                      vgrow="SOMETIMES"/>
-      <RowConstraints maxHeight="102.16937255859375" minHeight="10.0" prefHeight="83.06845092773438" vgrow="SOMETIMES"/>
-      <RowConstraints maxHeight="1.0" minHeight="1.0" prefHeight="1.0" vgrow="SOMETIMES"/>
+       <RowConstraints maxHeight="186.34861755371094" minHeight="10.0" prefHeight="137.43154907226562"
+                       vgrow="SOMETIMES"/>
+       <RowConstraints maxHeight="102.16937255859375" minHeight="10.0" prefHeight="83.06845092773438"
+                       vgrow="SOMETIMES"/>
+       <RowConstraints maxHeight="1.0" minHeight="1.0" prefHeight="1.0" vgrow="SOMETIMES"/>
    </rowConstraints>
    <opaqueInsets>
-      <Insets/>
+       <Insets/>
    </opaqueInsets>
    <cursor>
-      <Cursor fx:constant="HAND"/>
+       <Cursor fx:constant="HAND"/>
    </cursor>
-   <ImageView fitHeight="107.0" fitWidth="99.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER"
-              GridPane.valignment="BOTTOM">
-      <Image url="@../icons/add-icon-color-100.png"/>
+    <ImageView fitHeight="107.0" fitWidth="99.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER"
+               GridPane.valignment="BOTTOM">
+        <Image url="@../icons/add-icon-color-100.png"/>
    </ImageView>
-   <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-          prefHeight="240.0" prefWidth="240.0" text="New Finance Account" textFill="#3a6a95"
-          GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+    <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+           prefHeight="240.0" prefWidth="240.0" text="New Finance Account" textFill="#3a6a95"
+           GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
       <font>
-         <Font name="Source Sans 3 SemiBold" size="21.0"/>
+          <Font name="Source Sans 3 SemiBold" size="21.0"/>
       </font>
    </Label>
-   <HBox style="-fx-background-color: #1EBBD7;" GridPane.rowIndex="2"/>
+    <HBox style="-fx-background-color: #1EBBD7;" GridPane.rowIndex="2"/>
 </GridPane>

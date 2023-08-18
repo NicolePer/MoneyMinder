@@ -33,6 +33,7 @@ public class CreateFinancialAccountDialogController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         validateUserInputsOnFinish();
     }
+
     public void validateUserInputsOnFinish() {
         Button finish = (Button) dialogPane.lookupButton(FINISH);
         finish.addEventFilter(ACTION, f -> {

@@ -2,15 +2,10 @@ package at.nicoleperak.client.controllers.screens;
 
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.shared.User;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 
 import static at.nicoleperak.client.Redirection.redirectToWelcomeScreen;
 import static at.nicoleperak.client.ServiceFunctions.jsonb;
@@ -23,16 +18,10 @@ public class SignUpScreenController {
     private TextField emailField;
 
     @FXML
-    private AnchorPane goBackButton;
-
-    @FXML
     private PasswordField passwordField;
 
     @FXML
     private PasswordField retypePasswordField;
-
-    @FXML
-    private Button signUpButton;
 
     @FXML
     private TextField usernameField;
@@ -41,7 +30,7 @@ public class SignUpScreenController {
     private Label alertMessageLabel;
 
     @FXML
-    protected void onSignUpButtonClicked(ActionEvent event) {
+    void onSignUpButtonClicked() {
         String username = usernameField.getText();
         String email = emailField.getText();
         String password = passwordField.getText();
@@ -60,17 +49,13 @@ public class SignUpScreenController {
     }
 
     @FXML
-    protected void onKeyPressedInRetypedPasswordField(KeyEvent event) {
+    void onKeyTypedInRetypedPasswordField() {
         showAlertIfPasswordsDiffer();
     }
 
     @FXML
-    protected void onGoBackButtonClicked(MouseEvent event) {
+    void onGoBackButtonClicked() {
         redirectToWelcomeScreen("", alertMessageLabel);
-    }
-
-    private static void signUpUser(User newUser) throws ClientException {
-        post("users", jsonb.toJson(newUser), false);
     }
 
     private void showAlertIfPasswordsDiffer() {
@@ -81,5 +66,8 @@ public class SignUpScreenController {
         }
     }
 
+    private static void signUpUser(User newUser) throws ClientException {
+        post("users", jsonb.toJson(newUser), false);
+    }
 }
 
