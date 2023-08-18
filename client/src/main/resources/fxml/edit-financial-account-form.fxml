@@ -11,63 +11,63 @@
       <VBox alignment="CENTER">
          <GridPane hgap="20.0" vgap="20.0">
             <columnConstraints>
-               <ColumnConstraints hgrow="ALWAYS"/>
-               <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
             </columnConstraints>
             <rowConstraints>
-               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
             </rowConstraints>
-            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Title" textFill="#fbf9f8"
-                   GridPane.halignment="LEFT">
+             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Title" textFill="#fbf9f8"
+                    GridPane.halignment="LEFT">
                <font>
-                  <Font name="Source Sans 3 Medium" size="14.0"/>
+                   <Font name="Source Sans 3 Medium" size="14.0"/>
                </font>
                <opaqueInsets>
-                  <Insets/>
+                   <Insets/>
                </opaqueInsets>
             </Label>
-            <TextField fx:id="financialAccountTitleField" prefHeight="26.0" prefWidth="300.0"
-                       style="-fx-background-color: #FBF9F8;" GridPane.columnIndex="1">
+             <TextField fx:id="financialAccountTitleField" prefHeight="26.0" prefWidth="300.0"
+                        style="-fx-background-color: #FBF9F8;" GridPane.columnIndex="1">
                <font>
-                  <Font name="Source Sans 3 Regular" size="13.0"/>
+                   <Font name="Source Sans 3 Regular" size="13.0"/>
                </font>
             </TextField>
-            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="16.0" text="Description"
-                   textFill="#fbf9f8" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="16.0" text="Description"
+                    textFill="#fbf9f8" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
                <font>
-                  <Font name="Source Sans 3 Medium" size="14.0"/>
+                   <Font name="Source Sans 3 Medium" size="14.0"/>
                </font>
                <opaqueInsets>
-                  <Insets/>
+                   <Insets/>
                </opaqueInsets>
             </Label>
-            <TextField fx:id="financialAccountDescriptionField" layoutX="91.0" layoutY="12.0" prefHeight="26.0"
-                       prefWidth="300.0" style="-fx-background-color: #FBF9F8;" GridPane.columnIndex="1"
-                       GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+             <TextField fx:id="financialAccountDescriptionField" layoutX="91.0" layoutY="12.0" prefHeight="26.0"
+                        prefWidth="300.0" style="-fx-background-color: #FBF9F8;" GridPane.columnIndex="1"
+                        GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
                <font>
-                  <Font name="Source Sans 3 Regular" size="13.0"/>
+                   <Font name="Source Sans 3 Regular" size="13.0"/>
                </font>
             </TextField>
-            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="65.0" text="Owner"
-                   textFill="#fbf9f8" GridPane.rowIndex="2">
+             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="65.0" text="Owner"
+                    textFill="#fbf9f8" GridPane.rowIndex="2">
                <font>
-                  <Font name="Source Sans 3 Medium" size="14.0"/>
+                   <Font name="Source Sans 3 Medium" size="14.0"/>
                </font>
                <opaqueInsets>
-                  <Insets/>
+                   <Insets/>
                </opaqueInsets>
             </Label>
-            <ComboBox fx:id="ownerComboBox" prefWidth="300.0" stylesheets="@../css/combobox.css"
-                      GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+             <ComboBox fx:id="ownerComboBox" prefWidth="300.0" stylesheets="@../css/combobox.css"
+                       GridPane.columnIndex="1" GridPane.rowIndex="2"/>
          </GridPane>
          <Label fx:id="alertMessageLabel" alignment="CENTER" textFill="#f3de8a" wrapText="true">
             <VBox.margin>
-               <Insets bottom="-10.0" top="10.0"/>
+                <Insets bottom="-10.0" top="10.0"/>
             </VBox.margin>
             <font>
-               <Font name="Source Sans 3 Regular" size="13.0"/>
+                <Font name="Source Sans 3 Regular" size="13.0"/>
             </font>
          </Label>
       </VBox>
@@ -75,18 +75,18 @@
    <header>
       <HBox alignment="CENTER">
          <padding>
-            <Insets bottom="10.0" top="10.0"/>
+             <Insets bottom="10.0" top="10.0"/>
          </padding>
          <Label text="Edit Financial Account" textFill="#fbf9f8">
             <font>
-               <Font name="Source Sans 3 Medium" size="18.0"/>
+                <Font name="Source Sans 3 Medium" size="18.0"/>
             </font>
          </Label>
       </HBox>
    </header>
    <padding>
-      <Insets left="10.0" right="10.0"/>
+       <Insets left="10.0" right="10.0"/>
    </padding>
-   <ButtonType fx:constant="FINISH"/>
-   <ButtonType fx:constant="CANCEL"/>
+    <ButtonType fx:constant="FINISH"/>
+    <ButtonType fx:constant="CANCEL"/>
 </DialogPane>

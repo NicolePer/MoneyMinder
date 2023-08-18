@@ -13,8 +13,8 @@ import java.util.ArrayList;
 
 import static at.nicoleperak.server.database.CollaboratorsOperations.*;
 import static at.nicoleperak.server.database.DatabaseUtils.*;
-import static at.nicoleperak.server.database.FinancialGoalsOperations.selectFinancialGoal;
-import static at.nicoleperak.server.database.RecurringTransactionOrdersOperations.selectListOfRecurringTransactionOrders;
+import static at.nicoleperak.server.database.FinancialGoalsOperations.*;
+import static at.nicoleperak.server.database.RecurringTransactionOrdersOperations.*;
 import static at.nicoleperak.server.database.TransactionsOperations.*;
 import static at.nicoleperak.server.database.UsersOperations.*;
 import static java.sql.DriverManager.getConnection;
@@ -34,7 +34,7 @@ public class FinancialAccountsOperations {
                 "?," + // 1 TITLE
                 "?," + // 2 DESCRIPTION
                 "?)";  // 3 OWNER ID
-        String[] returnId = { FINANCIAL_ACCOUNT_ID };
+        String[] returnId = {FINANCIAL_ACCOUNT_ID};
         try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(insert, returnId)) {
             stmt.setString(1, financialAccount.getTitle());
@@ -163,6 +163,36 @@ public class FinancialAccountsOperations {
             stmt.executeUpdate();
         } catch (SQLException e) {
             throw new ServerException(500, "Could not update financial account", e);
+        }
+    }
+
+    public static void deleteFinancialAccount(Long financialAccountId) throws ServerException {
+        String deleteAllAssociatedRecurringTransactionOrders = "DELETE FROM " + RECURRING_TRANSACTION_ORDER_TABLE
+                + " WHERE " + RECURRING_TRANSACTION_ORDER_FINANCIAL_ACCOUNT_ID + " = ?";    // stmt1: 1 FINANCIAL_ACCOUNT_ID
+        String deleteAllAssociatedTransactions = "DELETE FROM " + TRANSACTION_TABLE
+                + " WHERE " + TRANSACTION_FINANCIAL_ACCOUNT_ID + " = ?";                    //stmt2: 1 FINANCIAL_ACCOUNT_ID
+        String deleteAllAssociatedCollaborators = "DELETE FROM " + COLLABORATOR_TABLE
+                + " WHERE " + COLLABORATOR_FINANCIAL_ACCOUNT_ID + " = ?";                   //stmt3: 1 FINANCIAL_ACCOUNT_ID
+        String deleteAssociatedFinancialGoal = "DELETE FROM " + FINANCIAL_GOAL_TABLE
+                + " WHERE " + FINANCIAL_GOAL_FINANCIAL_ACCOUNT_ID + " = ?";
+        try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);         //stmt4: 1 FINANCIAL_ACCOUNT_ID
+             PreparedStatement stmt1 = conn.prepareStatement(deleteAllAssociatedRecurringTransactionOrders);
+             PreparedStatement stmt2 = conn.prepareStatement(deleteAllAssociatedTransactions);
+             PreparedStatement stmt3 = conn.prepareStatement(deleteAllAssociatedCollaborators);
+             PreparedStatement stmt4 = conn.prepareStatement(deleteAssociatedFinancialGoal)) {
+            conn.setAutoCommit(false);
+            stmt1.setLong(1, financialAccountId);
+            stmt1.executeUpdate();
+            stmt2.setLong(1, financialAccountId);
+            stmt2.executeUpdate();
+            stmt3.setLong(1, financialAccountId);
+            stmt3.executeUpdate();
+            stmt4.setLong(1, financialAccountId);
+            stmt4.executeUpdate();
+            conn.commit();
+            conn.setAutoCommit(true);
+        } catch (SQLException e) {
+            throw new ServerException(500, "Could not delete financial account with id " + financialAccountId, e);
         }
     }
 }

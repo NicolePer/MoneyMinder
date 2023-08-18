@@ -43,6 +43,7 @@ public class EditFinancialAccountDialogController implements Initializable {
         onOwnerComboBoxSelectionChanged();
     }
 
+
     private void insertFinancialAccount() {
         financialAccountDescriptionField.setText(financialAccount.getDescription());
         financialAccountTitleField.setText(financialAccount.getTitle());

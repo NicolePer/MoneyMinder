@@ -47,8 +47,7 @@ import static at.nicoleperak.client.LoadingUtils.loadCategories;
 import static at.nicoleperak.client.LoadingUtils.loadSelectedFinancialAccountDetails;
 import static at.nicoleperak.client.Redirection.redirectToFinancialAccountsOverviewScreen;
 import static at.nicoleperak.client.Redirection.redirectToWelcomeScreen;
-import static at.nicoleperak.client.ServiceFunctions.jsonb;
-import static at.nicoleperak.client.ServiceFunctions.post;
+import static at.nicoleperak.client.ServiceFunctions.*;
 import static at.nicoleperak.client.Validation.assertDateIsInPast;
 import static at.nicoleperak.client.Validation.assertEmailIsValid;
 import static at.nicoleperak.client.factories.CollaboratorBoxFactory.buildCollaboratorBox;
@@ -66,8 +65,7 @@ import static java.util.Locale.US;
 import static java.util.Objects.requireNonNullElse;
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.collections.FXCollections.reverse;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
+import static javafx.scene.control.Alert.AlertType.*;
 import static javafx.scene.control.ButtonType.FINISH;
 import static javafx.scene.input.KeyCode.ENTER;
 
@@ -145,6 +143,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private VBox monthlyGoalBox;
 
     @FXML
+    private Hyperlink deleteFinancialAccountLink;
+
+    @FXML
     private Button setGoalButton;
     @FXML
     private TextField searchField;
@@ -198,6 +199,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private void showInfo() {
         if (userIsOwner()) {
             editAccountButton.setVisible(true);
+            deleteFinancialAccountLink.setVisible(true);
         }
         financialAccountInfoTitleLabel.setText(selectedFinancialAccount.getTitle());
         financialAccountInfoDescriptionLabel.setText(selectedFinancialAccount.getDescription());
@@ -293,6 +295,26 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     @FXML
     void onSetGoalButtonClicked(ActionEvent event) {
         showSetMonthlyGoalDialog();
+    }
+
+    @FXML
+    void onDeleteFinancialAccountLinkClicked(ActionEvent event) {
+        removeFinancialAccount();
+    }
+
+    private void removeFinancialAccount() {
+        new Alert(CONFIRMATION, "Are you sure you want to delete the financial account?")
+                .showAndWait()
+                .ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        try {
+                            delete("financial-accounts/" + selectedFinancialAccount.getId());
+                            redirectToFinancialAccountsOverviewScreen();
+                        } catch (ClientException e) {
+                            new Alert(ERROR, e.getMessage()).showAndWait();
+                        }
+                    }
+                });
     }
 
     private void addCollaborator() {
