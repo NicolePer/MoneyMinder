@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -21,10 +20,12 @@ import static at.nicoleperak.client.Client.getDialog;
 import static at.nicoleperak.client.FXMLLocation.TRANSACTION_FORM;
 import static at.nicoleperak.client.FXMLLocation.TRANSACTION_TILE;
 import static at.nicoleperak.client.ServiceFunctions.*;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderSuccessAlert;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderConfirmationDialogController.userHasConfirmedActionWhenAskedForConfirmation;
 import static at.nicoleperak.client.controllers.screens.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
 import static at.nicoleperak.client.factories.TransactionFactory.buildTransaction;
 import static at.nicoleperak.client.factories.TransactionTileFactory.buildTransactionTile;
-import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.ButtonType.FINISH;
 
 public class TransactionDetailsTileController {
@@ -87,7 +88,7 @@ public class TransactionDetailsTileController {
             Parent transactionTile = buildTransactionTile(transaction, loader, transactionsPane);
             transactionTileList.set(tileIndex, transactionTile);
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -103,21 +104,25 @@ public class TransactionDetailsTileController {
                 putEditedTransaction(editedTransaction);
             }
         } catch (IOException | ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
     private void putEditedTransaction(Transaction editedTransaction) throws ClientException {
         put("transactions/" + transaction.getId(), jsonb.toJson(editedTransaction));
+        showMoneyMinderSuccessAlert("Changes saved");
         reloadFinancialAccountDetailsScreen();
     }
 
     private void removeTransaction() {
-        try {
-            delete("transactions/" + transaction.getId());
-            reloadFinancialAccountDetailsScreen();
-        } catch (ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+        if (userHasConfirmedActionWhenAskedForConfirmation(
+                "Are you sure you want to delete this transaction?")) {
+            try {
+                delete("transactions/" + transaction.getId());
+                reloadFinancialAccountDetailsScreen();
+            } catch (ClientException e) {
+                showMoneyMinderErrorAlert(e.getMessage());
+            }
         }
     }
 

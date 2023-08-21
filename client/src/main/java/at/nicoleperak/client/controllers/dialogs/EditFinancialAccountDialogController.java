@@ -14,8 +14,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.Validation.assertUserInputLengthIsValid;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderWarningAlert;
 import static javafx.event.ActionEvent.ACTION;
-import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.ButtonType.FINISH;
 
 public class EditFinancialAccountDialogController implements Initializable {
@@ -62,14 +62,14 @@ public class EditFinancialAccountDialogController implements Initializable {
     public void onOwnerComboBoxSelectionChanged() {
         ownerComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.getId().equals(financialAccount.getOwner().getId())) {
-                new Alert(CONFIRMATION,
+                showMoneyMinderWarningAlert(
                         """
                                 If you change the owner of the financial account, you will no longer be able to
                                 \tedit the financial account,\s
                                 \tset/remove monthly goals and\s
                                 \tadd/remove collaborators.
                                         
-                                You will remain collaborator of this financial account.""").showAndWait();
+                                You will remain collaborator of this financial account.""");
             }
         });
     }

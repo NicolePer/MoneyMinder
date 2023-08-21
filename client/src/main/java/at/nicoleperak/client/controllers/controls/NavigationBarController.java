@@ -7,7 +7,10 @@ import at.nicoleperak.shared.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
@@ -22,7 +25,7 @@ import static at.nicoleperak.client.Redirection.redirectToFinancialAccountsOverv
 import static at.nicoleperak.client.Redirection.redirectToWelcomeScreen;
 import static at.nicoleperak.client.ServiceFunctions.jsonb;
 import static at.nicoleperak.client.ServiceFunctions.put;
-import static javafx.scene.control.Alert.AlertType.ERROR;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
 import static javafx.scene.control.ButtonType.FINISH;
 
 public class NavigationBarController implements Initializable {
@@ -88,7 +91,7 @@ public class NavigationBarController implements Initializable {
                 putEditedUser(controller);
             }
         } catch (IOException | ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 

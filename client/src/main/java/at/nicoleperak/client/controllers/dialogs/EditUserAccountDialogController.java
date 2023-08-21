@@ -19,9 +19,10 @@ import static at.nicoleperak.client.ServiceFunctions.delete;
 import static at.nicoleperak.client.Validation.assertEmailIsValid;
 import static at.nicoleperak.client.Validation.assertUserInputLengthIsValid;
 import static at.nicoleperak.client.controllers.controls.NavigationBarController.logout;
-import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.ButtonType.*;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderConfirmationDialogController.userHasConfirmedActionWhenAskedForConfirmation;
+import static javafx.scene.control.ButtonType.CANCEL;
+import static javafx.scene.control.ButtonType.FINISH;
 
 public class EditUserAccountDialogController implements Initializable {
 
@@ -42,19 +43,16 @@ public class EditUserAccountDialogController implements Initializable {
     private String password = null;
 
     private void deleteUserAccount() {
-        new Alert(CONFIRMATION, "Are you sure you want to delete your user account?")
-                .showAndWait()
-                .ifPresent(response -> {
-                    if (response == OK) {
-                        try {
-                            delete("users/" + getLoggedInUser().getId());
-                            dialog.setResult(CANCEL);
-                            logout("User account successfully deleted.");
-                        } catch (ClientException e) {
-                            new Alert(ERROR, e.getMessage()).showAndWait();
-                        }
-                    }
-                });
+        if (userHasConfirmedActionWhenAskedForConfirmation(
+                "Are you sure you want to permanently delete your user account?")) {
+            try {
+                delete("users/" + getLoggedInUser().getId());
+                dialog.setResult(CANCEL);
+                logout("User account successfully deleted.");
+            } catch (ClientException e) {
+                showMoneyMinderErrorAlert(e.getMessage());
+            }
+        }
     }
 
     @Override
@@ -95,7 +93,7 @@ public class EditUserAccountDialogController implements Initializable {
                 password = controller.getPasswordField().getText();
             }
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 

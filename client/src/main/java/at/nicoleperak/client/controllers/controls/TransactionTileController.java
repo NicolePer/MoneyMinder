@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -13,8 +12,8 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 
 import static at.nicoleperak.client.FXMLLocation.TRANSACTION_DETAILS_TILE;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
 import static at.nicoleperak.client.factories.TransactionDetailsTileFactory.buildTransactionDetailsTile;
-import static javafx.scene.control.Alert.AlertType.ERROR;
 
 public class TransactionTileController {
 
@@ -46,7 +45,7 @@ public class TransactionTileController {
             VBox transactionDetailsTile = buildTransactionDetailsTile(transaction, loader, transactionsPane);
             transactionTileList.set(tileIndex, transactionDetailsTile);
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 

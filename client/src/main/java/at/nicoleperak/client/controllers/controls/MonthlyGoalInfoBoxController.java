@@ -5,7 +5,6 @@ import at.nicoleperak.client.controllers.dialogs.SetMonthlyGoalDialogController;
 import at.nicoleperak.shared.FinancialGoal;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -17,9 +16,11 @@ import java.util.Optional;
 import static at.nicoleperak.client.Client.getDialog;
 import static at.nicoleperak.client.FXMLLocation.SET_MONTHLY_GOAL_FORM;
 import static at.nicoleperak.client.ServiceFunctions.*;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderSuccessAlert;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderConfirmationDialogController.userHasConfirmedActionWhenAskedForConfirmation;
 import static at.nicoleperak.client.controllers.screens.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
 import static at.nicoleperak.client.factories.FinancialGoalFactory.buildFinancialGoal;
-import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.ButtonType.FINISH;
 
 public class MonthlyGoalInfoBoxController {
@@ -49,12 +50,18 @@ public class MonthlyGoalInfoBoxController {
     }
 
     private void removeMonthlyGoal() {
-        try {
-            delete("financial-goals/" + goal.getId());
-            reloadFinancialAccountDetailsScreen();
-        } catch (ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+        if (userHasConfirmedActionWhenAskedForConfirmation(
+                "Are you sure you want to delete your monthly goal?")) {
+            try {
+                delete("financial-goals/" + goal.getId());
+                showMoneyMinderSuccessAlert("Monthly goal deleted");
+                reloadFinancialAccountDetailsScreen();
+
+            } catch (ClientException e) {
+                showMoneyMinderErrorAlert(e.getMessage());
+            }
         }
+
     }
 
     private void showSetFinancialGoalDialog() {
@@ -69,16 +76,17 @@ public class MonthlyGoalInfoBoxController {
                 putFinancialGoal(newGoal);
             }
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
     private void putFinancialGoal(FinancialGoal newGoal) {
         try {
             put("financial-goals/" + goal.getId(), jsonb.toJson(newGoal));
+            showMoneyMinderSuccessAlert("Monthly goal successfully set to " + newGoal.getGoalAmount() + " €");
             reloadFinancialAccountDetailsScreen();
         } catch (ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 

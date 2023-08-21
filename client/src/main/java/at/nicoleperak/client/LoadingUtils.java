@@ -4,13 +4,12 @@ import at.nicoleperak.shared.Category.CategoryType;
 import at.nicoleperak.shared.CategoryList;
 import at.nicoleperak.shared.FinancialAccount;
 import at.nicoleperak.shared.User;
-import javafx.scene.control.Alert;
 import javafx.scene.control.RadioButton;
 
 import static at.nicoleperak.client.ServiceFunctions.jsonb;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
 import static at.nicoleperak.shared.Category.CategoryType.Expense;
 import static at.nicoleperak.shared.Category.CategoryType.Income;
-import static javafx.scene.control.Alert.AlertType.ERROR;
 
 public class LoadingUtils {
 
@@ -19,7 +18,7 @@ public class LoadingUtils {
         try {
             jsonResponse = ServiceFunctions.get("financial-accounts/" + selectedFinancialAccount.getId());
         } catch (ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
         return jsonb.fromJson(jsonResponse, FinancialAccount.class);
     }
@@ -39,7 +38,7 @@ public class LoadingUtils {
         try {
             jsonResponse = ServiceFunctions.get("categories");
         } catch (ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
         return jsonb.fromJson(jsonResponse, CategoryList.class);
     }
@@ -49,7 +48,7 @@ public class LoadingUtils {
         try {
             jsonResponse = ServiceFunctions.get("categories/" + categoryType.name());
         } catch (ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
         return jsonb.fromJson(jsonResponse, CategoryList.class);
     }

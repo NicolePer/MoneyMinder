@@ -3,14 +3,14 @@ package at.nicoleperak.client.controllers.controls;
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.shared.User;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
 import static at.nicoleperak.client.ServiceFunctions.delete;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderSuccessAlert;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderConfirmationDialogController.userHasConfirmedActionWhenAskedForConfirmation;
 import static at.nicoleperak.client.controllers.screens.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 public class CollaboratorBoxController {
 
@@ -33,12 +33,16 @@ public class CollaboratorBoxController {
     }
 
     private void removeCollaborator() {
-        try {
-            delete("financial-accounts/" + financialAccountId + "/collaborators/" + collaborator.getId());
-            new Alert(INFORMATION, collaborator.getEmail() + " successfully removed as collaborator").showAndWait();
-            reloadFinancialAccountDetailsScreen();
-        } catch (ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+        if (userHasConfirmedActionWhenAskedForConfirmation(
+                "Are you sure you want to remove \"" + collaborator.getEmail() + "\" as a collaborator?")) {
+            try {
+                delete("financial-accounts/" + financialAccountId + "/collaborators/" + collaborator.getId());
+                showMoneyMinderSuccessAlert(collaborator.getEmail() + " removed as collaborator");
+                reloadFinancialAccountDetailsScreen();
+
+            } catch (ClientException e) {
+                showMoneyMinderErrorAlert(e.getMessage());
+            }
         }
     }
 

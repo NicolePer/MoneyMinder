@@ -3,7 +3,6 @@ package at.nicoleperak.client.controllers.controls;
 import at.nicoleperak.shared.FinancialAccount;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
@@ -12,6 +11,7 @@ import java.io.IOException;
 
 import static at.nicoleperak.client.Client.*;
 import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNT_DETAILS_SCREEN;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
 
 public class FinancialAccountTileController extends GridPane {
 
@@ -31,7 +31,7 @@ public class FinancialAccountTileController extends GridPane {
             Scene scene = loadScene(FINANCIAL_ACCOUNT_DETAILS_SCREEN);
             getStage().setScene(scene);
         } catch (IOException e) {
-            new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 

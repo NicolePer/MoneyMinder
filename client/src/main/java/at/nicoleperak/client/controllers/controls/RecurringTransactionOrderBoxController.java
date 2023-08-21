@@ -5,7 +5,6 @@ import at.nicoleperak.client.controllers.dialogs.RecurringTransactionDialogContr
 import at.nicoleperak.shared.RecurringTransactionOrder;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.Label;
@@ -16,10 +15,11 @@ import java.util.Optional;
 import static at.nicoleperak.client.Client.getDialog;
 import static at.nicoleperak.client.FXMLLocation.RECURRING_TRANSACTION_FORM;
 import static at.nicoleperak.client.ServiceFunctions.*;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderSuccessAlert;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderConfirmationDialogController.userHasConfirmedActionWhenAskedForConfirmation;
 import static at.nicoleperak.client.controllers.screens.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
 import static at.nicoleperak.client.factories.RecurringTransactionOrderFactory.buildRecurringTransactionOrder;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import static javafx.scene.control.ButtonType.FINISH;
 
 public class RecurringTransactionOrderBoxController {
@@ -43,13 +43,16 @@ public class RecurringTransactionOrderBoxController {
     }
 
     private void removeRecurringTransactionOrder() {
-        try {
-            delete("recurring-transaction-orders/" + order.getId());
-            new Alert(INFORMATION, "Recurring transaction order \""
-                    + order.getDescription() + "\" successfully deleted").showAndWait();
-            reloadFinancialAccountDetailsScreen();
-        } catch (ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+        if (userHasConfirmedActionWhenAskedForConfirmation(
+                "Are you sure you want to delete this order?")) {
+            try {
+                delete("recurring-transaction-orders/" + order.getId());
+                showMoneyMinderSuccessAlert("Recurring transaction order \""
+                        + order.getDescription() + "\" successfully deleted");
+                reloadFinancialAccountDetailsScreen();
+            } catch (ClientException e) {
+                showMoneyMinderErrorAlert(e.getMessage());
+            }
         }
     }
 
@@ -65,16 +68,17 @@ public class RecurringTransactionOrderBoxController {
                 putEditedRecurringTransactionOrder(editedOrder);
             }
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
     private void putEditedRecurringTransactionOrder(RecurringTransactionOrder editedOrder) {
         try {
             put("recurring-transaction-orders/" + order.getId(), jsonb.toJson(editedOrder));
+            showMoneyMinderSuccessAlert("Changes saved");
             reloadFinancialAccountDetailsScreen();
         } catch (ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 

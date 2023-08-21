@@ -8,7 +8,6 @@ import at.nicoleperak.shared.FinancialAccount;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
 
@@ -21,7 +20,7 @@ import static at.nicoleperak.client.FXMLLocation.CREATE_FINANCIAL_ACCOUNT_FORM;
 import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN;
 import static at.nicoleperak.client.ServiceFunctions.jsonb;
 import static at.nicoleperak.client.ServiceFunctions.post;
-import static javafx.scene.control.Alert.AlertType.ERROR;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
 import static javafx.scene.control.ButtonType.FINISH;
 
 public class CreateFinancialAccountTileController {
@@ -43,7 +42,7 @@ public class CreateFinancialAccountTileController {
                 reloadFinancialAccountsOverviewScreen();
             }
         } catch (IOException | ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -52,7 +51,7 @@ public class CreateFinancialAccountTileController {
             Scene scene = loadScene(FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN);
             Client.getStage().setScene(scene);
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 }

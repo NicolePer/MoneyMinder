@@ -4,7 +4,6 @@ import at.nicoleperak.client.ClientException;
 import at.nicoleperak.shared.User;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -17,7 +16,7 @@ import static at.nicoleperak.client.LoadingUtils.loadLoggedInUser;
 import static at.nicoleperak.client.Redirection.redirectToFinancialAccountsOverviewScreen;
 import static at.nicoleperak.client.Validation.assertEmailIsValid;
 import static at.nicoleperak.client.Validation.assertUserInputLengthIsValid;
-import static javafx.scene.control.Alert.AlertType.ERROR;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
 import static javafx.scene.paint.Color.RED;
 
 public class WelcomeScreenController {
@@ -38,7 +37,7 @@ public class WelcomeScreenController {
             getStage().setScene(scene);
             scene.getRoot().requestFocus();
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 

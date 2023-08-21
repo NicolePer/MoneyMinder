@@ -8,8 +8,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
@@ -22,13 +20,10 @@ import java.util.ResourceBundle;
 import static at.nicoleperak.client.FXMLLocation.*;
 import static at.nicoleperak.client.ServiceFunctions.get;
 import static at.nicoleperak.client.ServiceFunctions.jsonb;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
 import static at.nicoleperak.client.factories.FinancialAccountTileFactory.buildFinancialAccountTile;
-import static javafx.scene.control.Alert.AlertType.ERROR;
 
 public class FinancialAccountsOverviewScreenController implements Initializable {
-
-    @FXML
-    private Label alertMessageLabel;
 
     @FXML
     private TilePane financialAccountsTilePane;
@@ -50,7 +45,7 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
             controller.getNavigationBarBox().getChildren().remove(controller.getGoBackIcon());
             screenPane.getChildren().add(0, navigationBarBox);
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -66,7 +61,7 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
             }
             showCreateFinancialAccountTile();
         } catch (IOException | ClientException e) {
-            alertMessageLabel.setText(e.getMessage());
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 

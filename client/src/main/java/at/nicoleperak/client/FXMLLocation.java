@@ -24,7 +24,11 @@ FXMLLocation {
     SET_MONTHLY_GOAL_FORM("/fxml/set-monthly-goal-form.fxml"),
     NAVIGATION_BAR("/fxml/navigation-bar.fxml"),
     EDIT_USER_ACCOUNT_FORM("/fxml/edit-user-account-form.fxml"),
-    CHANGE_PASSWORD_FORM("/fxml/change-password-form.fxml");
+    CHANGE_PASSWORD_FORM("/fxml/change-password-form.fxml"),
+    MONEYMINDER_ERROR_ALERT("/fxml/moneyminder-error-alert.fxml"),
+    MONEYMINDER_WARNING_ALERT("/fxml/moneyminder-warning-alert.fxml"),
+    MONEYMINDER_SUCCESS_ALERT("/fxml/moneyminder-success-alert.fxml"),
+    MONEYMINDER_CONFIRMATION_DIALOG("/fxml/moneyminder-confirmation-dialog.fxml");
 
 
     private final String location;

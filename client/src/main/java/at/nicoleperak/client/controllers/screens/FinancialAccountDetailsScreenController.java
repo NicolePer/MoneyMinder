@@ -58,6 +58,9 @@ import static at.nicoleperak.client.Redirection.redirectToFinancialAccountsOverv
 import static at.nicoleperak.client.ServiceFunctions.*;
 import static at.nicoleperak.client.Validation.assertDateIsInPast;
 import static at.nicoleperak.client.Validation.assertEmailIsValid;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderSuccessAlert;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderConfirmationDialogController.userHasConfirmedActionWhenAskedForConfirmation;
 import static at.nicoleperak.client.factories.CollaboratorBoxFactory.buildCollaboratorBox;
 import static at.nicoleperak.client.factories.FinancialAccountFactory.buildFinancialAccount;
 import static at.nicoleperak.client.factories.FinancialGoalFactory.buildFinancialGoal;
@@ -74,7 +77,7 @@ import static java.util.Locale.US;
 import static java.util.Objects.requireNonNullElse;
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.collections.FXCollections.reverse;
-import static javafx.scene.control.Alert.AlertType.*;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import static javafx.scene.control.ButtonType.FINISH;
 import static javafx.scene.input.KeyCode.ENTER;
 
@@ -174,7 +177,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             Scene scene = loadScene(FINANCIAL_ACCOUNT_DETAILS_SCREEN);
             getStage().setScene(scene);
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -209,9 +212,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     void onDownloadIconClicked() {
         try {
             writeTransactionsToCsv();
-            new Alert(INFORMATION, "Transactions successfully exported to CSV-File.").showAndWait();
+            showMoneyMinderSuccessAlert("Transactions successfully exported to CSV-File.");
         } catch (Exception e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -242,7 +245,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                     MAX.minusDays(1));
             filterTransactions();
         } catch (ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -401,7 +404,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             HBox navigationBarBox = loader.load();
             screenPane.getChildren().add(0, navigationBarBox);
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -413,7 +416,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                 transactionsPane.getChildren().add(transactionTile);
             }
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
 
     }
@@ -445,7 +448,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                 collaboratorsPane.getChildren().add(collaboratorBox);
             }
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -458,7 +461,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                 recurringTransactionOrdersPane.getChildren().add(ordersBox);
             }
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -477,7 +480,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                 controller.getEditMonthlyGoalIcon().setVisible(true);
             }
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -509,7 +512,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             controller.setProgressBarColor(divisor);
             headerVBox.getChildren().add(1, monthlyGoalHeader);
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -524,7 +527,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                 postTransaction(transaction);
             }
         } catch (IOException | ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -540,7 +543,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                 putEditedFinancialAccount(editedAccount);
             }
         } catch (IOException | ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -555,7 +558,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                 postFinancialGoal(goal);
             }
         } catch (IOException | ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -570,7 +573,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                 postRecurringTransactionsOrder(order);
             }
         } catch (IOException | ClientException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -606,6 +609,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                         + selectedFinancialAccount.getId()
                         + "/financial-goals"
                 , jsonb.toJson(goal), true);
+        showMoneyMinderSuccessAlert("Financial Goal successfully set to " + goal.getGoalAmount() + " €");
         reloadFinancialAccountDetailsScreen();
     }
 
@@ -615,6 +619,8 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                         + "/recurring-transactions"
                 , jsonb.toJson(order)
                 , true);
+        showMoneyMinderSuccessAlert("Recurring transaction order \""
+                + order.getDescription() + "\" successfully created");
         reloadFinancialAccountDetailsScreen();
     }
 
@@ -625,25 +631,26 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                         + "/collaborators"
                 , jsonb.toJson(email)
                 , true);
-        new Alert(INFORMATION, "User successfully added as collaborator").showAndWait();
+        showMoneyMinderSuccessAlert("\"" + email + "\" successfully added as collaborator");
         reloadFinancialAccountDetailsScreen();
     }
 
     private void deleteFinancialAccount() {
-        new Alert(CONFIRMATION, "Are you sure you want to delete the financial account?\nIt will be permanently deleted, even for other collaborators.")
-                .showAndWait()
-                .ifPresent(response -> {
-                    if (response == ButtonType.OK) {
-                        try {
-                            delete("financial-accounts/" + selectedFinancialAccount.getId());
-                            redirectToFinancialAccountsOverviewScreen();
-                        } catch (ClientException e) {
-                            new Alert(ERROR, e.getMessage()).showAndWait();
-                        }
-                    }
-                });
+        if (userHasConfirmedActionWhenAskedForConfirmation(
+                "Are you sure you want to delete the financial account?" +
+                        "\nIt will be permanently deleted, even for other collaborators.")) {
+            try {
+                delete("financial-accounts/" + selectedFinancialAccount.getId());
+                showMoneyMinderSuccessAlert("Financial account \"" +
+                        selectedFinancialAccount.getTitle() + "\" successfully deleted");
+                redirectToFinancialAccountsOverviewScreen();
+            } catch (ClientException e) {
+                showMoneyMinderErrorAlert(e.getMessage());
+            }
+        }
     }
 
+    @SuppressWarnings("unchecked")
     private void writeTransactionsToCsv() throws Exception {
         File selectedFile = showFileChooserSaveDialog();
         if (selectedFile != null) {
@@ -671,6 +678,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         //https://stackoverflow.com/questions/74859461/java93422850-catransaction-synchronize-called-within-transaction-when-a
         return fileChooser.showSaveDialog(downloadIcon.getScene().getWindow());
     }
+
 
     private boolean userIsOwner() {
         return selectedFinancialAccount.getOwner().getId().equals(getLoggedInUser().getId());

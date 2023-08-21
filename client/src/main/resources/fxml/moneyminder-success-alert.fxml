@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<DialogPane stylesheets="@../css/dialog.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController">
+    <content>
+        <VBox alignment="CENTER">
+            <HBox alignment="CENTER" spacing="30.0">
+                <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                    <Image url="@../icons/check-icon-white.png"/>
+                </ImageView>
+                <Label fx:id="alertTextLabel" prefWidth="250.0" textFill="#fbf9f8" wrapText="true">
+                    <font>
+                        <Font name="Source Sans 3 Regular" size="14.0"/>
+                    </font>
+                </Label>
+            </HBox>
+        </VBox>
+    </content>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
+    <ButtonType fx:constant="OK"/>
+</DialogPane>

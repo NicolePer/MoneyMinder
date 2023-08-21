@@ -4,7 +4,6 @@ import at.nicoleperak.client.controllers.screens.WelcomeScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -15,7 +14,7 @@ import static at.nicoleperak.client.Client.getStage;
 import static at.nicoleperak.client.Client.loadScene;
 import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN;
 import static at.nicoleperak.client.FXMLLocation.WELCOME_SCREEN;
-import static javafx.scene.control.Alert.AlertType.ERROR;
+import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
 
 public class Redirection {
 
@@ -26,7 +25,7 @@ public class Redirection {
             stage.setScene(scene);
             centerStage(stage);
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -52,7 +51,7 @@ public class Redirection {
             stage.setScene(scene);
             centerStage(stage);
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
@@ -64,7 +63,7 @@ public class Redirection {
             stage.setScene(scene);
             centerStage(stage);
         } catch (IOException e) {
-            new Alert(ERROR, e.getMessage()).showAndWait();
+            showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
