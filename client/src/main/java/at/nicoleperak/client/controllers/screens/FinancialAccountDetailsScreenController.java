@@ -209,6 +209,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     void onDownloadIconClicked() {
         try {
             writeTransactionsToCsv();
+            new Alert(INFORMATION, "Transactions successfully exported to CSV-File.").showAndWait();
         } catch (Exception e) {
             new Alert(ERROR, e.getMessage()).showAndWait();
         }

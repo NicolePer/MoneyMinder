@@ -31,6 +31,10 @@ public class SignUpScreenController {
 
     @FXML
     void onSignUpButtonClicked() {
+        signUpUser();
+    }
+
+    private void signUpUser() {
         String username = usernameField.getText();
         String email = emailField.getText();
         String password = passwordField.getText();
@@ -41,7 +45,7 @@ public class SignUpScreenController {
             assertEmailIsValid(email);
             assertUserInputLengthIsValid(password, "password", 8, 255);
             assertPasswordsMatch(password, retypedPassword);
-            signUpUser(new User(null, username, email, password));
+            postUser(new User(null, username, email, password));
             redirectToWelcomeScreen("Your account has been successfully created!", alertMessageLabel);
         } catch (ClientException e) {
             alertMessageLabel.setText(e.getMessage());
@@ -66,7 +70,7 @@ public class SignUpScreenController {
         }
     }
 
-    private static void signUpUser(User newUser) throws ClientException {
+    private static void postUser(User newUser) throws ClientException {
         post("users", jsonb.toJson(newUser), false);
     }
 }

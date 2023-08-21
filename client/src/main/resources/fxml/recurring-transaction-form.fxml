@@ -45,49 +45,8 @@
                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                <RowConstraints vgrow="SOMETIMES" />
             </rowConstraints>
-            <Label fx:id="transactionPartnerLabel" contentDisplay="RIGHT" text="Transaction Partner" textFill="#fbf9f8" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5">
-               <font>
-                  <Font name="Source Sans 3 Medium" size="14.0" />
-               </font>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </Label>
-            <TextField fx:id="transactionPartnerField" prefHeight="28.0" prefWidth="159.0" style="-fx-background-color: #fbf9f8;" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
-               <font>
-                  <Font name="Source Sans 3 Regular" size="13.0" />
-               </font>
-            </TextField>
-            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="16.0" text="Description" textFill="#fbf9f8" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6">
-               <font>
-                  <Font name="Source Sans 3 Medium" size="14.0" />
-               </font>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </Label>
-            <TextField fx:id="descriptionField" layoutX="91.0" layoutY="12.0" prefHeight="26.0" prefWidth="391.0" style="-fx-background-color: #fbf9f8;" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="6">
-               <font>
-                  <Font name="Source Sans 3 Regular" size="13.0" />
-               </font>
-            </TextField>
-            <Label contentDisplay="RIGHT" layoutX="10.0" layoutY="65.0" text="Amount" textFill="#fbf9f8" GridPane.rowIndex="4">
-               <font>
-                  <Font name="Source Sans 3 Medium" size="14.0" />
-               </font>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </Label>
-            <TextField fx:id="amountField" layoutX="143.0" layoutY="61.0" prefWidth="50.0" promptText="0,00" style="-fx-background-color: #fbf9f8;" GridPane.columnIndex="1" GridPane.rowIndex="4">
-               <font>
-                  <Font name="Source Sans 3 Regular" size="13.0" />
-               </font>
-            </TextField>
-             <DatePicker fx:id="nextDatePicker" editable="false" promptText="Pick Date"
-                         style="-fx-background-color: #fbf9f8;" stylesheets="@../css/datepicker.css"
-                         GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="58.0" layoutY="165.0" text="Category" textFill="#fbf9f8">
+             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="58.0" layoutY="165.0" text="Category"
+                    textFill="#fbf9f8">
                <font>
                   <Font name="Source Sans 3 Medium" size="14.0" />
                </font>
@@ -98,38 +57,31 @@
              <ComboBox fx:id="categoryComboBox" disable="true" promptText="Choose Category"
                        style="-fx-background-color: #fbf9f8;" stylesheets="@../css/combobox.css"
                        GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"/>
-            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="72.0" layoutY="215.0" text="Note (optional)" textFill="#fbf9f8" GridPane.rowIndex="7">
+             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Interval" textFill="#fbf9f8"
+                    GridPane.rowIndex="1">
                <font>
-                  <Font name="Source Sans 3 Medium" size="14.0" />
+                   <Font name="Source Sans 3 Medium" size="14.0"/>
                </font>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </Label>
-            <TextArea fx:id="noteArea" prefHeight="100.0" style="-fx-background-color: #fbf9f8;" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7" GridPane.vgrow="ALWAYS">
-               <font>
-                  <Font name="Source Sans 3 Regular" size="13.0" />
-               </font>
-            </TextArea>
-            <Label fx:id="nextDateLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="72.0" layoutY="215.0" text="First Date" textFill="#fbf9f8" GridPane.rowIndex="2">
-               <font>
-                  <Font name="Source Sans 3 Medium" size="14.0" />
-               </font>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </Label>
-            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Interval" textFill="#fbf9f8" GridPane.rowIndex="1">
-               <font>
-                  <Font name="Source Sans 3 Medium" size="14.0" />
-               </font>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </Label>
+                 <opaqueInsets>
+                     <Insets/>
+                 </opaqueInsets>
+             </Label>
              <ComboBox fx:id="intervalComboBox" promptText="Choose Interval" style="-fx-background-color: #fbf9f8;"
                        stylesheets="@../css/combobox.css" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-            <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="115.0" text="End Date (optional)" textFill="#fbf9f8" GridPane.rowIndex="3">
+             <Label fx:id="nextDateLabel" alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="72.0" layoutY="215.0"
+                    text="First Date" textFill="#fbf9f8" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Source Sans 3 Medium" size="14.0" />
+               </font>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Label>
+             <DatePicker fx:id="nextDatePicker" editable="false" promptText="Pick Date"
+                         style="-fx-background-color: #fbf9f8;" stylesheets="@../css/datepicker.css"
+                         GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="115.0"
+                    text="End Date (optional)" textFill="#fbf9f8" GridPane.rowIndex="3">
                <font>
                   <Font name="Source Sans 3 Medium" size="14.0" />
                </font>
@@ -140,6 +92,67 @@
              <DatePicker fx:id="endDatePicker" editable="false" promptText="Pick Date"
                          style="-fx-background-color: #fbf9f8;" stylesheets="@../css/datepicker.css"
                          GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <TextField fx:id="amountField" layoutX="143.0" layoutY="61.0" prefWidth="50.0" promptText="0,00" style="-fx-background-color: #fbf9f8;" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <font>
+                  <Font name="Source Sans 3 Regular" size="13.0" />
+               </font>
+            </TextField>
+             <Label contentDisplay="RIGHT" layoutX="10.0" layoutY="65.0" text="Amount" textFill="#fbf9f8"
+                    GridPane.rowIndex="4">
+               <font>
+                  <Font name="Source Sans 3 Medium" size="14.0" />
+               </font>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Label>
+             <Label fx:id="transactionPartnerLabel" contentDisplay="RIGHT" text="Transaction Partner" textFill="#fbf9f8"
+                    GridPane.hgrow="ALWAYS" GridPane.rowIndex="5">
+               <font>
+                  <Font name="Source Sans 3 Medium" size="14.0" />
+               </font>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Label>
+             <TextField fx:id="transactionPartnerField" prefHeight="28.0" prefWidth="159.0"
+                        style="-fx-background-color: #fbf9f8;" GridPane.columnIndex="1" GridPane.halignment="RIGHT"
+                        GridPane.rowIndex="5">
+               <font>
+                  <Font name="Source Sans 3 Regular" size="13.0" />
+               </font>
+             </TextField>
+             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="10.0" layoutY="16.0" text="Description"
+                    textFill="#fbf9f8" GridPane.hgrow="ALWAYS" GridPane.rowIndex="6">
+               <font>
+                  <Font name="Source Sans 3 Medium" size="14.0" />
+               </font>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Label>
+             <TextField fx:id="descriptionField" layoutX="91.0" layoutY="12.0" prefHeight="26.0" prefWidth="391.0"
+                        style="-fx-background-color: #fbf9f8;" GridPane.columnIndex="1" GridPane.halignment="LEFT"
+                        GridPane.rowIndex="6">
+                 <font>
+                     <Font name="Source Sans 3 Regular" size="13.0"/>
+                 </font>
+             </TextField>
+             <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="72.0" layoutY="215.0"
+                    text="Note (optional)" textFill="#fbf9f8" GridPane.rowIndex="7">
+               <font>
+                  <Font name="Source Sans 3 Medium" size="14.0" />
+               </font>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Label>
+             <TextArea fx:id="noteArea" prefHeight="100.0" style="-fx-background-color: #fbf9f8;"
+                       GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="7" GridPane.vgrow="ALWAYS">
+               <font>
+                   <Font name="Source Sans 3 Regular" size="13.0"/>
+               </font>
+             </TextArea>
          </GridPane>
          <Label fx:id="alertMessageLabel" alignment="CENTER" textFill="RED">
             <VBox.margin>

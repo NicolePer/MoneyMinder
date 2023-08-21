@@ -74,8 +74,9 @@
       </VBox>
       <VBox spacing="5.0">
          <HBox alignment="CENTER">
-             <Button alignment="CENTER" cache="true" mnemonicParsing="false" onAction="#onSignUpButtonClicked"
-                     style="-fx-background-color: #FBF9F8;" text="Sign Up" textAlignment="JUSTIFY" textFill="#3a6a95">
+             <Button alignment="CENTER" cache="true" defaultButton="true" mnemonicParsing="false"
+                     onAction="#onSignUpButtonClicked" style="-fx-background-color: #FBF9F8;" text="Sign Up"
+                     textAlignment="JUSTIFY" textFill="#3a6a95">
                <font>
                   <Font name="Source Sans 3 Medium" size="13.0" />
                </font>

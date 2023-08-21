@@ -138,7 +138,7 @@ public class TransactionDialogController implements Initializable {
         return amountField;
     }
 
-    public ComboBox<?> getCategoryComboBox() {
+    public ComboBox<Category> getCategoryComboBox() {
         return categoryComboBox;
     }
 
