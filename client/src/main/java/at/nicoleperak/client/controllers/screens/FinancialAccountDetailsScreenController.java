@@ -221,7 +221,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     @FXML
     void onCategorySelected() {
         selectedCategory = categoryComboBox.getSelectionModel().getSelectedItem();
-        filterTransactions();
+        filterAndSearchTransactions();
     }
 
     @FXML
@@ -231,7 +231,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         CategoryList filteredList = loadCategories(transactionTypeComboBox.getSelectionModel().getSelectedItem());
         categoryObservableList.setAll(filteredList.getCategories());
         selectedType = transactionTypeComboBox.getValue();
-        filterTransactions();
+        filterAndSearchTransactions();
     }
 
     @FXML
@@ -243,7 +243,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                     MIN.plusDays(1));
             selectedDateTo = requireNonNullElse(dateToDatePicker.getValue(),
                     MAX.minusDays(1));
-            filterTransactions();
+            filterAndSearchTransactions();
         } catch (ClientException e) {
             showMoneyMinderErrorAlert(e.getMessage());
         }
@@ -257,13 +257,13 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     @FXML
     void onEnterKeyPressedInSearchBar(KeyEvent event) {
         if (event.getCode().equals(ENTER)) {
-            searchTransactions();
+            filterAndSearchTransactions();
         }
     }
 
     @FXML
     void onSearchIconClicked() {
-        searchTransactions();
+        filterAndSearchTransactions();
     }
 
     @FXML
@@ -293,50 +293,14 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         deleteFinancialAccount();
     }
 
-    private void searchTransactions() {
-        String query = searchField.getText();
-        List<String> searchTerms = List.of(query.toLowerCase().split("[\\s.,+]+"));
-        List<Transaction> resultList = new ArrayList<>();
-        for (Transaction transaction : selectedFinancialAccount.getTransactions()) {
-            String transactionNote = requireNonNullElse(transaction.getNote(), "");
-            if (searchTerms.stream().anyMatch(transaction.getDescription().toLowerCase()::contains) ||
-                    searchTerms.stream().anyMatch(transaction.getTransactionPartner().toLowerCase()::contains) ||
-                    searchTerms.stream().anyMatch(transaction.getCategory().getTitle().toLowerCase()::contains) ||
-                    searchTerms.stream().anyMatch(transactionNote.toLowerCase()::contains)) {
-                resultList.add(transaction);
-            }
-        }
+
+    private void filterAndSearchTransactions() {
+        List<Transaction> filteredTransactionList = filterTransactions();
+        List<Transaction> resultList = searchTransactions(filteredTransactionList);
         transactionsPane.getChildren().clear();
         showTransactions(resultList);
     }
 
-    private void filterTransactions() {
-        List<Transaction> filteredTransactionList = selectedFinancialAccount.getTransactions().stream()
-                .filter(transaction -> {
-                    if (selectedType != null) {
-                        return transaction.getCategory().getType().equals(selectedType);
-                    } else return true;
-                })
-                .filter(transaction -> {
-                    if (selectedCategory != null) {
-                        return transaction.getCategory().getId().equals(selectedCategory.getId());
-                    } else return true;
-                })
-                .filter(transaction -> {
-                    if (selectedDateTo != null) {
-                        return transaction.getDate().isBefore(selectedDateTo.plusDays(1));
-                    } else return true;
-
-                })
-                .filter(transaction -> {
-                    if (selectedDateFrom != null) {
-                        return transaction.getDate().isAfter(selectedDateFrom.minusDays(1));
-                    } else return true;
-                })
-                .toList();
-        transactionsPane.getChildren().clear();
-        showTransactions(filteredTransactionList);
-    }
 
     private void setLabels() {
         financialAccountTitleLabel.setText(selectedFinancialAccount.getTitle().toUpperCase());
@@ -577,6 +541,15 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    private File showFileChooserSaveDialog() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+        fileChooser.setInitialFileName(Validation.convertToValidFileName(selectedFinancialAccount.getTitle().toLowerCase()) + "_transactions");
+        //https://stackoverflow.com/questions/74859461/java93422850-catransaction-synchronize-called-within-transaction-when-a
+        return fileChooser.showSaveDialog(downloadIcon.getScene().getWindow());
+    }
+
     private void addCollaborator() {
         try {
             collaboratorAlertMessageLabel.setText("");
@@ -670,15 +643,47 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
-    private File showFileChooserSaveDialog() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
-        fileChooser.setInitialFileName(Validation.convertToValidFileName(selectedFinancialAccount.getTitle().toLowerCase()) + "_transactions");
-        //https://stackoverflow.com/questions/74859461/java93422850-catransaction-synchronize-called-within-transaction-when-a
-        return fileChooser.showSaveDialog(downloadIcon.getScene().getWindow());
+    private List<Transaction> searchTransactions(List<Transaction> filteredList) {
+        String query = searchField.getText();
+        List<String> searchTerms = List.of(query.toLowerCase().split("[\\s.,+]+"));
+        List<Transaction> resultList = new ArrayList<>();
+        for (Transaction transaction : filteredList) {
+            String transactionNote = requireNonNullElse(transaction.getNote(), "");
+            if (searchTerms.stream().anyMatch(transaction.getDescription().toLowerCase()::contains) ||
+                    searchTerms.stream().anyMatch(transaction.getTransactionPartner().toLowerCase()::contains) ||
+                    searchTerms.stream().anyMatch(transaction.getCategory().getTitle().toLowerCase()::contains) ||
+                    searchTerms.stream().anyMatch(transactionNote.toLowerCase()::contains)) {
+                resultList.add(transaction);
+            }
+        }
+        return resultList;
     }
 
+    private List<Transaction> filterTransactions() {
+        return selectedFinancialAccount.getTransactions().stream()
+                .filter(transaction -> {
+                    if (selectedType != null) {
+                        return transaction.getCategory().getType().equals(selectedType);
+                    } else return true;
+                })
+                .filter(transaction -> {
+                    if (selectedCategory != null) {
+                        return transaction.getCategory().getId().equals(selectedCategory.getId());
+                    } else return true;
+                })
+                .filter(transaction -> {
+                    if (selectedDateTo != null) {
+                        return transaction.getDate().isBefore(selectedDateTo.plusDays(1));
+                    } else return true;
+
+                })
+                .filter(transaction -> {
+                    if (selectedDateFrom != null) {
+                        return transaction.getDate().isAfter(selectedDateFrom.minusDays(1));
+                    } else return true;
+                })
+                .toList();
+    }
 
     private boolean userIsOwner() {
         return selectedFinancialAccount.getOwner().getId().equals(getLoggedInUser().getId());
