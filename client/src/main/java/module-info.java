@@ -4,7 +4,10 @@ module client {
     requires javafx.fxml;
     requires javafx.base;
     requires shared;
+    requires com.opencsv;
+    requires java.sql;
     requires java.net.http;
+    requires commons.collections;
     exports at.nicoleperak.client;
     opens at.nicoleperak.client to javafx.fxml;
     exports at.nicoleperak.client.factories;

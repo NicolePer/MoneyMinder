@@ -358,8 +358,9 @@
                            </cursor>
                            <Image url="@../icons/search-icon.png" />
                         </ImageView>
-                         <ImageView fitHeight="20.0" fitWidth="20.0" layoutX="1058.0" layoutY="27.0"
-                                    onMouseClicked="#onDownloadIconClicked" pickOnBounds="true" preserveRatio="true">
+                         <ImageView fx:id="downloadIcon" fitHeight="20.0" fitWidth="20.0" layoutX="1058.0"
+                                    layoutY="27.0" onMouseClicked="#onDownloadIconClicked" pickOnBounds="true"
+                                    preserveRatio="true">
                            <cursor>
                               <Cursor fx:constant="HAND" />
                            </cursor>

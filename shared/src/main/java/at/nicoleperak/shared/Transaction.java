@@ -1,18 +1,37 @@
 package at.nicoleperak.shared;
 
+import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvIgnore;
+
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @SuppressWarnings("unused")
-public class Transaction {
+public class Transaction implements Serializable {
 
+    @CsvIgnore
     private Long id;
+
+    @CsvBindByName(column = "description")
     private String description;
+
+    @CsvBindByName(column = "amount")
     private BigDecimal amount;
+
+    @CsvBindByName(column = "date")
     private LocalDate date;
+
+    @CsvBindByName(column = "category")
     private Category category;
+
+    @CsvBindByName(column = "transaction partner")
     private String transactionPartner;
+
+    @CsvBindByName(column = "note")
     private String note;
+
+    @CsvBindByName(column = "added automatically")
     private boolean addedAutomatically;
 
     public Transaction() {

@@ -89,4 +89,8 @@ public class Validation {
             throw new ClientException("Please enter valid number for amount");
         }
     }
+
+    public static String convertToValidFileName(String string) {
+        return string.replaceAll("[^a-zA-Z0-9-_.]", "_");
+    }
 }

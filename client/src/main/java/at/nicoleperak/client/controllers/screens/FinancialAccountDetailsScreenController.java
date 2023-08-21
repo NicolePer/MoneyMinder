@@ -2,6 +2,7 @@ package at.nicoleperak.client.controllers.screens;
 
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.client.ServiceFunctions;
+import at.nicoleperak.client.Validation;
 import at.nicoleperak.client.controllers.controls.MonthlyGoalHeaderController;
 import at.nicoleperak.client.controllers.controls.MonthlyGoalInfoBoxController;
 import at.nicoleperak.client.controllers.dialogs.EditFinancialAccountDialogController;
@@ -10,6 +11,10 @@ import at.nicoleperak.client.controllers.dialogs.SetMonthlyGoalDialogController;
 import at.nicoleperak.client.controllers.dialogs.TransactionDialogController;
 import at.nicoleperak.shared.*;
 import at.nicoleperak.shared.Category.CategoryType;
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.HeaderColumnNameMappingStrategy;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,12 +28,18 @@ import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import org.apache.commons.collections.comparators.FixedOrderComparator;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
@@ -135,6 +146,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private Button setGoalButton;
 
     @FXML
+    private ImageView downloadIcon;
+
+    @FXML
     private TextField searchField;
 
     @FXML
@@ -193,7 +207,11 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     void onDownloadIconClicked() {
-        //TODO create functionality
+        try {
+            writeTransactionsToCsv();
+        } catch (Exception e) {
+            new Alert(ERROR, e.getMessage()).showAndWait();
+        }
     }
 
     @FXML
@@ -623,6 +641,34 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                         }
                     }
                 });
+    }
+
+    private void writeTransactionsToCsv() throws Exception {
+        File selectedFile = showFileChooserSaveDialog();
+        if (selectedFile != null) {
+            List<Transaction> transactions = selectedFinancialAccount.getTransactions();
+            HeaderColumnNameMappingStrategy<Transaction> strategy = new HeaderColumnNameMappingStrategy<>();
+            strategy.setType(Transaction.class);
+            String[] columns = {"DATE", "DESCRIPTION", "TRANSACTION PARTNER", "AMOUNT", "CATEGORY", "NOTE", "ADDED AUTOMATICALLY"};
+            strategy.setColumnOrderOnWrite(new FixedOrderComparator(columns));
+            try (Writer writer = new FileWriter(selectedFile.toPath().toString())) {
+                StatefulBeanToCsv<Transaction> sbc = new StatefulBeanToCsvBuilder<Transaction>(writer)
+                        .withQuotechar('\"')
+                        .withMappingStrategy(strategy)
+                        .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
+                        .build();
+                sbc.write(transactions);
+            }
+        }
+    }
+
+    private File showFileChooserSaveDialog() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+        fileChooser.setInitialFileName(Validation.convertToValidFileName(selectedFinancialAccount.getTitle().toLowerCase()) + "_transactions");
+        //https://stackoverflow.com/questions/74859461/java93422850-catransaction-synchronize-called-within-transaction-when-a
+        return fileChooser.showSaveDialog(downloadIcon.getScene().getWindow());
     }
 
     private boolean userIsOwner() {
