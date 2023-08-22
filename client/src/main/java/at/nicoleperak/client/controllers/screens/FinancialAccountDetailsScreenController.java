@@ -3,12 +3,14 @@ package at.nicoleperak.client.controllers.screens;
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.client.ServiceFunctions;
 import at.nicoleperak.client.Validation;
+import at.nicoleperak.client.controllers.controls.BarChartBoxController;
 import at.nicoleperak.client.controllers.controls.MonthlyGoalHeaderController;
 import at.nicoleperak.client.controllers.controls.MonthlyGoalInfoBoxController;
+import at.nicoleperak.client.controllers.controls.PieChartBoxController;
+import at.nicoleperak.client.controllers.dialogs.CreateTransactionDialogController;
 import at.nicoleperak.client.controllers.dialogs.EditFinancialAccountDialogController;
 import at.nicoleperak.client.controllers.dialogs.RecurringTransactionDialogController;
 import at.nicoleperak.client.controllers.dialogs.SetMonthlyGoalDialogController;
-import at.nicoleperak.client.controllers.dialogs.TransactionDialogController;
 import at.nicoleperak.shared.*;
 import at.nicoleperak.shared.Category.CategoryType;
 import com.opencsv.CSVWriter;
@@ -22,11 +24,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.PieChart;
-import javafx.scene.chart.XYChart.Data;
-import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -40,10 +37,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -64,48 +59,39 @@ import static at.nicoleperak.client.controllers.dialogs.MoneyMinderConfirmationD
 import static at.nicoleperak.client.factories.CollaboratorBoxFactory.buildCollaboratorBox;
 import static at.nicoleperak.client.factories.FinancialAccountFactory.buildFinancialAccount;
 import static at.nicoleperak.client.factories.FinancialGoalFactory.buildFinancialGoal;
-import static at.nicoleperak.client.factories.PieChartDataFactory.buildPieChartData;
 import static at.nicoleperak.client.factories.RecurringTransactionOrderBoxFactory.buildRecurringTransactionOrderBox;
 import static at.nicoleperak.client.factories.RecurringTransactionOrderFactory.buildRecurringTransactionOrder;
 import static at.nicoleperak.client.factories.TransactionFactory.buildTransaction;
 import static at.nicoleperak.client.factories.TransactionTileFactory.buildTransactionTile;
-import static at.nicoleperak.shared.Category.CategoryType.EXPENSE;
-import static at.nicoleperak.shared.Category.CategoryType.INCOME;
-import static java.time.LocalDate.*;
-import static java.time.format.TextStyle.FULL;
-import static java.util.Locale.US;
+import static java.time.LocalDate.MAX;
+import static java.time.LocalDate.MIN;
 import static java.util.Objects.requireNonNullElse;
 import static javafx.collections.FXCollections.observableArrayList;
-import static javafx.collections.FXCollections.reverse;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import static javafx.scene.control.ButtonType.FINISH;
 import static javafx.scene.input.KeyCode.ENTER;
 
 public class FinancialAccountDetailsScreenController implements Initializable {
 
-    ObservableList<Category> categoryObservableList = observableArrayList();
-    ObservableList<CategoryType> typeObservableList = observableArrayList();
+    private final ObservableList<Category> categoryObservableList = observableArrayList();
+    private final ObservableList<CategoryType> typeObservableList = observableArrayList();
     private FinancialAccount selectedFinancialAccount;
     private CategoryType selectedType;
     private Category selectedCategory;
     private LocalDate selectedDateFrom;
     private LocalDate selectedDateTo;
-    private Integer numberOfMonths = 6;
 
     @FXML
     private VBox screenPane;
+
+    @FXML
+    private Tab analysisTab;
 
     @FXML
     private Label balanceLabel;
 
     @FXML
     private VBox recurringTransactionOrdersPane;
-
-    @FXML
-    private CategoryAxis categoryAxis;
-
-    @FXML
-    private Spinner<Integer> numberOfMonthsSpinner;
 
     @FXML
     private VBox headerVBox;
@@ -115,9 +101,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     private VBox collaboratorsPane;
-
-    @FXML
-    private BarChart<String, Number> barChart;
 
     @FXML
     private Label financialAccountTitleLabel;
@@ -132,16 +115,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private DatePicker dateToDatePicker;
 
     @FXML
-    private PieChart pieChart;
-
-    @FXML
     private Label collaboratorAlertMessageLabel;
-
-    @FXML
-    private ToggleGroup pieChartToggleGroup;
-
-    @FXML
-    private RadioButton incomeRadioButton;
 
     @FXML
     private VBox monthlyGoalBox;
@@ -171,6 +145,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private ComboBox<Category> categoryComboBox;
 
     @FXML
+    private Tab trendsTab;
+
+    @FXML
     private ComboBox<CategoryType> transactionTypeComboBox;
 
     @FXML
@@ -195,12 +172,10 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         showCollaborators();
         showRecurringTransactionOrders();
         showMonthlyGoal();
-        setSpinner();
         setLabels();
         setComboBoxes();
-        setPieChart();
-        setBarChart();
-        resetPieChartOnChangesOfPieChartToggleGroup();
+        setAnalysisTab();
+        setTrendsTab();
     }
 
     @FXML
@@ -298,13 +273,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         deleteFinancialAccount();
     }
 
-    private void listenForChangesOnSpinner() {
-        numberOfMonthsSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            numberOfMonths = newValue;
-            setBarChart();
-        });
-    }
-
 
     private void filterAndSearchTransactions() {
         List<Transaction> filteredTransactionList = filterTransactions();
@@ -313,12 +281,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         showTransactions(resultList);
     }
 
-
-    private void setSpinner() {
-        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 12, numberOfMonths);
-        numberOfMonthsSpinner.setValueFactory(valueFactory);
-        listenForChangesOnSpinner();
-    }
 
     private void setLabels() {
         financialAccountTitleLabel.setText(selectedFinancialAccount.getTitle().toUpperCase());
@@ -336,54 +298,12 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         transactionTypeComboBox.setItems(typeObservableList);
     }
 
-    private void setPieChart() {
-        CategoryType categoryType = pieChartToggleGroup.getSelectedToggle()
-                .equals(incomeRadioButton) ? INCOME : EXPENSE;
-        pieChart.setData(buildPieChartData(selectedFinancialAccount.getTransactions(), categoryType));
+    private void setAnalysisTab() {
+        analysisTab.setContent(getPieChartBox());
     }
 
-    private void resetPieChartOnChangesOfPieChartToggleGroup() {
-        pieChartToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> setPieChart());
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    private void setBarChart() {
-        barChart.getData().clear();
-        ObservableList<String> months = observableArrayList();
-        List<Transaction> transactionList = selectedFinancialAccount.getTransactions();
-        Series<String, Number> incomeSeries = new Series<>();
-        incomeSeries.setName("Income");
-        Series<String, Number> expenseSeries = new Series<>();
-        expenseSeries.setName("Expenses");
-        for (int i = 0; i < numberOfMonths; i++) {
-            int currentMonthValue = now().getMonthValue() - i;
-            if (currentMonthValue <= 0) {
-                currentMonthValue += 12;
-            }
-            int finalCurrentMonthValue = currentMonthValue;
-            List<Transaction> monthTransactionList = transactionList.stream()
-                    .filter(transaction ->
-                            transaction.getDate().getMonthValue() == finalCurrentMonthValue)
-                    .toList();
-            BigDecimal sumIncome = new BigDecimal(0);
-            BigDecimal sumExpenses = new BigDecimal(0);
-            months.add(Month.of(currentMonthValue).getDisplayName(FULL, US));
-            for (Transaction transaction : monthTransactionList) {
-                BigDecimal amount = transaction.getAmount().abs();
-                if (transaction.getCategory().getType().equals(INCOME)) {
-                    sumIncome = sumIncome.add(amount);
-                } else {
-                    sumExpenses = sumExpenses.add(amount);
-                }
-            }
-            incomeSeries.getData().add(new Data<>(Month.of(currentMonthValue).getDisplayName(FULL, US), sumIncome.doubleValue()));
-            expenseSeries.getData().add(new Data<>(Month.of(currentMonthValue).getDisplayName(FULL, US), sumExpenses.doubleValue()));
-        }
-        //noinspection unchecked
-        barChart.getData().addAll(incomeSeries, expenseSeries);
-        reverse(months);
-        categoryAxis.getCategories().clear();
-        categoryAxis.setCategories(months);
+    private void setTrendsTab() {
+        trendsTab.setContent(getBarChartBox());
     }
 
     private void insertNavigationBar() {
@@ -416,8 +336,8 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             }
         } else {
             FinancialGoal goal = selectedFinancialAccount.getFinancialGoal();
-            showMonthlyGoalInfobox(goal);
-            showMonthlyGoalHeader(goal);
+            monthlyGoalBox.getChildren().add(getMonthlyGoalVBox(goal));
+            headerVBox.getChildren().add(1, getMonthlyGoalHeader(goal));
         }
     }
 
@@ -453,24 +373,6 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
-    private void showMonthlyGoalInfobox(FinancialGoal goal) {
-        try {
-            monthlyGoalBox.getChildren().clear();
-            FXMLLoader loader = MONTHLY_GOAL_INFOBOX.getLoader();
-            VBox monthlyGoalInfoBox = loader.load();
-            MonthlyGoalInfoBoxController controller = loader.getController();
-            controller.getGoalLabel().setText(formatBalance(goal.getGoalAmount()));
-            controller.getCurrentExpensesLabel().setText(formatBalance(goal.getCurrentMonthsExpenses().abs()));
-            controller.setGoal(goal);
-            monthlyGoalBox.getChildren().add(monthlyGoalInfoBox);
-            if (userIsOwner()) {
-                controller.getDeleteMonthlyGoalIcon().setVisible(true);
-                controller.getEditMonthlyGoalIcon().setVisible(true);
-            }
-        } catch (IOException e) {
-            showMoneyMinderErrorAlert(e.getMessage());
-        }
-    }
 
     private void showInfo() {
         if (userIsOwner()) {
@@ -486,29 +388,11 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                         + " (" + selectedFinancialAccount.getOwner().getEmail() + ")");
     }
 
-    private void showMonthlyGoalHeader(FinancialGoal goal) {
-        double currentMonthsExpenses = goal.getCurrentMonthsExpenses().abs().doubleValue();
-        double goalAmount = goal.getGoalAmount().doubleValue();
-        double divisor = currentMonthsExpenses / goalAmount;
-        int goalStatusInPercent = (int) Math.round(divisor * 100);
-        try {
-            FXMLLoader loader = MONTHLY_GOAL_HEADER.getLoader();
-            GridPane monthlyGoalHeader = loader.load();
-            MonthlyGoalHeaderController controller = loader.getController();
-            controller.getPercentageLabel().setText(goalStatusInPercent + " %");
-            controller.getProgressBar().setProgress(divisor);
-            controller.setProgressBarColor(divisor);
-            headerVBox.getChildren().add(1, monthlyGoalHeader);
-        } catch (IOException e) {
-            showMoneyMinderErrorAlert(e.getMessage());
-        }
-    }
-
     private void showCreateTransactionDialog() {
         try {
-            FXMLLoader loader = TRANSACTION_FORM.getLoader();
+            FXMLLoader loader = CREATE_TRANSACTION_FORM.getLoader();
             DialogPane dialogPane = loader.load();
-            TransactionDialogController controller = loader.getController();
+            CreateTransactionDialogController controller = loader.getController();
             Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
             if (result.isPresent() && result.get() == FINISH) {
                 Transaction transaction = buildTransaction(controller, false);
@@ -707,6 +591,71 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                     } else return true;
                 })
                 .toList();
+    }
+
+    private VBox getPieChartBox() {
+        try {
+            FXMLLoader loader = PIE_CHART.getLoader();
+            VBox pieChartBox = loader.load();
+            PieChartBoxController controller = loader.getController();
+            controller.setSelectedFinancialAccount(selectedFinancialAccount);
+            return pieChartBox;
+        } catch (IOException e) {
+            showMoneyMinderErrorAlert(e.getMessage());
+            return null;
+        }
+    }
+
+    private VBox getBarChartBox() {
+        try {
+            FXMLLoader loader = BAR_CHART.getLoader();
+            VBox barChartBox = loader.load();
+            BarChartBoxController controller = loader.getController();
+            controller.setSelectedFinancialAccount(selectedFinancialAccount);
+            return barChartBox;
+        } catch (IOException e) {
+            showMoneyMinderErrorAlert(e.getMessage());
+            return null;
+        }
+    }
+
+    private VBox getMonthlyGoalVBox(FinancialGoal goal) {
+        try {
+            monthlyGoalBox.getChildren().clear();
+            FXMLLoader loader = MONTHLY_GOAL_INFOBOX.getLoader();
+            VBox monthlyGoalInfoBox = loader.load();
+            MonthlyGoalInfoBoxController controller = loader.getController();
+            controller.getGoalLabel().setText(formatBalance(goal.getGoalAmount()));
+            controller.getCurrentExpensesLabel().setText(formatBalance(goal.getCurrentMonthsExpenses().abs()));
+            controller.setGoal(goal);
+            if (userIsOwner()) {
+                controller.getDeleteMonthlyGoalIcon().setVisible(true);
+                controller.getEditMonthlyGoalIcon().setVisible(true);
+            }
+            return monthlyGoalInfoBox;
+        } catch (IOException e) {
+            showMoneyMinderErrorAlert(e.getMessage());
+            return null;
+        }
+    }
+
+    private GridPane getMonthlyGoalHeader(FinancialGoal goal) {
+        double currentMonthsExpenses = goal.getCurrentMonthsExpenses().abs().doubleValue();
+        double goalAmount = goal.getGoalAmount().doubleValue();
+        double divisor = currentMonthsExpenses / goalAmount;
+        int goalStatusInPercent = (int) Math.round(divisor * 100);
+        try {
+            FXMLLoader loader = MONTHLY_GOAL_HEADER.getLoader();
+            GridPane monthlyGoalHeader = loader.load();
+            MonthlyGoalHeaderController controller = loader.getController();
+            controller.getPercentageLabel().setText(goalStatusInPercent + " %");
+            controller.getProgressBar().setProgress(divisor);
+            controller.setProgressBarColor(divisor);
+            return monthlyGoalHeader;
+        } catch (IOException e) {
+            showMoneyMinderErrorAlert(e.getMessage());
+            return null;
+        }
     }
 
     private boolean userIsOwner() {

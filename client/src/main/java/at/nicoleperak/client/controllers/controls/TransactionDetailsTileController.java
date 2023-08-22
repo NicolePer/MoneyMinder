@@ -1,7 +1,7 @@
 package at.nicoleperak.client.controllers.controls;
 
 import at.nicoleperak.client.ClientException;
-import at.nicoleperak.client.controllers.dialogs.TransactionDialogController;
+import at.nicoleperak.client.controllers.dialogs.CreateTransactionDialogController;
 import at.nicoleperak.shared.Transaction;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static at.nicoleperak.client.Client.getDialog;
-import static at.nicoleperak.client.FXMLLocation.TRANSACTION_FORM;
+import static at.nicoleperak.client.FXMLLocation.CREATE_TRANSACTION_FORM;
 import static at.nicoleperak.client.FXMLLocation.TRANSACTION_TILE;
 import static at.nicoleperak.client.ServiceFunctions.*;
 import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
@@ -109,9 +109,9 @@ public class TransactionDetailsTileController {
 
     private void showEditTransactionDialog() {
         try {
-            FXMLLoader loader = TRANSACTION_FORM.getLoader();
+            FXMLLoader loader = CREATE_TRANSACTION_FORM.getLoader();
             DialogPane dialogPane = loader.load();
-            TransactionDialogController controller = loader.getController();
+            CreateTransactionDialogController controller = loader.getController();
             controller.setSelectedTransaction(transaction);
             Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
             if (result.isPresent() && result.get() == FINISH) {

@@ -13,7 +13,7 @@ FXMLLocation {
     FINANCIAL_ACCOUNT_TILE("/fxml/financial-account-tile.fxml"),
     SIGN_UP_SCREEN("/fxml/sign-up-screen.fxml"),
     TRANSACTION_DETAILS_TILE("/fxml/transaction-details-tile.fxml"),
-    TRANSACTION_FORM("/fxml/transaction-form.fxml"),
+    CREATE_TRANSACTION_FORM("/fxml/create-transaction-form.fxml"),
     TRANSACTION_TILE("/fxml/transaction-tile.fxml"),
     WELCOME_SCREEN("/fxml/welcome-screen.fxml"),
     COLLABORATOR_BOX("/fxml/collaborator-box.fxml"),
@@ -28,7 +28,9 @@ FXMLLocation {
     MONEYMINDER_ERROR_ALERT("/fxml/moneyminder-error-alert.fxml"),
     MONEYMINDER_WARNING_ALERT("/fxml/moneyminder-warning-alert.fxml"),
     MONEYMINDER_SUCCESS_ALERT("/fxml/moneyminder-success-alert.fxml"),
-    MONEYMINDER_CONFIRMATION_DIALOG("/fxml/moneyminder-confirmation-dialog.fxml");
+    MONEYMINDER_CONFIRMATION_DIALOG("/fxml/moneyminder-confirmation-dialog.fxml"),
+    PIE_CHART("/fxml/pie-chart-box.fxml"),
+    BAR_CHART("/fxml/bar-chart-box.fxml");
 
 
     private final String location;

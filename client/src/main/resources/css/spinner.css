@@ -1,11 +1,11 @@
 * {
-	-fx-primary-color: #3A6A95;
-	-fx-secondary-color: #749AC1;
+	-fx-primary-color: #749AC1;
+	-fx-secondary-color: #3A6A95;
 	-fx-focus-color: -fx-secondary-color;
 	-fx-font-family: "Source Sans 3 Medium";
     -fx-font-size : 18px;
     -fx-background-color: transparent;
-    -fx-text-fill: -fx-primary-color;
+    -fx-text-fill: -fx-secondary-color;
 
 }
 

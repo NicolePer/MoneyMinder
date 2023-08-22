@@ -20,7 +20,7 @@ import static at.nicoleperak.shared.Category.CategoryType.INCOME;
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.event.ActionEvent.ACTION;
 
-public class TransactionDialogController implements Initializable {
+public class CreateTransactionDialogController implements Initializable {
 
     private final ObservableList<Category> categoryObservableList = observableArrayList();
     private Transaction selectedTransaction;
