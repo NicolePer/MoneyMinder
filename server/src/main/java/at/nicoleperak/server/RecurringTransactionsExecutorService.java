@@ -92,10 +92,10 @@ public class RecurringTransactionsExecutorService implements AutoCloseable {
         LocalDate newNextDate = order.getNextDate();
         Interval interval = order.getInterval();
         switch (interval) {
-            case monthly -> newNextDate = currentNextDate.plusMonths(1);
-            case quarterly -> newNextDate = currentNextDate.plusMonths(3);
-            case semiannual -> newNextDate = currentNextDate.plusMonths(6);
-            case yearly -> newNextDate = currentNextDate.plusYears(1);
+            case MONTHLY -> newNextDate = currentNextDate.plusMonths(1);
+            case QUARTERLY -> newNextDate = currentNextDate.plusMonths(3);
+            case SEMIANNUAL -> newNextDate = currentNextDate.plusMonths(6);
+            case YEARLY -> newNextDate = currentNextDate.plusYears(1);
         }
         if (newNextDate.isBefore(endDate) || newNextDate.isEqual(endDate)) {
             order.setNextDate(newNextDate);

@@ -17,7 +17,7 @@ public class RecurringTransactionOrderBoxFactory {
                 .setText(order.getDescription());
         controller
                 .getOrderIntervalLabel()
-                .setText(order.getInterval().name());
+                .setText(order.getInterval().getLabel());
         controller
                 .setOrder(order);
         return recurringTransactionBox;

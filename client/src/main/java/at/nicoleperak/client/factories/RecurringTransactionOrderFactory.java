@@ -9,13 +9,14 @@ import java.time.LocalDate;
 
 import static at.nicoleperak.client.Format.convertIntoParsableDecimal;
 import static at.nicoleperak.client.Format.formatAmount;
+import static at.nicoleperak.shared.RecurringTransactionOrder.Interval;
 
 public class RecurringTransactionOrderFactory {
 
     public static RecurringTransactionOrder buildRecurringTransactionOrder(RecurringTransactionDialogController controller) {
         LocalDate nextDate = controller.getNextDatePicker().getValue();
         LocalDate endDate = controller.getEndDatePicker().getValue();
-        RecurringTransactionOrder.Interval interval = controller.getIntervalComboBox().getSelectionModel().getSelectedItem();
+        Interval interval = controller.getIntervalComboBox().getSelectionModel().getSelectedItem();
         String transactionPartner = controller.getTransactionPartnerField().getText();
         String description = controller.getDescriptionField().getText();
         Category category = controller.getCategoryComboBox().getSelectionModel().getSelectedItem();

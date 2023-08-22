@@ -32,15 +32,6 @@ public class RecurringTransactionOrder {
         this.interval = interval;
     }
 
-    public enum Interval {
-        monthly, quarterly, semiannual, yearly;
-
-        @Override
-        public String toString() {
-            return name();
-        }
-    }
-
     @Override
     public String toString() {
         return "RecurringTransactionOrder{" +
@@ -54,6 +45,28 @@ public class RecurringTransactionOrder {
                 ", endDate=" + endDate +
                 ", interval=" + interval +
                 '}';
+    }
+
+    public enum Interval {
+        MONTHLY("monthly"),
+        QUARTERLY("quarterly"),
+        SEMIANNUAL("semiannual"),
+        YEARLY("yearly");
+
+        private final String label;
+
+        Interval(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        @Override
+        public String toString() {
+            return label;
+        }
     }
 
     public Long getId() {
@@ -127,5 +140,7 @@ public class RecurringTransactionOrder {
     public void setInterval(Interval interval) {
         this.interval = interval;
     }
+
+
 }
 
