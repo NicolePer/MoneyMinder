@@ -4,7 +4,10 @@ import at.nicoleperak.client.ClientException;
 import at.nicoleperak.shared.FinancialGoal;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -13,6 +16,7 @@ import static at.nicoleperak.client.Format.convertIntoParsableDecimal;
 import static at.nicoleperak.client.Validation.assertAmountIsBigDecimal;
 import static at.nicoleperak.client.Validation.assertUserInputLengthIsValid;
 import static javafx.event.ActionEvent.ACTION;
+import static javafx.scene.control.ButtonType.FINISH;
 
 public class SetMonthlyGoalDialogController implements Initializable {
 
@@ -35,7 +39,7 @@ public class SetMonthlyGoalDialogController implements Initializable {
     }
 
     public void validateUserInputsOnFinish() {
-        Button finish = (Button) dialogPane.lookupButton(ButtonType.FINISH);
+        Button finish = (Button) dialogPane.lookupButton(FINISH);
         finish.addEventFilter(ACTION, f -> {
             String amountString = convertIntoParsableDecimal(goalTextField.getText());
             try {

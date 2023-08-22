@@ -69,8 +69,8 @@ import static at.nicoleperak.client.factories.RecurringTransactionOrderBoxFactor
 import static at.nicoleperak.client.factories.RecurringTransactionOrderFactory.buildRecurringTransactionOrder;
 import static at.nicoleperak.client.factories.TransactionFactory.buildTransaction;
 import static at.nicoleperak.client.factories.TransactionTileFactory.buildTransactionTile;
-import static at.nicoleperak.shared.Category.CategoryType.Expense;
-import static at.nicoleperak.shared.Category.CategoryType.Income;
+import static at.nicoleperak.shared.Category.CategoryType.EXPENSE;
+import static at.nicoleperak.shared.Category.CategoryType.INCOME;
 import static java.time.LocalDate.*;
 import static java.time.format.TextStyle.FULL;
 import static java.util.Locale.US;
@@ -320,7 +320,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     private void setPieChart() {
         CategoryType categoryType = pieChartToggleGroup.getSelectedToggle()
-                .equals(incomeRadioButton) ? Income : Expense;
+                .equals(incomeRadioButton) ? INCOME : EXPENSE;
         pieChart.setData(buildPieChartData(selectedFinancialAccount.getTransactions(), categoryType));
     }
 
@@ -347,7 +347,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             months.add(Month.of(currentMonthValue).getDisplayName(FULL, US));
             for (Transaction transaction : monthTransactionList) {
                 BigDecimal amount = transaction.getAmount().abs();
-                if (transaction.getCategory().getType().equals(Income)) {
+                if (transaction.getCategory().getType().equals(INCOME)) {
                     sumIncome = sumIncome.add(amount);
                 } else {
                     sumExpenses = sumExpenses.add(amount);

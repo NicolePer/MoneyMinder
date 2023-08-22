@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 import static at.nicoleperak.client.Format.convertIntoParsableDecimal;
 import static at.nicoleperak.client.LoadingUtils.loadCategories;
 import static at.nicoleperak.client.Validation.*;
-import static at.nicoleperak.shared.Category.CategoryType.Income;
+import static at.nicoleperak.shared.Category.CategoryType.INCOME;
 import static at.nicoleperak.shared.RecurringTransactionOrder.Interval;
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.scene.control.ButtonType.FINISH;
@@ -145,7 +145,7 @@ public class RecurringTransactionDialogController implements Initializable {
     }
 
     private void insertRecurringTransactionOrder() {
-        if (selectedRecurringTransaction.getCategory().getType().equals(Income)) {
+        if (selectedRecurringTransaction.getCategory().getType().equals(INCOME)) {
             incomeRadioButton.setSelected(true);
         } else {
             expenseRadioButton.setSelected(true);

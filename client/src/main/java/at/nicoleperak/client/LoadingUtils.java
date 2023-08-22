@@ -8,8 +8,8 @@ import javafx.scene.control.RadioButton;
 
 import static at.nicoleperak.client.ServiceFunctions.jsonb;
 import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
-import static at.nicoleperak.shared.Category.CategoryType.Expense;
-import static at.nicoleperak.shared.Category.CategoryType.Income;
+import static at.nicoleperak.shared.Category.CategoryType.EXPENSE;
+import static at.nicoleperak.shared.Category.CategoryType.INCOME;
 
 public class LoadingUtils {
 
@@ -29,7 +29,7 @@ public class LoadingUtils {
     }
 
     public static CategoryList loadCategories(RadioButton incomeRadioButton) {
-        CategoryType categoryType = incomeRadioButton.isSelected() ? Income : Expense;
+        CategoryType categoryType = incomeRadioButton.isSelected() ? INCOME : EXPENSE;
         return loadCategories(categoryType);
     }
 

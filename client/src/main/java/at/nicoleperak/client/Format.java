@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
+import static at.nicoleperak.shared.Category.CategoryType.EXPENSE;
+
 public class Format {
 
     public static String formatBalance(BigDecimal balance) {
@@ -19,7 +21,7 @@ public class Format {
 
     public static String formatAmount(String amount, Category category) {
         StringBuilder sb = new StringBuilder();
-        if (category.getType().equals(Category.CategoryType.Expense)) {
+        if (category.getType().equals(EXPENSE)) {
             sb.append("-");
         }
         sb.append(amount);

@@ -16,7 +16,7 @@ public class TransactionFactory {
         LocalDate date = controller.getDatePicker().getValue();
         String transactionPartner = controller.getTransactionPartnerField().getText();
         String description = controller.getDescriptionField().getText();
-        Category category = (Category) controller.getCategoryComboBox().getSelectionModel().getSelectedItem();
+        Category category = controller.getCategoryComboBox().getSelectionModel().getSelectedItem();
         String amountString = convertIntoParsableDecimal(controller.getAmountField().getText());
         BigDecimal amount = new BigDecimal(formatAmount(amountString, category));
         String note = controller.getNoteArea().getText();

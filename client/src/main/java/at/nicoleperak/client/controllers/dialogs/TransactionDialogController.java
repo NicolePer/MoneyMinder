@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 import static at.nicoleperak.client.Format.convertIntoParsableDecimal;
 import static at.nicoleperak.client.LoadingUtils.loadCategories;
 import static at.nicoleperak.client.Validation.*;
-import static at.nicoleperak.shared.Category.CategoryType.Income;
+import static at.nicoleperak.shared.Category.CategoryType.INCOME;
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.event.ActionEvent.ACTION;
 
@@ -73,7 +73,7 @@ public class TransactionDialogController implements Initializable {
     }
 
     private void insertTransactionDetails() {
-        if (selectedTransaction.getCategory().getType().equals(Income)) {
+        if (selectedTransaction.getCategory().getType().equals(INCOME)) {
             incomeRadioButton.setSelected(true);
         } else {
             expenseRadioButton.setSelected(true);

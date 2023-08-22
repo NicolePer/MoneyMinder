@@ -18,7 +18,23 @@ public class Category {
     public Category() {
     }
 
-    public enum CategoryType {Income, Expense}
+    public enum CategoryType {
+        INCOME("Income"), EXPENSE("Expense");
+        private final String label;
+
+        CategoryType(String label) {
+            this.label = label;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        @Override
+        public String toString() {
+            return label;
+        }
+    }
 
     public Long getId() {
         return id;

@@ -8,7 +8,7 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 
 import static at.nicoleperak.client.Format.formatBalance;
-import static at.nicoleperak.shared.Category.CategoryType.Income;
+import static at.nicoleperak.shared.Category.CategoryType.INCOME;
 import static java.time.format.DateTimeFormatter.ofLocalizedDate;
 import static java.time.format.FormatStyle.LONG;
 import static java.time.format.FormatStyle.MEDIUM;
@@ -45,7 +45,7 @@ public class TransactionDetailsTileFactory {
                 .setText(formatBalance(transaction.getAmount()));
         controller
                 .getTransactionTypeLabel()
-                .setText(transaction.getCategory().getType().name());
+                .setText(transaction.getCategory().getType().getLabel());
         controller
                 .getTransactionCategoryLabel()
                 .setText(transaction.getCategory().getTitle());
@@ -61,7 +61,7 @@ public class TransactionDetailsTileFactory {
                 .setTransactionsPane(transactionsPane);
         controller
                 .getTransactionPartnerTitleLabel()
-                .setText(transaction.getCategory().getType().equals(Income) ? "Source:" : "Recipient:");
+                .setText(transaction.getCategory().getType().equals(INCOME) ? "Source:" : "Recipient:");
         return transactionDetailsTile;
     }
 }
