@@ -40,19 +40,34 @@ public class TransactionDetailsTileController {
     private Label transactionAmountLabel;
 
     @FXML
+    private Label transactionAmountLabel2;
+
+    @FXML
     private Label transactionCategoryLabel;
 
     @FXML
     private Label transactionDateLabel;
 
     @FXML
+    private Label transactionDateLabel2;
+
+    @FXML
     private Label transactionDescriptionLabel;
+
+    @FXML
+    private Label transactionDescriptionLabel2;
 
     @FXML
     private Label transactionNoteLabel;
 
     @FXML
     private Label transactionPartnerLabel;
+
+    @FXML
+    private Label transactionPartnerLabel2;
+
+    @FXML
+    private Label transactionPartnerTitleLabel;
 
     @FXML
     private Label transactionTypeLabel;
@@ -166,5 +181,24 @@ public class TransactionDetailsTileController {
         this.transactionsPane = transactionsPane;
     }
 
+    public Label getTransactionAmountLabel2() {
+        return transactionAmountLabel2;
+    }
+
+    public Label getTransactionDateLabel2() {
+        return transactionDateLabel2;
+    }
+
+    public Label getTransactionDescriptionLabel2() {
+        return transactionDescriptionLabel2;
+    }
+
+    public Label getTransactionPartnerLabel2() {
+        return transactionPartnerLabel2;
+    }
+
+    public Label getTransactionPartnerTitleLabel() {
+        return transactionPartnerTitleLabel;
+    }
 }
 

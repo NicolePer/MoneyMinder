@@ -154,7 +154,7 @@
                </font>
              </TextArea>
          </GridPane>
-         <Label fx:id="alertMessageLabel" alignment="CENTER" textFill="RED">
+          <Label fx:id="alertMessageLabel" alignment="CENTER" textFill="#f3de8a">
             <VBox.margin>
                <Insets bottom="-10.0" top="10.0" />
             </VBox.margin>

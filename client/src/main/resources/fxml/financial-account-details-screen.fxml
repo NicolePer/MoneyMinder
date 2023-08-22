@@ -102,11 +102,11 @@
                                          </opaqueInsets>
                                      </Label>
                                  </GridPane>
-                                 <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                 <HBox spacing="10.0">
                                      <Button fx:id="editAccountButton" mnemonicParsing="false"
                                              onAction="#onEditAccountButtonClicked" prefWidth="130.0"
-                                             style="-fx-background-color: #FBF9F8;" text="Edit Account"
-                                             textFill="#3a6a95" visible="false">
+                                             style="-fx-background-color: #FBF9F8; -fx-background-color: #FBF9F8;"
+                                             text="Edit Account" textFill="#3a6a95" visible="false">
                                          <font>
                                              <Font name="Source Sans 3 Medium" size="14.0"/>
                                          </font>
@@ -117,7 +117,7 @@
                                              <Insets bottom="1.0" left="1.0" right="1.0" top="1.0"/>
                                          </opaqueInsets>
                                          <HBox.margin>
-                                             <Insets bottom="10.0" top="5.0"/>
+                                             <Insets/>
                                          </HBox.margin>
                                          <graphic>
                                              <ImageView fitHeight="20.0" fitWidth="15.0" pickOnBounds="true"
@@ -146,6 +146,9 @@
                                              </ImageView>
                                          </graphic>
                                      </Button>
+                                     <padding>
+                                         <Insets top="5.0"/>
+                                     </padding>
                                  </HBox>
                              </VBox>
                          </TitledPane>
