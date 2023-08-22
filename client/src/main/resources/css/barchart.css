@@ -1,5 +1,7 @@
 .default-color0.chart-bar { -fx-bar-fill: #67A56A;}
-.default-color1.chart-bar { -fx-bar-fill: #D87D7E; }
+.default-color1.chart-bar { -fx-bar-fill: #D87D7E;}
+.default-color2.chart-bar { -fx-bar-fill: #67A56A;}
+.default-color3.chart-bar { -fx-bar-fill: #D87D7E;}
 
 .axis {
     -fx-font-family: "Source Sans 3 Medium";

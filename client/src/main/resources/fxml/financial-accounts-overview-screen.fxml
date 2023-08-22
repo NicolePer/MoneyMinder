@@ -25,14 +25,6 @@
             </HBox.margin>
         </Label>
     </HBox>
-    <Label fx:id="alertMessageLabel" alignment="TOP_CENTER" textFill="RED" VBox.vgrow="NEVER">
-        <font>
-          <Font name="Source Sans 3 Regular" size="13.0" />
-        </font>
-        <VBox.margin>
-          <Insets top="-30.0" />
-        </VBox.margin>
-    </Label>
     <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
         <VBox.margin>
             <Insets />

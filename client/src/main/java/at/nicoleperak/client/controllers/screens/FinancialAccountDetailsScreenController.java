@@ -90,6 +90,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private Category selectedCategory;
     private LocalDate selectedDateFrom;
     private LocalDate selectedDateTo;
+    private Integer numberOfMonths = 6;
 
     @FXML
     private VBox screenPane;
@@ -102,6 +103,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     @FXML
     private CategoryAxis categoryAxis;
+
+    @FXML
+    private Spinner<Integer> numberOfMonthsSpinner;
 
     @FXML
     private VBox headerVBox;
@@ -191,10 +195,11 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         showCollaborators();
         showRecurringTransactionOrders();
         showMonthlyGoal();
+        setSpinner();
         setLabels();
         setComboBoxes();
         setPieChart();
-        setBarChart(6);
+        setBarChart();
         resetPieChartOnChangesOfPieChartToggleGroup();
     }
 
@@ -293,6 +298,13 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         deleteFinancialAccount();
     }
 
+    private void listenForChangesOnSpinner() {
+        numberOfMonthsSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            numberOfMonths = newValue;
+            setBarChart();
+        });
+    }
+
 
     private void filterAndSearchTransactions() {
         List<Transaction> filteredTransactionList = filterTransactions();
@@ -301,6 +313,12 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         showTransactions(resultList);
     }
 
+
+    private void setSpinner() {
+        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 12, numberOfMonths);
+        numberOfMonthsSpinner.setValueFactory(valueFactory);
+        listenForChangesOnSpinner();
+    }
 
     private void setLabels() {
         financialAccountTitleLabel.setText(selectedFinancialAccount.getTitle().toUpperCase());
@@ -329,7 +347,8 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private void setBarChart(int numberOfMonths) {
+    private void setBarChart() {
+        barChart.getData().clear();
         ObservableList<String> months = observableArrayList();
         List<Transaction> transactionList = selectedFinancialAccount.getTransactions();
         Series<String, Number> incomeSeries = new Series<>();
@@ -338,9 +357,13 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         expenseSeries.setName("Expenses");
         for (int i = 0; i < numberOfMonths; i++) {
             int currentMonthValue = now().getMonthValue() - i;
+            if (currentMonthValue <= 0) {
+                currentMonthValue += 12;
+            }
+            int finalCurrentMonthValue = currentMonthValue;
             List<Transaction> monthTransactionList = transactionList.stream()
                     .filter(transaction ->
-                            transaction.getDate().getMonthValue() == currentMonthValue)
+                            transaction.getDate().getMonthValue() == finalCurrentMonthValue)
                     .toList();
             BigDecimal sumIncome = new BigDecimal(0);
             BigDecimal sumExpenses = new BigDecimal(0);
@@ -359,6 +382,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         //noinspection unchecked
         barChart.getData().addAll(incomeSeries, expenseSeries);
         reverse(months);
+        categoryAxis.getCategories().clear();
         categoryAxis.setCategories(months);
     }
 
