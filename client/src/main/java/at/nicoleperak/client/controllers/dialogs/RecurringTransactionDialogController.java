@@ -98,6 +98,7 @@ public class RecurringTransactionDialogController implements Initializable {
             try {
                 assertRadioButtonIsSelected(transactionTypeToggleGroup);
                 assertCategoryIsSelected(categoryComboBox);
+                assertIntervalIsSelected(intervalComboBox);
                 assertDateIsNotNull(nextDate);
                 if (endDate != null) {
                     assertDateIsInTheFuture(endDate);

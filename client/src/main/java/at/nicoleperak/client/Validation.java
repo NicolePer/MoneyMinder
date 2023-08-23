@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static at.nicoleperak.shared.RecurringTransactionOrder.Interval;
 import static java.time.LocalDate.now;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
@@ -79,6 +80,12 @@ public class Validation {
     public static void assertCategoryIsSelected(ComboBox<Category> comboBox) throws ClientException {
         if (comboBox.getSelectionModel().getSelectedItem() == null) {
             throw new ClientException("Please select category");
+        }
+    }
+
+    public static void assertIntervalIsSelected(ComboBox<Interval> comboBox) throws ClientException {
+        if (comboBox.getSelectionModel().getSelectedItem() == null) {
+            throw new ClientException("Please select interval");
         }
     }
 
