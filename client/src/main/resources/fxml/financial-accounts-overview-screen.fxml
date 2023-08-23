@@ -25,7 +25,9 @@
             </HBox.margin>
         </Label>
     </HBox>
-    <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+    <ScrollPane fitToHeight="true" fitToWidth="true"
+                style="-fx-background: transparent; -fx-background-color: transparent;"
+                stylesheets="@../css/scrollpane.css" VBox.vgrow="ALWAYS">
         <VBox.margin>
             <Insets />
         </VBox.margin>

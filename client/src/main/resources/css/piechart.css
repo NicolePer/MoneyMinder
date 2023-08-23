@@ -3,6 +3,10 @@
     -fx-fill: #3A6A95;
 }
 
+.chart-pie {
+    -fx-border-color: #FBF9F8;
+ }
+
 
 .chart-legend {
     -fx-font-family: "Source Sans 3 Medium";

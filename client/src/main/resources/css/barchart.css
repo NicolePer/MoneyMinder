@@ -3,6 +3,10 @@
 .default-color2.chart-bar { -fx-bar-fill: #67A56A;}
 .default-color3.chart-bar { -fx-bar-fill: #D87D7E;}
 
+.chart-plot-background {
+    -fx-background-color: #FBF9F8;
+}
+
 .axis {
     -fx-font-family: "Source Sans 3 Medium";
     -fx-font-size : 15px;
