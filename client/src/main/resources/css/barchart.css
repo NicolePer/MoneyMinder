@@ -1,7 +1,18 @@
-.default-color0.chart-bar { -fx-bar-fill: #67A56A;}
-.default-color1.chart-bar { -fx-bar-fill: #D87D7E;}
-.default-color2.chart-bar { -fx-bar-fill: #67A56A;}
-.default-color3.chart-bar { -fx-bar-fill: #D87D7E;}
+.default-color0.chart-bar {
+    -fx-bar-fill: #67A56A;
+}
+
+.default-color1.chart-bar {
+    -fx-bar-fill: #D87D7E;
+}
+
+.default-color2.chart-bar {
+    -fx-bar-fill: #67A56A;
+}
+
+.default-color3.chart-bar {
+    -fx-bar-fill: #D87D7E;
+}
 
 .chart-plot-background {
     -fx-background-color: #FBF9F8;
@@ -9,20 +20,20 @@
 
 .axis {
     -fx-font-family: "Source Sans 3 Medium";
-    -fx-font-size : 15px;
+    -fx-font-size: 15px;
 }
 
 .axis-label {
-  -fx-text-fill: #3A6A95;
+    -fx-text-fill: #3A6A95;
 }
 
-.chart-legend{
+.chart-legend {
     -fx-font-family: "Source Sans 3 Medium";
-    -fx-font-size : 15px;
+    -fx-font-size: 15px;
     -fx-background-color: #FBF9F8;
 }
 
-.chart-legend-item{
+.chart-legend-item {
     -fx-text-fill: #3A6A95;
 }
 

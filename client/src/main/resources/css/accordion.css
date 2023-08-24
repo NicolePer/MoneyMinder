@@ -1,6 +1,7 @@
 .accordion {
     -fx-background-color: #749AC1;
 }
+
 .accordion > .titled-pane {
     -fx-background-color: #749AC1;
     -fx-text-fill: #3A6A95;
@@ -8,12 +9,13 @@
     -fx-font-family: 'Source Sans 3 Medium';
 
 }
+
 .accordion > .titled-pane:focused {
     -fx-text-fill: white;
 }
-.accordion > .titled-pane > .title {
-    -fx-background-color:  #3A6A95, #749AC1, #749AC1;
 
+.accordion > .titled-pane > .title {
+    -fx-background-color: #3A6A95, #749AC1, #749AC1;
 }
 
 .accordion > .titled-pane .content {
@@ -22,22 +24,21 @@
 
 .accordion > .titled-pane:focused > .title {
     -fx-color: #3A6A95;
-
 }
 
 .accordion > .titled-pane > .title > .arrow-button {
     -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-background-radius: 0;
-    -fx-padding: 0.0em 0.25em 0.0em 0.0em; /* 0 3 0 0 */
+    -fx-padding: 0 0.25em 0 0;
 }
 
 .accordion > .titled-pane > .title > .arrow-button .arrow {
     -fx-background-color: #3A6A95;
     -fx-mark-highlight-color: #f3de8a;
-    -fx-mark-color : #3A6A95;
+    -fx-mark-color: #3A6A95;
     -fx-background-insets: 1 0 -1 0, 0;
-    -fx-padding: 0.25em 0.3125em 0.25em 0.3125em; /* 3 3.75 3 3.75 */
+    -fx-padding: 0.25em 0.3125em 0.25em 0.3125em;
     -fx-shape: "M 0 0 h 7 l -3.5 4 z";
     -fx-effect: null;
 }
@@ -46,7 +47,7 @@
     -fx-rotate: -90;
 }
 
-.accordion > .titled-pane:focused > .title > .arrow-button .arrow  {
+.accordion > .titled-pane:focused > .title > .arrow-button .arrow {
     -fx-background-color: #3A6A95;
     -fx-mark-color: #f3de8a;
 }

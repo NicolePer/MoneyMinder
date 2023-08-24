@@ -1,9 +1,9 @@
 * {
-	-fx-primary-color: #749AC1;
-	-fx-secondary-color: #3A6A95;
-	-fx-focus-color: -fx-secondary-color;
-	-fx-font-family: "Source Sans 3 Medium";
-    -fx-font-size : 18px;
+    -fx-primary-color: #749AC1;
+    -fx-secondary-color: #3A6A95;
+    -fx-focus-color: -fx-secondary-color;
+    -fx-font-family: "Source Sans 3 Medium";
+    -fx-font-size: 18px;
     -fx-background-color: transparent;
     -fx-text-fill: -fx-secondary-color;
 
@@ -11,22 +11,25 @@
 
 .spinner .increment-arrow-button,
 .spinner .decrement-arrow-button {
-	-fx-background-color: -fx-primary-color;
-	-fx-background-radius: 0;
-	-fx-padding: 4 5 4 5;
+    -fx-background-color: -fx-primary-color;
+    -fx-background-radius: 0;
+    -fx-padding: 4 5 4 5;
 }
+
 .spinner .increment-arrow-button:hover,
 .spinner .decrement-arrow-button:hover {
-	-fx-background-color: -fx-secondary-color;
+    -fx-background-color: -fx-secondary-color;
 }
+
 .spinner .increment-arrow-button:hover:pressed,
 .spinner .decrement-arrow-button:hover:pressed,
 .spinner .increment-arrow-button:pressed,
 .spinner .decrement-arrow-button:pressed {
-	-fx-background-color: -fx-secondary-color;
+    -fx-background-color: -fx-secondary-color;
 }
+
 .spinner .increment-arrow-button .increment-arrow,
 .spinner .decrement-arrow-button .decrement-arrow {
-	-fx-background-color: #FBF9F8;
-	-fx-padding: 2 3 2 3;
+    -fx-background-color: #FBF9F8;
+    -fx-padding: 2 3 2 3;
 }

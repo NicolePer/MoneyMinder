@@ -5,16 +5,15 @@
 
 .chart-pie {
     -fx-border-color: #FBF9F8;
- }
-
+}
 
 .chart-legend {
     -fx-font-family: "Source Sans 3 Medium";
-    -fx-fill:  #3A6A95;
+    -fx-fill: #3A6A95;
     -fx-background-color: transparent;
 }
 
-.chart-legend-item{
+.chart-legend-item {
     -fx-text-fill: #3A6A95;
 }
 

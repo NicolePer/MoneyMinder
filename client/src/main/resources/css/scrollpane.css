@@ -1,50 +1,50 @@
 .scroll-pane .scroll-bar:horizontal .track,
-.scroll-pane .scroll-bar:vertical .track{
+.scroll-pane .scroll-bar:vertical .track {
     -fx-background-color: #749AC1;
-    -fx-border-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-border-radius :2.0em;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+    -fx-border-radius: 2em;
 }
 
 
-.scroll-pane .scroll-bar:horizontal .increment-button ,
+.scroll-pane .scroll-bar:horizontal .increment-button,
 .scroll-pane .scroll-bar:horizontal .decrement-button {
-    -fx-background-color : #749AC1;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 0.0 10.0 0.0;
+    -fx-background-color: #749AC1;
+    -fx-background-radius: 0;
+    -fx-padding: 0 0 10 0;
 
 }
 
-.scroll-pane .scroll-bar:vertical .increment-button ,
+.scroll-pane .scroll-bar:vertical .increment-button,
 .scroll-pane .scroll-bar:vertical .decrement-button {
-    -fx-background-color : #749AC1;;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 10.0 0.0 0.0;
+    -fx-background-color: #749AC1;;
+    -fx-background-radius: 0;
+    -fx-padding: 0 10 0 0;
 
 }
 
- .scroll-pane .scroll-bar .increment-arrow,
- .scroll-pane .scroll-bar .decrement-arrow{
-    -fx-shape : " ";
-    -fx-padding :0.15em 0.0;
+.scroll-pane .scroll-bar .increment-arrow,
+.scroll-pane .scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0.15em 0;
 }
 
- .scroll-pane .scroll-bar:vertical .increment-arrow,
- .scroll-pane .scroll-bar:vertical .decrement-arrow{
-    -fx-shape : " ";
-    -fx-padding :0.0 0.15em;
+.scroll-pane .scroll-bar:vertical .increment-arrow,
+.scroll-pane .scroll-bar:vertical .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0 0.15em;
 }
 
 .scroll-pane .scroll-bar:horizontal .thumb,
 .scroll-pane .scroll-bar:vertical .thumb {
-    -fx-background-color : #3A6A95;
-    -fx-background-insets : 2.0, 0.0, 0.0;
-    -fx-background-radius : 2.0em;
+    -fx-background-color: #3A6A95;
+    -fx-background-insets: 2, 0, 0;
+    -fx-background-radius: 2em;
 }
 
 .scroll-pane .scroll-bar:horizontal .thumb:hover,
 .scroll-pane.scroll-bar:vertical .thumb:hover {
-    -fx-background-color : #3A6A95;
-    -fx-background-insets : 2.0, 0.0, 0.0;
-    -fx-background-radius : 2.0em;
+    -fx-background-color: #3A6A95;
+    -fx-background-insets: 2, 0, 0;
+    -fx-background-radius: 2em;
 }
