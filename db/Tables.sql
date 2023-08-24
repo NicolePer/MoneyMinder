@@ -49,14 +49,13 @@ CREATE TABLE categories (
  ('Insurance',1),
  ('Taxes',1),
  ('Fees',1),
- ('Other Expenses',1)
- ;
+ ('Other Expenses',1);
 
 CREATE TABLE transactions (
  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
  description VARCHAR(255) NOT NULL,
  amount NUMERIC NOT NULL,
- date DATE NOT NULL,
+ transaction_date DATE NOT NULL,
  transaction_partner VARCHAR(255) NOT NULL,
  category_id BIGINT REFERENCES categories(id) NOT NULL,
  note VARCHAR(1000),
