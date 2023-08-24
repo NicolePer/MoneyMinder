@@ -45,7 +45,7 @@
             <Insets/>
         </HBox.margin>
     </Label>
-    <MenuButton mnemonicParsing="false" style="-fx-background-color: transparent;">
+    <MenuButton mnemonicParsing="false" style="-fx-background-color: transparent;" stylesheets="@../css/menu.css">
         <items>
             <MenuItem mnemonicParsing="false" onAction="#onLogoutMenuItemClicked" text="Logout"/>
             <MenuItem mnemonicParsing="false" onAction="#onUserAccountSettingsMenuItemClicked"

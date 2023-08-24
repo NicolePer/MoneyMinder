@@ -33,7 +33,7 @@
         <Image url="@../icons/add-icon-color-100.png"/>
    </ImageView>
     <Label alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-           prefHeight="240.0" prefWidth="240.0" text="New Finance Account" textFill="#3a6a95"
+           prefHeight="240.0" prefWidth="240.0" text="New Financial Account" textFill="#3a6a95"
            GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
       <font>
           <Font name="Source Sans 3 SemiBold" size="21.0"/>

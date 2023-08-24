@@ -32,14 +32,16 @@
                   <Font name="Source Sans 3 Medium" size="26.0" />
                </font>
             </Label>
-            <TextField fx:id="emailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="email" style="-fx-background-color: #FBF9F8;" text="test123@test.com">
+             <TextField fx:id="emailField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                        minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="email"
+                        style="-fx-background-color: #FBF9F8;">
                <font>
                   <Font name="Source Sans 3 Regular" size="13.0" />
                </font>
             </TextField>
              <PasswordField fx:id="passwordField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
                             minWidth="-Infinity" prefHeight="28.0" prefWidth="270.0" promptText="password"
-                            style="-fx-background-color: #FBF9F8;" text="12345678">
+                            style="-fx-background-color: #FBF9F8;">
                <font>
                   <Font name="Source Sans 3 Regular" size="13.0" />
                </font>

@@ -1,0 +1,69 @@
+* {
+    -fx-my-menu-color: #3A6A95;
+    -fx-my-menu-color-highlighted: #749AC1;
+    -fx-my-menu-font-color: #fbf9f8;
+    -fx-my-menu-font-color-highlighted: #fbf9f8;
+}
+
+.menu-bar {
+    -fx-background-color: -fx-my-menu-color;
+}
+
+.menu-bar > .container > .menu-button {
+    -fx-background-color: -fx-my-menu-color;
+}
+
+.menu-bar > .container > .menu-button > .label {
+    -fx-text-fill: -fx-my-menu-font-color;
+}
+
+.menu-button > .arrow-button > .arrow {
+ -fx-background-color: -fx-my-menu-font-color-highlighted;
+    -fx-mark-highlight-color: -fx-my-menu-color;
+    -fx-mark-color : -fx-my-menu-font-color-highlighted;
+    -fx-background-insets: 1 0 -1 0, 0;
+    -fx-padding: 0.25em 0.3125em 0.25em 0.3125em; /* 3 3.75 3 3.75 */
+    -fx-shape: "M 0 0 h 7 l -3.5 4 z";
+}
+
+.menu-bar > .container > .menu-button > .label:disabled {
+    -fx-opacity: 1.0;
+}
+
+.menu-bar > .container > .menu-button:hover,
+.menu-bar > .container > .menu-button:focused,
+.menu-bar > .container > .menu-button:showing {
+    -fx-background-color: -fx-my-menu-color-highlighted;
+}
+
+.menu-bar > .container > .menu-button:hover > .label,
+.menu-bar > .container > .menu-button:focused > .label,
+.menu-bar > .container > .menu-button:showing > .label {
+    -fx-text-fill: -fx-my-menu-font-color-highlighted;
+}
+
+.menu-item {
+    -fx-background-color: -fx-my-menu-color;
+    -fx-font-family: "Source Sans 3 Medium";
+    -fx-font-size : 14px;
+}
+
+.menu-item .label {
+    -fx-text-fill: -fx-my-menu-font-color;
+}
+
+.menu-item .label:disabled {
+    -fx-opacity: 1.0;
+}
+
+.menu-item:focused, .menu-item:hovered {
+    -fx-background-color: -fx-my-menu-color-highlighted;
+}
+
+.menu-item:focused .label, .menu-item:hovered .label {
+    -fx-text-fill: -fx-my-menu-font-color-highlighted;
+}
+
+.context-menu {
+    -fx-background-color: -fx-my-menu-color;
+}
