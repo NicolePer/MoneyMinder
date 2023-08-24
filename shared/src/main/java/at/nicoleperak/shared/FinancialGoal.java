@@ -18,6 +18,15 @@ public class FinancialGoal {
     public FinancialGoal() {
     }
 
+    @Override
+    public String toString() {
+        return "FinancialGoal{" +
+                "id=" + id +
+                ", goalAmount=" + goalAmount +
+                ", currentMonthsExpenses=" + currentMonthsExpenses +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }
@@ -40,14 +49,5 @@ public class FinancialGoal {
 
     public void setCurrentMonthsExpenses(BigDecimal currentMonthsExpenses) {
         this.currentMonthsExpenses = currentMonthsExpenses;
-    }
-
-    @Override
-    public String toString() {
-        return "FinancialGoal{" +
-                "id=" + id +
-                ", goalAmount=" + goalAmount +
-                ", currentMonthsExpenses=" + currentMonthsExpenses +
-                '}';
     }
 }

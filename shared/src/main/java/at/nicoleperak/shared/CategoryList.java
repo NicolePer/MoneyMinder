@@ -8,6 +8,7 @@ public class CategoryList {
     private List<Category> categories;
 
     public CategoryList() {
+
     }
 
     public CategoryList(List<Category> categories) {

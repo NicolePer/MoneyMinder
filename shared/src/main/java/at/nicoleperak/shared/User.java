@@ -1,15 +1,10 @@
 package at.nicoleperak.shared;
 
-import jakarta.json.bind.annotation.JsonbNillable;
-
 @SuppressWarnings("unused")
 public class User {
-    @JsonbNillable
     private Long id;
-    @JsonbNillable
     private String username;
     private String email;
-    @JsonbNillable
     private String password;
 
     public User(Long id, String username, String email, String password) {
