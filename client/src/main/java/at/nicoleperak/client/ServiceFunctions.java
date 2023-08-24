@@ -66,7 +66,7 @@ public class ServiceFunctions {
                 return jsonResponse;
             } else {
                 String errorMessage = jsonb.fromJson(jsonResponse, String.class);
-                throw new ClientException(errorMessage);
+                throw new ClientException(statusCode + ": " + errorMessage);
             }
         } catch (URISyntaxException | IOException | InterruptedException e) {
             throw new ClientException("An unexpected error occurred", e);
