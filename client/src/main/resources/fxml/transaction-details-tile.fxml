@@ -59,8 +59,6 @@
          <RowConstraints vgrow="SOMETIMES" />
          <RowConstraints vgrow="SOMETIMES" />
          <RowConstraints vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="ALWAYS"/>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="ALWAYS"/>
           <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
           <RowConstraints valignment="CENTER" vgrow="SOMETIMES"/>
           <RowConstraints valignment="TOP" vgrow="ALWAYS"/>
@@ -94,7 +92,7 @@
             <Font name="Source Sans 3 SemiBold" size="18.0" />
          </font>
       </Label>
-       <Label text="Note:" textFill="#3a6a95" GridPane.rowIndex="7" GridPane.valignment="TOP">
+       <Label text="Note:" textFill="#3a6a95" GridPane.rowIndex="5" GridPane.valignment="TOP">
          <font>
             <Font name="Source Sans 3 SemiBold" size="18.0" />
          </font>
@@ -107,7 +105,7 @@
        <Label fx:id="transactionNoteLabel" contentDisplay="TOP"
               text="this is a note this is a note this is a note this is a note this is a note this is a note this is a note this is a note this is a note this is a note this is a note this is a note this is a note this is a note this is a note this is a note this is a note this is a note"
               textAlignment="JUSTIFY" textFill="#3a6a95" wrapText="true" GridPane.columnIndex="1"
-              GridPane.columnSpan="2" GridPane.rowIndex="7" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
+              GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
          <font>
             <Font name="Source Sans 3 Regular" size="18.0" />
          </font>
@@ -186,13 +184,13 @@
          </Button>
       </HBox>
        <Label fx:id="transactionPartnerTitleLabel" layoutX="31.0" layoutY="110.0" text="Partner:" textFill="#3a6a95"
-              GridPane.rowIndex="5" GridPane.valignment="TOP">
+              GridPane.rowIndex="3" GridPane.valignment="TOP">
            <font>
                <Font name="Source Sans 3 SemiBold" size="18.0"/>
            </font>
        </Label>
        <Label fx:id="transactionPartnerLabel2" layoutX="151.0" layoutY="110.0" text="Landlord" textAlignment="JUSTIFY"
-              textFill="#3a6a95" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5"
+              textFill="#3a6a95" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3"
               GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
            <font>
                <Font name="Source Sans 3 Regular" size="18.0"/>
@@ -202,42 +200,20 @@
            </GridPane.margin>
        </Label>
        <Label contentDisplay="TOP" layoutX="31.0" layoutY="32.0" text="Description:" textFill="#3a6a95"
-              GridPane.rowIndex="6" GridPane.valignment="TOP">
+              GridPane.rowIndex="4" GridPane.valignment="TOP">
            <font>
                <Font name="Source Sans 3 SemiBold" size="18.0"/>
            </font>
        </Label>
        <Label fx:id="transactionDescriptionLabel2" layoutX="151.0" layoutY="32.0" text="Rent Payment"
               textAlignment="JUSTIFY" textFill="#3a6a95" wrapText="true" GridPane.columnIndex="1"
-              GridPane.columnSpan="2" GridPane.rowIndex="6" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
+              GridPane.columnSpan="2" GridPane.rowIndex="4" GridPane.valignment="TOP" GridPane.vgrow="ALWAYS">
            <font>
                <Font name="Source Sans 3 Regular" size="18.0"/>
            </font>
            <GridPane.margin>
                <Insets/>
            </GridPane.margin>
-       </Label>
-       <Label layoutX="31.0" layoutY="191.0" text="Date:" textFill="#3a6a95" GridPane.rowIndex="4">
-           <font>
-               <Font name="Source Sans 3 SemiBold" size="18.0"/>
-           </font>
-       </Label>
-       <Label fx:id="transactionDateLabel2" layoutX="151.0" layoutY="191.0" text="21.07.2023" textFill="#3a6a95"
-              wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="4">
-           <font>
-               <Font name="Source Sans 3 Regular" size="18.0"/>
-           </font>
-       </Label>
-       <Label layoutX="31.0" layoutY="227.0" text="Amount:" textFill="#3a6a95" GridPane.rowIndex="3">
-           <font>
-               <Font name="Source Sans 3 SemiBold" size="18.0"/>
-           </font>
-       </Label>
-       <Label fx:id="transactionAmountLabel2" layoutX="151.0" layoutY="227.0" text="399.12 €" textFill="#3a6a95"
-              wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
-           <font>
-               <Font name="Source Sans 3 Regular" size="18.0"/>
-           </font>
        </Label>
    </GridPane>
 </VBox>

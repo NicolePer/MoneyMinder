@@ -40,16 +40,10 @@ public class TransactionDetailsTileController {
     private Label transactionAmountLabel;
 
     @FXML
-    private Label transactionAmountLabel2;
-
-    @FXML
     private Label transactionCategoryLabel;
 
     @FXML
     private Label transactionDateLabel;
-
-    @FXML
-    private Label transactionDateLabel2;
 
     @FXML
     private Label transactionDescriptionLabel;
@@ -179,14 +173,6 @@ public class TransactionDetailsTileController {
 
     public void setTransactionsPane(VBox transactionsPane) {
         this.transactionsPane = transactionsPane;
-    }
-
-    public Label getTransactionAmountLabel2() {
-        return transactionAmountLabel2;
-    }
-
-    public Label getTransactionDateLabel2() {
-        return transactionDateLabel2;
     }
 
     public Label getTransactionDescriptionLabel2() {
