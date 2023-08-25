@@ -8,6 +8,7 @@ module client {
     requires java.sql;
     requires java.net.http;
     requires commons.collections;
+    requires java.desktop;
     exports at.nicoleperak.client;
     opens at.nicoleperak.client to javafx.fxml;
     exports at.nicoleperak.client.factories;

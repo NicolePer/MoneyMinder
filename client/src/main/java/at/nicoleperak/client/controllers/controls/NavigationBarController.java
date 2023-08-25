@@ -14,6 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
@@ -26,6 +28,7 @@ import static at.nicoleperak.client.Redirection.redirectToWelcomeScreen;
 import static at.nicoleperak.client.ServiceFunctions.jsonb;
 import static at.nicoleperak.client.ServiceFunctions.put;
 import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
+import static java.util.Objects.requireNonNull;
 import static javafx.scene.control.ButtonType.FINISH;
 
 public class NavigationBarController implements Initializable {
@@ -52,6 +55,11 @@ public class NavigationBarController implements Initializable {
         setUserCredentials(null);
     }
 
+    private static void insertUserData(EditUserAccountDialogController controller) {
+        controller.getEmailTextField().setText(getLoggedInUser().getEmail());
+        controller.getUsernameTextField().setText(getLoggedInUser().getUsername());
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         userLabel.setText(Client.getLoggedInUser().getUsername());
@@ -64,7 +72,12 @@ public class NavigationBarController implements Initializable {
 
     @FXML
     void onHelpMenuItemClicked() {
-        //TODO ADD MENU
+        try {
+            File file = new File((requireNonNull(getClass().getResource("/help/MoneyMinderUserGuide.pdf")).toURI()));
+            openFile(file);
+        } catch (Exception e) {
+            showMoneyMinderErrorAlert("User Guide could not be loaded");
+        }
     }
 
     @FXML
@@ -75,6 +88,16 @@ public class NavigationBarController implements Initializable {
     @FXML
     void onUserAccountSettingsMenuItemClicked() {
         showEditUserAccountDialog();
+    }
+
+    public void openFile(File file) {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().open(file);
+            } catch (IOException e) {
+                showMoneyMinderErrorAlert(e.getMessage());
+            }
+        }
     }
 
     private void showEditUserAccountDialog() {
@@ -93,11 +116,6 @@ public class NavigationBarController implements Initializable {
         } catch (IOException | ClientException e) {
             showMoneyMinderErrorAlert(e.getMessage());
         }
-    }
-
-    private static void insertUserData(EditUserAccountDialogController controller) {
-        controller.getEmailTextField().setText(getLoggedInUser().getEmail());
-        controller.getUsernameTextField().setText(getLoggedInUser().getUsername());
     }
 
     private void putEditedUser(EditUserAccountDialogController controller) throws ClientException {
