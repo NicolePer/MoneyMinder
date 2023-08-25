@@ -20,27 +20,20 @@ import static at.nicoleperak.client.Validation.*;
 import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
 
 public class SignUpScreenController {
-
     @FXML
     private TextField emailField;
-
     @FXML
     private PasswordField passwordField;
-
     @FXML
     private PasswordField retypePasswordField;
-
     @FXML
     private TextField usernameField;
-
     @FXML
     private Label alertMessageLabel;
 
-    @FXML
-    void onSignUpButtonClicked() {
-        signUpUser();
-    }
-
+    /**
+     * Reloads the scene.
+     */
     public static void reloadFinancialAccountsOverviewScreen() {
         try {
             Scene scene = loadScene(FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN);
@@ -50,6 +43,26 @@ public class SignUpScreenController {
         }
     }
 
+    @FXML
+    void onSignUpButtonClicked() {
+        signUpUser();
+    }
+
+    @FXML
+    void onKeyTypedInRetypedPasswordField() {
+        showAlertIfPasswordsDiffer();
+    }
+
+    @FXML
+    void onGoBackButtonClicked() {
+        redirectToWelcomeScreen("", alertMessageLabel);
+    }
+
+    /**
+     * Asserts that user inputs are valid and shows alert message to user, if this is not the case.
+     * Sends post-request to server to create a user. Then redirects user to welcome screen
+     * and displays success message to user.
+     */
     private void signUpUser() {
         String username = usernameField.getText();
         String email = emailField.getText();
@@ -68,16 +81,9 @@ public class SignUpScreenController {
         }
     }
 
-    @FXML
-    void onKeyTypedInRetypedPasswordField() {
-        showAlertIfPasswordsDiffer();
-    }
-
-    @FXML
-    void onGoBackButtonClicked() {
-        redirectToWelcomeScreen("", alertMessageLabel);
-    }
-
+    /**
+     * Checks whether the user input in the password textfields differ and informs the user if that is the case.
+     */
     private void showAlertIfPasswordsDiffer() {
         if (passwordsDiffer(passwordField.getText(), retypePasswordField.getText())) {
             alertMessageLabel.setText("passwords do not match");
@@ -86,7 +92,13 @@ public class SignUpScreenController {
         }
     }
 
-    private static void postUser(User newUser) throws ClientException {
+    /**
+     * Sends post-request to server to create a user.
+     *
+     * @param newUser User to be created.
+     * @throws ClientException If there is an issue regarding the server interaction.
+     */
+    private void postUser(User newUser) throws ClientException {
         post("users", jsonb.toJson(newUser), false);
     }
 }

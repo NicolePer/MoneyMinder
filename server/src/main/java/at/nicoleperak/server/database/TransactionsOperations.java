@@ -25,6 +25,13 @@ public class TransactionsOperations {
     protected static final String TRANSACTION_ADDED_AUTOMATICALLY = "added_automatically";
     protected static final String TRANSACTION_FINANCIAL_ACCOUNT_ID = "financial_account_id";
 
+    /**
+     * Gets the data of all transactions of the given financial account.
+     *
+     * @param financialAccountId The ID of the financial account.
+     * @return List of transactions.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static List<Transaction> selectListOfTransactions(Long financialAccountId) throws ServerException {
         String select = "SELECT t." + TRANSACTION_ID + " AS transaction_id, "
                 + TRANSACTION_DESCRIPTION + ", " + TRANSACTION_AMOUNT + ", "
@@ -63,6 +70,13 @@ public class TransactionsOperations {
         }
     }
 
+    /**
+     * Inserts a new transaction into the database.
+     *
+     * @param transaction        Data of the new transaction.
+     * @param financialAccountId ID of the financial account the transaction should be added to.
+     * @throws ServerException If the transaction could not be created.
+     */
     public static void insertTransaction(Transaction transaction, Long financialAccountId) throws ServerException {
         String insert = "INSERT INTO " + TRANSACTION_TABLE
                 + " (" + TRANSACTION_DESCRIPTION + "," + TRANSACTION_AMOUNT + ","
@@ -94,6 +108,13 @@ public class TransactionsOperations {
         }
     }
 
+    /**
+     * Gets the ID of the financial account that the given transaction is associated with.
+     *
+     * @param transactionId The ID of the transaction.
+     * @return The ID of the financial account.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static Long selectFinancialAccountId(Long transactionId) throws ServerException {
         String select = "SELECT " + TRANSACTION_FINANCIAL_ACCOUNT_ID + " FROM " + TRANSACTION_TABLE
                 + " WHERE " + TRANSACTION_ID + " = ?";
@@ -112,6 +133,13 @@ public class TransactionsOperations {
         }
     }
 
+    /**
+     * Updates the data of an existing transaction in the database.
+     *
+     * @param transaction The new transaction data.
+     * @param transactionId The ID of the transaction to be updated.
+     * @throws ServerException If the transaction data could not be updated successfully.
+     */
     public static void updateTransaction(Transaction transaction, Long transactionId) throws ServerException {
         String update = "UPDATE " + TRANSACTION_TABLE + " SET "
                 + TRANSACTION_DESCRIPTION + " = ?, "            // 1 DESCRIPTION
@@ -136,6 +164,12 @@ public class TransactionsOperations {
         }
     }
 
+    /**
+     * Deletes a transaction from the database.
+     *
+     * @param transactionId The ID of the transaction to be deleted.
+     * @throws ServerException If the deletion could not be executed successfully.
+     */
     public static void deleteTransaction(Long transactionId) throws ServerException {
         String delete = "DELETE FROM " + TRANSACTION_TABLE +
                 " WHERE " + TRANSACTION_ID + " = ?";

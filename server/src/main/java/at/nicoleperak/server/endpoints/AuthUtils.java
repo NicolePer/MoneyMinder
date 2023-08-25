@@ -18,11 +18,25 @@ public class AuthUtils {
 
     private static final Argon2Function hashingFunction = Argon2Function.getInstance(19456, 2, 1, 128, Argon2.ID, 19);
 
+    /**
+     * Creates a secure hash of the given plain-text password.
+     *
+     * @param password The plain-text password.
+     * @return The hash of the password.
+     */
     public static String createPasswordHash(String password) {
         Hash hash = Password.hash(password).addRandomSalt(12).with(hashingFunction);
         return hash.getResult();
     }
 
+    /**
+     * Validates that an incoming request was sent by an authenticated user and returns its user data.
+     * Users must authenticate themselves by appending a Basic Authentication header to every HTTP request.
+     *
+     * @param exchange The HTTP request.
+     * @return The data of the successfully authenticated user.
+     * @throws ServerException If the authentication was not successful.
+     */
     public static User authenticate(HttpExchange exchange) throws ServerException {
         Headers requestHeaders = exchange.getRequestHeaders();
         String authHeaderValue = requestHeaders.getFirst("Authorization");
@@ -37,6 +51,13 @@ public class AuthUtils {
         return currentUser;
     }
 
+    /**
+     * Throws an exception if the given password hash was not generated with the given plain-text password.
+     *
+     * @param password     The plain-text password.
+     * @param passwordHash The password hash.
+     * @throws ServerException If the password matching check failed.
+     */
     private static void assertPasswordMatchesPasswordHash(String password, String passwordHash) throws ServerException {
         HashChecker hashChecker = Password.check(password, passwordHash);
         if (!hashChecker.with(hashingFunction)) {

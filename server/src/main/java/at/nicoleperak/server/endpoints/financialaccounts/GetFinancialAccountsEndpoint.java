@@ -15,6 +15,13 @@ import static at.nicoleperak.server.endpoints.HttpMethod.GET;
 import static java.lang.Long.parseLong;
 
 public class GetFinancialAccountsEndpoint implements Endpoint {
+
+    /**
+     * Checks if the given request was sent to {@code GET /financial-accounts/<accountId>}
+     *
+     * @param exchange The HTTP request.
+     * @return True if the request was sent to {@code GET /financial-accounts/<accountId>}. False in any other case.
+     */
     @Override
     public boolean canHandle(HttpExchange exchange) {
         HttpMethod requestMethod = getRequestMethod(exchange);
@@ -23,6 +30,12 @@ public class GetFinancialAccountsEndpoint implements Endpoint {
                 && pathSegments.length == 2 && pathSegments[0].equals("financial-accounts");
     }
 
+    /**
+     * Responds with the detailed data of a financial account.
+     *
+     * @param exchange The HTTP exchange.
+     * @throws ServerException If an error occurred during the execution.
+     */
     @Override
     public void handle(HttpExchange exchange) throws ServerException {
         Long financialAccountId = parseLong(getPathSegments(exchange)[1]);
@@ -33,7 +46,14 @@ public class GetFinancialAccountsEndpoint implements Endpoint {
         setResponse(exchange, 200, jsonResponse);
     }
 
-    private FinancialAccount getFinancialAccount(Long userId) throws ServerException {
-        return selectFullFinancialAccount(userId);
+    /**
+     * Returns the data of the financial account with the given ID.
+     *
+     * @param financialAccountId The ID of the financial account.
+     * @return The financial account.
+     * @throws ServerException If the account could not be queried.
+     */
+    private FinancialAccount getFinancialAccount(Long financialAccountId) throws ServerException {
+        return selectFullFinancialAccount(financialAccountId);
     }
 }

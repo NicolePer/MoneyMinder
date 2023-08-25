@@ -13,6 +13,11 @@ import static com.sun.net.httpserver.HttpServer.create;
 @SuppressWarnings("CallToPrintStackTrace")
 public class Server {
 
+    /**
+     * Starts the HTTP server and initializes schedulers.
+     *
+     * @param args Command line arguments (not used).
+     */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void main(String[] args) {
         try {

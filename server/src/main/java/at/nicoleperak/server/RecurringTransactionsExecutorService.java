@@ -27,6 +27,9 @@ public class RecurringTransactionsExecutorService implements AutoCloseable {
         this.executorService = Executors.newSingleThreadScheduledExecutor();
     }
 
+    /**
+     * Initiates the execution of {@link #executeOutstandingRecurringTransactionOrders()} at midnight every day.
+     */
     public void scheduleService() {
         ZonedDateTime now = now(ZoneId.of("Europe/Vienna"));
         LocalDate today = now.toLocalDate();
@@ -48,6 +51,12 @@ public class RecurringTransactionsExecutorService implements AutoCloseable {
         System.out.println("RecurringTransactionExecutor: recurring transaction execution scheduled");
     }
 
+    /**
+     * Iterates over all recurring transaction orders and executes them in case they are outstanding, i.e., if the
+     * day of their next executing is today or lies in the past.
+     * For every execution, a new transaction based on the data of the respective is created.
+     * In case an order has not been executed for longer than its interval, multiple transactions might be created.
+     */
     public void executeOutstandingRecurringTransactionOrders() {
         try {
             int outstandingOrderCounter = 0;
@@ -86,6 +95,11 @@ public class RecurringTransactionsExecutorService implements AutoCloseable {
         }
     }
 
+    /**
+     * Updates the date of the next order execution with respect to the order interval.
+     *
+     * @param order The recurrign transaction order to be updated.
+     */
     private void setNewNextDate(RecurringTransactionOrder order) {
         LocalDate endDate = order.getEndDate();
         LocalDate currentNextDate = order.getNextDate();
@@ -104,6 +118,12 @@ public class RecurringTransactionsExecutorService implements AutoCloseable {
         }
     }
 
+    /**
+     * Execute a recurring transaction order if it is outstanding.
+     * I.e., if the next execution date of the order is today or lies in the past, create a respective transaction.
+     *
+     * @param order The order to be executed if outstanding.
+     */
     public static void executeIfOrderIsOutstanding(RecurringTransactionOrder order) {
         if (isOutstanding(order)) {
             try (RecurringTransactionsExecutorService executorService = new RecurringTransactionsExecutorService()) {
@@ -114,6 +134,12 @@ public class RecurringTransactionsExecutorService implements AutoCloseable {
         }
     }
 
+    /**
+     * Checks if a recurring transaction order is outstanding, i.e., if it is time to be executed.
+     *
+     * @param order The order to be checked.
+     * @return True if the next execution date of the order is today or lies in the past.
+     */
     private static boolean isOutstanding(RecurringTransactionOrder order) {
         LocalDate nextDate = order.getNextDate();
         ZonedDateTime now = now(ZoneId.of("Europe/Vienna"));
@@ -121,6 +147,9 @@ public class RecurringTransactionsExecutorService implements AutoCloseable {
         return nextDate.isBefore(today) || nextDate.isEqual(today);
     }
 
+    /**
+     * Shut down the scheduler.
+     */
     @Override
     public void close() {
         executorService.shutdown();

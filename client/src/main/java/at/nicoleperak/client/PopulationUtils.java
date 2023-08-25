@@ -11,7 +11,7 @@ import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertControll
 import static at.nicoleperak.shared.Category.CategoryType.EXPENSE;
 import static at.nicoleperak.shared.Category.CategoryType.INCOME;
 
-public class LoadingUtils {
+public class PopulationUtils {
 
     public static FinancialAccount loadSelectedFinancialAccountDetails(FinancialAccount selectedFinancialAccount) {
         String jsonResponse = null;
@@ -28,12 +28,12 @@ public class LoadingUtils {
         return jsonb.fromJson(jsonResponse, User.class);
     }
 
-    public static CategoryList loadCategories(RadioButton incomeRadioButton) {
+    public static CategoryList populateCategories(RadioButton incomeRadioButton) {
         CategoryType categoryType = incomeRadioButton.isSelected() ? INCOME : EXPENSE;
-        return loadCategories(categoryType);
+        return populateCategories(categoryType);
     }
 
-    public static CategoryList loadCategories() {
+    public static CategoryList populateCategories() {
         String jsonResponse = null;
         try {
             jsonResponse = ServiceFunctions.get("categories");
@@ -43,7 +43,7 @@ public class LoadingUtils {
         return jsonb.fromJson(jsonResponse, CategoryList.class);
     }
 
-    public static CategoryList loadCategories(CategoryType categoryType) {
+    public static CategoryList populateCategories(CategoryType categoryType) {
         String jsonResponse = null;
         try {
             jsonResponse = ServiceFunctions.get("categories/" + categoryType.name());

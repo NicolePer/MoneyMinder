@@ -13,9 +13,18 @@ import static java.time.format.DateTimeFormatter.ofLocalizedDate;
 import static java.time.format.FormatStyle.MEDIUM;
 import static java.util.Locale.US;
 
-public class TransactionDetailsTileFactory {
+public class ExpandedTransactionTileFactory {
 
-    public static VBox buildTransactionDetailsTile(Transaction transaction, FXMLLoader loader, VBox transactionsPane) throws IOException {
+    /**
+     * Constructs an expanded transactions tile for displaying detailed information about a transaction.
+     *
+     * @param transaction      The Transaction object containing transaction information.
+     * @param loader           The FXMLLoader instance used for loading the transaction details tile layout.
+     * @param transactionsPane The VBox in which the transaction details will be placed.
+     * @return An expanded transaction tile containing details about the transactions.
+     * @throws IOException If there is an issue regarding the FXML loading process.
+     */
+    public static VBox buildExpandedTransactionTile(Transaction transaction, FXMLLoader loader, VBox transactionsPane) throws IOException {
         VBox transactionDetailsTile = loader.load();
         ExpandedTransactionTileController controller = loader.getController();
         controller

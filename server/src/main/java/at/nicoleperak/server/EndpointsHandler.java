@@ -54,6 +54,12 @@ public class EndpointsHandler implements HttpHandler {
             new DeleteUsersEndpoint()
     );
 
+    /**
+     * Handles all incoming HTTP requests.
+     *
+     * @param exchange the exchange containing the request from the
+     *                 client and used to send the response
+     */
     @Override
     public void handle(HttpExchange exchange) {
         try {

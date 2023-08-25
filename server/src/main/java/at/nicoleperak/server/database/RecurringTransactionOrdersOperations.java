@@ -18,7 +18,6 @@ import static at.nicoleperak.server.database.TransactionsOperations.*;
 import static at.nicoleperak.shared.RecurringTransactionOrder.Interval;
 import static java.sql.DriverManager.getConnection;
 
-@SuppressWarnings("CallToPrintStackTrace")
 public class RecurringTransactionOrdersOperations {
 
     protected static final String RECURRING_TRANSACTION_ORDER_TABLE = "recurring_transaction_orders";
@@ -33,6 +32,13 @@ public class RecurringTransactionOrdersOperations {
     protected static final String RECURRING_TRANSACTION_ORDER_INTERVAL = "order_interval";
     protected static final String RECURRING_TRANSACTION_ORDER_FINANCIAL_ACCOUNT_ID = "financial_account_id";
 
+    /**
+     * Inserts a new order into the database.
+     *
+     * @param order              Data of the new order.
+     * @param financialAccountId ID of the financial account the order should be added to.
+     * @throws ServerException If the order could not be created.
+     */
     public static void insertOrder(RecurringTransactionOrder order, Long financialAccountId) throws ServerException {
         String insert = "INSERT INTO " + RECURRING_TRANSACTION_ORDER_TABLE
                 + " (" + RECURRING_TRANSACTION_ORDER_DESCRIPTION + "," + RECURRING_TRANSACTION_ORDER_AMOUNT + ","
@@ -70,6 +76,13 @@ public class RecurringTransactionOrdersOperations {
         }
     }
 
+    /**
+     * Gets the data of all recurring transaction orders of the given financial account.
+     *
+     * @param financialAccountId The ID of the financial account.
+     * @return List of recurring transaction orders.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static List<RecurringTransactionOrder> selectListOfRecurringTransactionOrders(Long financialAccountId) throws ServerException {
         String select = "SELECT r." + RECURRING_TRANSACTION_ORDER_ID + ","
                 + RECURRING_TRANSACTION_ORDER_DESCRIPTION + ","
@@ -121,6 +134,13 @@ public class RecurringTransactionOrdersOperations {
         }
     }
 
+    /**
+     * Gets the ID of the financial account that the given order is associated with.
+     *
+     * @param orderId The ID of the order.
+     * @return The ID of the financial account.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static Long selectFinancialAccountId(Long orderId) throws ServerException {
         String select = "SELECT " + RECURRING_TRANSACTION_ORDER_FINANCIAL_ACCOUNT_ID
                 + " FROM " + RECURRING_TRANSACTION_ORDER_TABLE
@@ -140,6 +160,12 @@ public class RecurringTransactionOrdersOperations {
         }
     }
 
+    /**
+     * Deletes an order from the database.
+     *
+     * @param orderId The ID of the order to be deleted.
+     * @throws ServerException If the deletion could not be executed successfully.
+     */
     public static void deleteOrder(Long orderId) throws ServerException {
         String delete = "DELETE FROM " + RECURRING_TRANSACTION_ORDER_TABLE +
                 " WHERE " + RECURRING_TRANSACTION_ORDER_ID + " = ?";
@@ -152,6 +178,13 @@ public class RecurringTransactionOrdersOperations {
         }
     }
 
+    /**
+     * Updates the data of an existing recurring transaction order in the database.
+     *
+     * @param order The new order data.
+     * @param orderId The ID of the order to be updated.
+     * @throws ServerException If the order data could not be updated successfully.
+     */
     public static void updateOrder(RecurringTransactionOrder order, Long orderId) throws ServerException {
         String update = "UPDATE " + RECURRING_TRANSACTION_ORDER_TABLE + " SET "
                 + RECURRING_TRANSACTION_ORDER_DESCRIPTION + " = ?, "    // 1 DESCRIPTION
@@ -184,6 +217,12 @@ public class RecurringTransactionOrdersOperations {
         }
     }
 
+    /**
+     * Gets the data of all recurring transaction orders that have the executed.
+     *
+     * @return List of recurring transaction orders.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static List<RecurringTransactionOrder> selectListOfOutstandingOrders() throws ServerException {
         ZonedDateTime now = ZonedDateTime.now(ZoneId.of("Europe/Vienna"));
         LocalDate today = now.toLocalDate();
@@ -237,6 +276,15 @@ public class RecurringTransactionOrdersOperations {
         }
     }
 
+    /**
+     * Inserts a new transaction into the database as a result of an execution of the given recurring transaction order.
+     * Updates the respective transaction order.
+     *
+     * @param order Data of the recurring transaction order.
+     * @param transaction Data of the new transaction.
+     * @param financialAccountId ID of the financial account the transaction should be added to.
+     * @throws ServerException If the transaction could not be created or the order could not be updated.
+     */
     public static void insertTransactionAndUpdateOrder(RecurringTransactionOrder order, Transaction transaction, Long financialAccountId) throws ServerException {
         String update = "UPDATE " + RECURRING_TRANSACTION_ORDER_TABLE + " SET "
                 + RECURRING_TRANSACTION_ORDER_NEXT_DATE + " = ? "        // 1 NEXT_DATE
@@ -278,6 +326,15 @@ public class RecurringTransactionOrdersOperations {
         }
     }
 
+    /**
+     * Inserts a new transaction into the database as a result of an execution of the given recurring transaction order.
+     * Deletes the respective transaction order.
+     *
+     * @param order Data of the recurring transaction order.
+     * @param transaction Data of the new transaction.
+     * @param financialAccountId ID of the financial account the transaction should be added to.
+     * @throws ServerException If the transaction could not be created or the order could not be deleted.
+     */
     public static void insertTransactionAndDeleteOrder(RecurringTransactionOrder order, Transaction transaction, Long financialAccountId) throws ServerException {
         String delete = "DELETE FROM " + RECURRING_TRANSACTION_ORDER_TABLE
                 + " WHERE " + RECURRING_TRANSACTION_ORDER_ID + " = ?";   // 1 RECURRING_TRANSACTION_ORDER_ID

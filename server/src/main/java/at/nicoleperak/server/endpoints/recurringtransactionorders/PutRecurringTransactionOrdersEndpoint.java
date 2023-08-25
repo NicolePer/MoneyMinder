@@ -20,6 +20,13 @@ import static java.lang.Long.parseLong;
 
 @SuppressWarnings({"CallToPrintStackTrace", "RedundantSuppression"})
 public class PutRecurringTransactionOrdersEndpoint implements Endpoint {
+
+    /**
+     * Checks if the given request was sent to {@code PUT /recurring-transaction-orders/<orderId>}
+     *
+     * @param exchange The HTTP request.
+     * @return True if the request was sent to {@code PUT /recurring-transaction-orders/<orderId>}. False in any other case.
+     */
     @Override
     public boolean canHandle(HttpExchange exchange) {
         HttpMethod requestMethod = getRequestMethod(exchange);
@@ -28,6 +35,13 @@ public class PutRecurringTransactionOrdersEndpoint implements Endpoint {
                 && pathSegments.length == 2 && pathSegments[0].equals("recurring-transaction-orders");
     }
 
+    /**
+     * Updates an existing recurring transaction order.
+     * Responds with status code {@code 200} in case the update was successful.
+     *
+     * @param exchange The HTTP exchange.
+     * @throws ServerException If an error occurred during the update.
+     */
     @Override
     public void handle(HttpExchange exchange) throws ServerException {
         Long orderId = parseLong(getPathSegments(exchange)[1]);
@@ -35,6 +49,12 @@ public class PutRecurringTransactionOrdersEndpoint implements Endpoint {
         setResponse(exchange, 200, "");
     }
 
+    /**
+     * Updates the given recurring transaction order.
+     *
+     * @param exchange The HTTP request.
+     * @throws ServerException If an error occurred during the update.
+     */
     private void editRecurringTransactionOrder(HttpExchange exchange, Long orderId) throws ServerException {
         User currentUser = authenticate(exchange);
         try {

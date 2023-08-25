@@ -12,7 +12,6 @@ import java.util.List;
 
 import static at.nicoleperak.server.database.DatabaseUtils.*;
 import static at.nicoleperak.server.database.UsersOperations.*;
-import static at.nicoleperak.server.database.UsersOperations.USER_EMAIL;
 import static java.sql.DriverManager.getConnection;
 
 public class CollaboratorsOperations {
@@ -21,6 +20,13 @@ public class CollaboratorsOperations {
     protected static final String COLLABORATOR_FINANCIAL_ACCOUNT_ID = "financial_account_id";
     protected static final String COLLABORATOR_USER_ID = "user_id";
 
+    /**
+     * Adds the given user as a collaborator to the given financial account.
+     *
+     * @param userId             ID of the user.
+     * @param financialAccountId ID of the financial account.
+     * @throws ServerException If the transaction could not be created.
+     */
     public static void insertCollaborator(Long userId, Long financialAccountId) throws ServerException {
         String insert = "INSERT INTO " + COLLABORATOR_TABLE
                 + " (" + COLLABORATOR_FINANCIAL_ACCOUNT_ID + "," + COLLABORATOR_USER_ID
@@ -37,6 +43,13 @@ public class CollaboratorsOperations {
         }
     }
 
+    /**
+     * Gets the IDs of all users that collaborate on the given financial account.
+     *
+     * @param financialAccountId The ID of the financial account.
+     * @return List of user IDs.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static List<Long> selectCollaboratorIds(Long financialAccountId) throws ServerException {
         String select = "SELECT " + COLLABORATOR_USER_ID + " FROM " + COLLABORATOR_TABLE
                 + " WHERE " + COLLABORATOR_FINANCIAL_ACCOUNT_ID + " = ?";
@@ -55,6 +68,13 @@ public class CollaboratorsOperations {
         }
     }
 
+    /**
+     * Gets the data of all users that collaborate on the given financial account.
+     *
+     * @param financialAccountId The ID of the financial account.
+     * @return List of users.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static List<User> selectListOfCollaborators(Long financialAccountId) throws ServerException {
         String select = "SELECT c." + COLLABORATOR_USER_ID
                 + ", u." + USER_NAME
@@ -83,6 +103,13 @@ public class CollaboratorsOperations {
         }
     }
 
+    /**
+     * Removes the given user from the collaborators of the given financial account.
+     *
+     * @param collaboratorUserId The ID of the user to be removed.
+     * @param financialAccountId The ID of the financial account.
+     * @throws ServerException If the removal could not be executed successfully.
+     */
     public static void deleteCollaborator(Long collaboratorUserId, Long financialAccountId) throws ServerException {
         String delete = "DELETE FROM " + COLLABORATOR_TABLE +
                 " WHERE " + COLLABORATOR_USER_ID + " = ?" +

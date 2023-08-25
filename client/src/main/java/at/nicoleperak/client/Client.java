@@ -25,6 +25,12 @@ public class Client extends Application {
         launch(args);
     }
 
+    /**
+     * Starts the MoneyMinder application by initializing the primary stage, loading the welcome screen,
+     * and displaying the main scene.
+     *
+     * @param primaryStage The primary stage of the JavaFX application.
+     */
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -40,18 +46,39 @@ public class Client extends Application {
         }
     }
 
+    /**
+     * Loads a JavaFX scene from the specified FXML location.
+     *
+     * @param fxmlLocation The FXMLLocation enum indicating the location of the FXML file.
+     * @return A new Scene instance containing the loaded control.
+     * @throws IOException If there is an issue regarding the FXML loading process.
+     */
     public static Scene loadScene(FXMLLocation fxmlLocation) throws IOException {
         FXMLLoader loader = fxmlLocation.getLoader();
         Parent root = loader.load();
         return new Scene(root);
     }
 
+    /**
+     * Loads a JavaFX scene from the specified FXML location using the provided FXMLLoader.
+     *
+     * @param fxmlLocation The FXMLLocation enum indicating the location of the FXML file.
+     * @param loader       The FXMLLoader instance used for loading the FXML.
+     * @return A new Scene instance containing the loaded UI.
+     * @throws IOException If there is an issue regarding the FXML loading process.
+     */
     public static Scene loadScene(FXMLLocation fxmlLocation, FXMLLoader loader) throws IOException {
         loader.setLocation(Client.class.getResource(fxmlLocation.getLocation()));
         Parent root = loader.load();
         return new Scene(root);
     }
 
+    /**
+     * Creates and returns a JavaFX dialog with the specified DialogPane.
+     *
+     * @param dialogPane The DialogPane to set as the content of the dialog.
+     * @return A new Dialog instance with the provided content.
+     */
     public static Dialog<ButtonType> getDialog(DialogPane dialogPane) {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setDialogPane(dialogPane);

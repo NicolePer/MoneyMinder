@@ -15,6 +15,15 @@ import static java.util.Locale.US;
 
 public class TransactionTileFactory {
 
+    /**
+     * Constructs a transaction tile for displaying  information about a transaction.
+     *
+     * @param transaction      The Transaction object containing transaction information.
+     * @param loader           The FXMLLoader instance used for loading the transaction tile layout.
+     * @param transactionsPane The VBox in which the transaction tile will be placed.
+     * @return A transaction tile containing information about the transactions.
+     * @throws IOException If there is an issue regarding the FXML loading process.
+     */
     public static Parent buildTransactionTile(Transaction transaction, FXMLLoader loader, VBox transactionsPane) throws IOException {
         Parent transactionTile = loader.load();
         TransactionTileController controller = loader.getController();

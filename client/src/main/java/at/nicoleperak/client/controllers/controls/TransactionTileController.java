@@ -13,7 +13,7 @@ import java.io.IOException;
 
 import static at.nicoleperak.client.FXMLLocation.EXPANDED_TRANSACTION_TILE;
 import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
-import static at.nicoleperak.client.factories.TransactionDetailsTileFactory.buildTransactionDetailsTile;
+import static at.nicoleperak.client.factories.ExpandedTransactionTileFactory.buildExpandedTransactionTile;
 
 public class TransactionTileController {
     private Transaction transaction;
@@ -42,7 +42,7 @@ public class TransactionTileController {
             ObservableList<Node> transactionTileList = transactionsPane.getChildren();
             int tileIndex = transactionTileList.indexOf(transactionTile);
             FXMLLoader loader = EXPANDED_TRANSACTION_TILE.getLoader();
-            VBox transactionDetailsTile = buildTransactionDetailsTile(transaction, loader, transactionsPane);
+            VBox transactionDetailsTile = buildExpandedTransactionTile(transaction, loader, transactionsPane);
             transactionTileList.set(tileIndex, transactionDetailsTile);
         } catch (IOException e) {
             showMoneyMinderErrorAlert(e.getMessage());

@@ -11,9 +11,16 @@ import static at.nicoleperak.server.Validation.assertAuthenticatedUserIsCollabor
 import static at.nicoleperak.server.endpoints.AuthUtils.authenticate;
 import static at.nicoleperak.server.endpoints.EndpointUtils.*;
 import static at.nicoleperak.server.endpoints.HttpMethod.DELETE;
-import static java.lang.Long.*;
+import static java.lang.Long.parseLong;
 
 public class DeleteRecurringTransactionOrdersEndpoint implements Endpoint {
+
+    /**
+     * Checks if the given request was sent to {@code DELETE /recurring-transaction-orders/<orderId>}
+     *
+     * @param exchange The HTTP request.
+     * @return True if the request was sent to {@code DELETE /recurring-transaction-orders/<orderId>}. False in any other case.
+     */
     @Override
     public boolean canHandle(HttpExchange exchange) {
         HttpMethod requestMethod = getRequestMethod(exchange);
@@ -22,6 +29,13 @@ public class DeleteRecurringTransactionOrdersEndpoint implements Endpoint {
                 && pathSegments.length == 2 && pathSegments[0].equals("recurring-transaction-orders");
     }
 
+    /**
+     * Deletes a recurring transaction order.
+     * Responds with status code {@code 204} in case the deletion was successful.
+     *
+     * @param exchange The HTTP exchange.
+     * @throws ServerException If an error occurred during the deletion.
+     */
     @Override
     public void handle(HttpExchange exchange) throws ServerException {
         Long orderId = parseLong(getPathSegments(exchange)[1]);
@@ -29,6 +43,13 @@ public class DeleteRecurringTransactionOrdersEndpoint implements Endpoint {
         setResponse(exchange, 204, "");
     }
 
+    /**
+     * Deletes a recurring transaction order.
+     *
+     * @param exchange The HTTP request.
+     * @param orderId  The ID of the order to be deleted.
+     * @throws ServerException If an error occurred during the deletion.
+     */
     private void deleteOrder(HttpExchange exchange, Long orderId) throws ServerException {
         User currentUser = authenticate(exchange);
         Long financialAccountId = RecurringTransactionOrdersOperations.selectFinancialAccountId(orderId);

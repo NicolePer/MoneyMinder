@@ -18,6 +18,13 @@ import static at.nicoleperak.server.endpoints.HttpMethod.POST;
 import static java.lang.Long.parseLong;
 
 public class PostRecurringTransactionOrdersEndpoint implements Endpoint {
+
+    /**
+     * Checks if the given request was sent to {@code POST /financial-accounts/<accountId>/recurring-transactions}
+     *
+     * @param exchange The HTTP request.
+     * @return True if the request was sent to {@code POST /financial-accounts/<accountId>/recurring-transactions}. False in any other case.
+     */
     @Override
     public boolean canHandle(HttpExchange exchange) {
         HttpMethod requestMethod = getRequestMethod(exchange);
@@ -26,6 +33,13 @@ public class PostRecurringTransactionOrdersEndpoint implements Endpoint {
                 && pathSegments.length == 3 && pathSegments[2].equals("recurring-transactions");
     }
 
+    /**
+     * Creates a new recurring transaction order for a financial account.
+     * Responds with status code {@code 201} in case the creation was successful.
+     *
+     * @param exchange The HTTP exchange.
+     * @throws ServerException If an error occurred during the creation.
+     */
     @Override
     public void handle(HttpExchange exchange) throws ServerException {
         Long financialAccountId = parseLong(getPathSegments(exchange)[1]);
@@ -33,6 +47,13 @@ public class PostRecurringTransactionOrdersEndpoint implements Endpoint {
         setResponse(exchange, 201, "");
     }
 
+    /**
+     * Creates a new recurring transaction order for the given financial account.
+     *
+     * @param exchange           The HTTP request.
+     * @param financialAccountId ID of the financial account the order should be added to.
+     * @throws ServerException If an error occurred during the creation.
+     */
     private void createNewRecurringTransactionOrder(HttpExchange exchange, Long financialAccountId) throws ServerException {
         User currentUser = authenticate(exchange);
         try {

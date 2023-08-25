@@ -28,6 +28,12 @@ public class FinancialAccountsOperations {
     protected static final String FINANCIAL_ACCOUNT_BALANCE = "balance";
     protected static final String FINANCIAL_ACCOUNT_OWNER_ID = "owner_user_id";
 
+    /**
+     * Inserts a new financial account into the database.
+     *
+     * @param financialAccount Data of the new account.
+     * @throws ServerException If the account could not be created.
+     */
     public static Long insertFinancialAccount(FinancialAccount financialAccount) throws ServerException {
         String insert = "INSERT INTO " + FINANCIAL_ACCOUNT_TABLE
                 + " (" + FINANCIAL_ACCOUNT_TITLE + "," + FINANCIAL_ACCOUNT_DESCRIPTION
@@ -53,6 +59,13 @@ public class FinancialAccountsOperations {
         return -1L;
     }
 
+    /**
+     * Gets the data of a financial account.
+     *
+     * @param financialAccountId The ID of the financial account.
+     * @return The financial account.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static FinancialAccount selectFullFinancialAccount(Long financialAccountId) throws ServerException {
         String select = "SELECT f." + FINANCIAL_ACCOUNT_TITLE
                 + ", f." + FINANCIAL_ACCOUNT_DESCRIPTION
@@ -96,7 +109,14 @@ public class FinancialAccountsOperations {
         }
     }
 
-    public static FinancialAccountsList selectListOfFinancialAccountOverviews(Long id) throws ServerException {
+    /**
+     * Gets the overview data of all financial accounts that the given user collaborates on.
+     *
+     * @param userId The ID of the user.
+     * @return List of financial accounts.
+     * @throws ServerException If the database could not be queried successfully.
+     */
+    public static FinancialAccountsList selectListOfFinancialAccountOverviews(Long userId) throws ServerException {
         ArrayList<FinancialAccount> financialAccounts = new ArrayList<>();
         String select = "SELECT f." + FINANCIAL_ACCOUNT_ID
                 + ", f." + FINANCIAL_ACCOUNT_TITLE
@@ -111,7 +131,7 @@ public class FinancialAccountsOperations {
                 + " GROUP BY f." + FINANCIAL_ACCOUNT_ID;
         try (Connection conn = getConnection(CONNECTION, DB_USERNAME, DB_PASSWORD);
              PreparedStatement stmt = conn.prepareStatement(select)) {
-            stmt.setLong(1, id);
+            stmt.setLong(1, userId);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     financialAccounts.add(new FinancialAccount(rs.getLong(FINANCIAL_ACCOUNT_ID),
@@ -131,6 +151,13 @@ public class FinancialAccountsOperations {
         }
     }
 
+    /**
+     * Gets the ID of the user that owns the given financial account.
+     *
+     * @param financialAccountId The ID of the financial account.
+     * @return User ID of the account's owner.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static Long selectOwnerIdOfFinancialAccount(Long financialAccountId) throws ServerException {
         String select = "SELECT " + FINANCIAL_ACCOUNT_OWNER_ID + " FROM " + FINANCIAL_ACCOUNT_TABLE
                 + " WHERE " + FINANCIAL_ACCOUNT_ID + " = ?";
@@ -149,6 +176,13 @@ public class FinancialAccountsOperations {
         }
     }
 
+    /**
+     * Updates the data of an existing financial account in the database.
+     *
+     * @param financialAccount   The new account data.
+     * @param financialAccountId The ID of the account to be updated.
+     * @throws ServerException If the account data could not be updated successfully.
+     */
     public static void updateFinancialAccount(FinancialAccount financialAccount, Long financialAccountId) throws ServerException {
         String update = "UPDATE " + FINANCIAL_ACCOUNT_TABLE + " SET "
                 + FINANCIAL_ACCOUNT_TITLE + " = ?, "            // 1 TITLE
@@ -167,6 +201,12 @@ public class FinancialAccountsOperations {
         }
     }
 
+    /**
+     * Deletes a financial account from the database.
+     *
+     * @param financialAccountId The ID of the account to be deleted.
+     * @throws ServerException If the deletion could not be executed successfully.
+     */
     public static void deleteFinancialAccount(Long financialAccountId) throws ServerException {
         String deleteAllAssociatedRecurringTransactionOrders = "DELETE FROM " + RECURRING_TRANSACTION_ORDER_TABLE
                 + " WHERE " + RECURRING_TRANSACTION_ORDER_FINANCIAL_ACCOUNT_ID + " = ?";    // stmt1: 1 FINANCIAL_ACCOUNT_ID
@@ -197,6 +237,13 @@ public class FinancialAccountsOperations {
         }
     }
 
+    /**
+     * Gets the IDs of all financial accounts that are shared between multiple collaborators and that the given user owns.
+     *
+     * @param ownerId The ID of the user.
+     * @return List of financial account IDs.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static List<Long> selectListOfSharedFinancialAccountIdsWhereUserIsOwner(Long ownerId) throws ServerException {
         List<Long> financialAccountIds = new ArrayList<>();
         String select = "SELECT DISTINCT f." + FINANCIAL_ACCOUNT_ID + " FROM " + FINANCIAL_ACCOUNT_TABLE + " f"

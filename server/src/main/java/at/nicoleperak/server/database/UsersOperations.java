@@ -26,6 +26,13 @@ public class UsersOperations {
     protected static final String USER_EMAIL = "email";
     protected static final String USER_PASSWORD_HASH = "password_hash";
 
+    /**
+     * Inserts a new user into the database.
+     *
+     * @param user         Data of the new user.
+     * @param passwordHash Hashed user password.
+     * @throws ServerException If the user could not be created.
+     */
     public static void insertUser(User user, String passwordHash) throws ServerException {
 
         String insert = "INSERT INTO " + USER_TABLE
@@ -44,6 +51,13 @@ public class UsersOperations {
         }
     }
 
+    /**
+     * Checks if a user with the given email address exists in the database.
+     *
+     * @param email Email address.
+     * @return True if user exists. False if the user does not exist.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static boolean userExistsByEmail(String email) throws ServerException {
         String select = "SELECT " + USER_EMAIL + " FROM " + USER_TABLE
                 + " WHERE " + USER_EMAIL + " = ?";
@@ -58,6 +72,13 @@ public class UsersOperations {
         }
     }
 
+    /**
+     * Gets the data of the user with the given email address from the database.
+     *
+     * @param email Email address.
+     * @return User data.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static User selectUser(String email) throws ServerException {
         String select = "SELECT * FROM " + USER_TABLE
                 + " WHERE " + USER_EMAIL + " = ?";
@@ -76,6 +97,14 @@ public class UsersOperations {
         }
     }
 
+    /**
+     * Updates the data of an existing user (including the password) in the database.
+     *
+     * @param user The new user data.
+     * @param passwordHash The new hashed password.
+     * @param userId The ID of the user to be updated.
+     * @throws ServerException If the user data could not be updated successfully.
+     */
     public static void updateUser(User user, String passwordHash, Long userId) throws ServerException {
         String update = "UPDATE " + USER_TABLE + " SET "
                 + USER_NAME + " = ?, "            // 1 USER_NAME
@@ -94,6 +123,13 @@ public class UsersOperations {
         }
     }
 
+    /**
+     * Updates the data of an existing user in the database.
+     *
+     * @param user The new user data.
+     * @param userId The ID of the user to be updated.
+     * @throws ServerException If the user data could not be updated successfully.
+     */
     public static void updateUser(User user, Long userId) throws ServerException {
         String update = "UPDATE " + USER_TABLE + " SET "
                 + USER_NAME + " = ?, "           // 1 USER_NAME
@@ -110,6 +146,12 @@ public class UsersOperations {
         }
     }
 
+    /**
+     * Deletes a user from the database.
+     *
+     * @param userId The ID of the user to be deleted.
+     * @throws ServerException If the deletion could not be executed successfully.
+     */
     public static void deleteUser(Long userId) throws ServerException {
         String deleteUserFromCollaboratorsTable =
                 "DELETE FROM " + COLLABORATOR_TABLE

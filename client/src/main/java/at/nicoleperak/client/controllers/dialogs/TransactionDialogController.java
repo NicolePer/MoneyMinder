@@ -1,6 +1,7 @@
 package at.nicoleperak.client.controllers.dialogs;
 
 import at.nicoleperak.client.ClientException;
+import at.nicoleperak.client.PopulationUtils;
 import at.nicoleperak.shared.Category;
 import at.nicoleperak.shared.CategoryList;
 import at.nicoleperak.shared.Transaction;
@@ -14,7 +15,6 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import static at.nicoleperak.client.Format.convertIntoParsableDecimal;
-import static at.nicoleperak.client.LoadingUtils.loadCategories;
 import static at.nicoleperak.client.Validation.*;
 import static at.nicoleperak.shared.Category.CategoryType.INCOME;
 import static javafx.collections.FXCollections.observableArrayList;
@@ -158,7 +158,7 @@ public class TransactionDialogController implements Initializable {
      */
     private void populateCategoryComboBox() {
         categoryObservableList.clear();
-        CategoryList categoryList = loadCategories(incomeRadioButton);
+        CategoryList categoryList = PopulationUtils.populateCategories(incomeRadioButton);
         categoryObservableList.addAll(categoryList.getCategories());
         categoryComboBox.setItems(categoryObservableList);
         categoryComboBox.setDisable(false);

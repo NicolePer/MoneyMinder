@@ -8,12 +8,27 @@ import static at.nicoleperak.server.database.FinancialAccountsOperations.selectO
 
 public class Validation {
 
+    /**
+     * Asserts that the given user is among the collaborators of the given financial account.
+     *
+     * @param userId             The ID of the user.
+     * @param financialAccountId The ID of the financial account.
+     * @throws ServerException If the user is not among the collaborators of the account.
+     */
     public static void assertAuthenticatedUserIsCollaborator(Long userId, Long financialAccountId) throws ServerException {
         List<Long> userIds = selectCollaboratorIds(financialAccountId);
         if (!userIds.contains(userId)) {
             throw new ServerException(403, "User is not authorized to access this financial account");
         }
     }
+
+    /**
+     * Asserts that the given user is the owner of the given financial account.
+     *
+     * @param userId The ID of the user.
+     * @param financialAccountId The ID of the financial account.
+     * @throws ServerException If the user is not the owner of the account.
+     */
     public static void assertAuthenticatedUserIsOwner(Long userId, Long financialAccountId) throws ServerException {
         Long ownerId = selectOwnerIdOfFinancialAccount(financialAccountId);
         if(!userId.equals(ownerId)){
@@ -21,6 +36,13 @@ public class Validation {
         }
     }
 
+    /**
+     * Asserts that the given user is not already among the collaborators of the given financial account.
+     *
+     * @param userId The ID of the user.
+     * @param financialAccountId The ID of the financial account.
+     * @throws ServerException If the user is already among the collaborators of the account.
+     */
     public static void assertUserIsNotAlreadyCollaborator(Long userId, Long financialAccountId) throws ServerException {
         List<Long> userIds = selectCollaboratorIds(financialAccountId);
         if (userIds.contains(userId)) {
@@ -28,12 +50,25 @@ public class Validation {
         }
     }
 
+    /**
+     * Asserts that the two given users are the same.
+     *
+     * @param userId The ID of the user.
+     * @param currentUserId The ID of the current user.
+     * @throws ServerException If the two users are not the same.
+     */
     public static void assertUserIdEqualsCurrentUserId(Long userId, Long currentUserId) throws ServerException {
         if (!userId.equals(currentUserId)) {
             throw new ServerException(403, "User is not authorized to access the requested user account");
         }
     }
 
+    /**
+     * Asserts that the given user does not own any financial accounts that are shared between multiple collaborators.
+     *
+     * @param userId The ID of the user.
+     * @throws ServerException If the user owns any financial accounts that are shared between multiple collaborators.
+     */
     public static void assertUserIsNotOwnerOfAnySharedFinancialAccounts(Long userId) throws ServerException {
         List<Long> sharedFinancialAccountIds = selectListOfSharedFinancialAccountIdsWhereUserIsOwner(userId);
         if (!sharedFinancialAccountIds.isEmpty()) {

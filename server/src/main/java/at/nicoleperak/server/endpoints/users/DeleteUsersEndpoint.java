@@ -15,6 +15,13 @@ import static at.nicoleperak.server.endpoints.HttpMethod.DELETE;
 import static java.lang.Long.parseLong;
 
 public class DeleteUsersEndpoint implements Endpoint {
+
+    /**
+     * Checks if the given request was sent to {@code DELETE /users/<userId>}
+     *
+     * @param exchange The HTTP request.
+     * @return True if the request was sent to {@code DELETE /users/<userId>}. False in any other case.
+     */
     @Override
     public boolean canHandle(HttpExchange exchange) {
         HttpMethod requestMethod = getRequestMethod(exchange);
@@ -23,6 +30,13 @@ public class DeleteUsersEndpoint implements Endpoint {
                 && pathSegments.length == 2 && pathSegments[0].equals("users");
     }
 
+    /**
+     * Deletes a user.
+     * Responds with status code {@code 204} in case the deletion was successful.
+     *
+     * @param exchange The HTTP exchange.
+     * @throws ServerException If an error occurred during the deletion.
+     */
     @Override
     public void handle(HttpExchange exchange) throws ServerException {
         Long userId = parseLong(getPathSegments(exchange)[1]);
@@ -30,6 +44,13 @@ public class DeleteUsersEndpoint implements Endpoint {
         setResponse(exchange, 204, "");
     }
 
+    /**
+     * Deletes a user.
+     *
+     * @param exchange The HTTP request.
+     * @param userId   The ID of the user to be deleted.
+     * @throws ServerException If an error occurred during the deletion.
+     */
     private void deleteUser(HttpExchange exchange, Long userId) throws ServerException {
         User currentUser = authenticate(exchange);
         assertUserIdEqualsCurrentUserId(userId, currentUser.getId());

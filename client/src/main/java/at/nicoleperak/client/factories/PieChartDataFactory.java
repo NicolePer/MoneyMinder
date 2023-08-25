@@ -16,6 +16,13 @@ import static javafx.scene.chart.PieChart.Data;
 
 public class PieChartDataFactory {
 
+    /**
+     * Constructs pie chart data based on a list of transactions and a category type.
+     *
+     * @param transactionsList A list of transactions to calculate data from.
+     * @param categoryType     The category type to filter transactions.
+     * @return An ObservableList of Data objects representing pie chart segments.
+     */
     public static ObservableList<Data> buildPieChartData(List<Transaction> transactionsList, CategoryType categoryType) {
         HashMap<Category, BigDecimal> categories = new HashMap<>();
         BigDecimal totalAmount = new BigDecimal(0);

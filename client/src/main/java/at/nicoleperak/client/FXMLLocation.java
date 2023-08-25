@@ -39,13 +39,18 @@ FXMLLocation {
         this.location = location;
     }
 
-    public String getLocation() {
-        return location;
-    }
-
+    /**
+     * Gets a new FXMLLoader configured with the location for loading FXML files.
+     *
+     * @return A new FXMLLoader instance with the specified location.
+     */
     public FXMLLoader getLoader() {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource(location));
         return loader;
+    }
+
+    public String getLocation() {
+        return location;
     }
 }

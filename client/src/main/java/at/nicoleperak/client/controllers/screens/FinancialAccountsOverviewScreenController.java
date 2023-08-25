@@ -24,19 +24,29 @@ import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertControll
 import static at.nicoleperak.client.factories.FinancialAccountTileFactory.buildFinancialAccountTile;
 
 public class FinancialAccountsOverviewScreenController implements Initializable {
-
     @FXML
     private TilePane financialAccountsTilePane;
-
     @FXML
     private VBox screenPane;
 
+    /**
+     * Upon initialization inserts the navigation bar control into the screenPane and
+     * displays an overview of all financial accounts where the user is owner or collaborator.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or
+     *                  {@code null} if the location is not known.
+     * @param resources The resources used to localize the root object, or {@code null} if
+     *                  the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         insertNavigationBar();
         showFinancialAccounts();
     }
 
+    /**
+     * Inserts the navigation bar control into screenPane.
+     */
     private void insertNavigationBar() {
         try {
             FXMLLoader loader = NAVIGATION_BAR.getLoader();
@@ -49,6 +59,10 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
         }
     }
 
+    /**
+     * Inserts a dynamic amount of financial account tiles into the financialAccountsTilePane
+     * to display an overview of all financial accounts where the user is owner or collaborator to the user.
+     */
     private void showFinancialAccounts() {
         try {
             String jsonResponse = get("financial-accounts");
@@ -65,6 +79,11 @@ public class FinancialAccountsOverviewScreenController implements Initializable 
         }
     }
 
+    /**
+     * Inserts a createFinancialAccountTile control into the financialAccountsTilePane
+     *
+     * @throws IOException If there is an issue regarding the FXML loading process.
+     */
     private void showCreateFinancialAccountTile() throws IOException {
         FXMLLoader loader = CREATE_FINANCIAL_ACCOUNT_TILE.getLoader();
         Parent createAccountTile = loader.load();

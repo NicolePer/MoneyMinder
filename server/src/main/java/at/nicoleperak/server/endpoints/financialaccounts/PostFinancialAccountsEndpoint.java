@@ -16,6 +16,13 @@ import static at.nicoleperak.server.endpoints.EndpointUtils.*;
 import static at.nicoleperak.server.endpoints.HttpMethod.POST;
 
 public class PostFinancialAccountsEndpoint implements Endpoint {
+
+    /**
+     * Checks if the given request was sent to {@code POST /financial-accounts}
+     *
+     * @param exchange The HTTP request.
+     * @return True if the request was sent to {@code POST /financial-accounts}. False in any other case.
+     */
     @Override
     public boolean canHandle(HttpExchange exchange) {
         HttpMethod requestMethod = getRequestMethod(exchange);
@@ -24,12 +31,25 @@ public class PostFinancialAccountsEndpoint implements Endpoint {
                 && pathSegments.length == 1 && pathSegments[0].equals("financial-accounts");
     }
 
+    /**
+     * Creates a new financial account.
+     * Responds with status code {@code 201} in case the creation was successful.
+     *
+     * @param exchange The HTTP exchange.
+     * @throws ServerException If an error occurred during the creation.
+     */
     @Override
     public void handle(HttpExchange exchange) throws ServerException {
         createNewFinancialAccount(exchange);
         setResponse(exchange, 201, "");
     }
 
+    /**
+     * Creates a new financial account.
+     *
+     * @param exchange The HTTP request.
+     * @throws ServerException If an error occurred during the creation.
+     */
     private void createNewFinancialAccount(HttpExchange exchange) throws ServerException {
         User currentUser = authenticate(exchange);
         try {

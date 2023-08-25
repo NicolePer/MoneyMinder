@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import static at.nicoleperak.client.Client.*;
 import static at.nicoleperak.client.FXMLLocation.SIGN_UP_SCREEN;
-import static at.nicoleperak.client.LoadingUtils.loadLoggedInUser;
+import static at.nicoleperak.client.PopulationUtils.loadLoggedInUser;
 import static at.nicoleperak.client.Redirection.redirectToFinancialAccountsOverviewScreen;
 import static at.nicoleperak.client.Validation.assertEmailIsValid;
 import static at.nicoleperak.client.Validation.assertUserInputLengthIsValid;
@@ -30,8 +30,10 @@ public class WelcomeScreenController {
     @FXML
     private Label alertMessageLabel;
 
-    @FXML
-    protected void onSignUpLinkClicked() {
+    /**
+     * Redirects the user to the sign-up screen.
+     */
+    private static void redirectToSignUpScreen() {
         try {
             Scene scene = loadScene(SIGN_UP_SCREEN);
             getStage().setScene(scene);
@@ -42,7 +44,22 @@ public class WelcomeScreenController {
     }
 
     @FXML
-    protected void onSignInButtonClicked() {
+    void onSignUpLinkClicked() {
+        redirectToSignUpScreen();
+    }
+
+    @FXML
+    void onSignInButtonClicked() {
+        signInUser();
+    }
+
+    /**
+     * Asserts that user inputs are valid and shows alert message to user, if this is not the case.
+     * Stores user credentials in Client.
+     * Sends get-request to server to authenticate user and gather user account information.
+     * Redirects user to financial accounts overview screen.
+     */
+    private void signInUser() {
         String email = emailField.getText();
         String password = passwordField.getText();
         try {
@@ -59,14 +76,29 @@ public class WelcomeScreenController {
         }
     }
 
-    private static void saveLoggedInUser(User loggedInUser) {
+    /**
+     * Stores loggedInUser in Client.
+     *
+     * @param loggedInUser User object of logged-in user.
+     */
+    private void saveLoggedInUser(User loggedInUser) {
         setLoggedInUser(loggedInUser);
     }
 
+    /**
+     * Stores loggedInUser in Client.
+     *
+     * @param user User object with login data entered in welcome screen.
+     */
     private void saveUserCredentials(User user) {
         setUserCredentials(user);
     }
 
+    /**
+     * Sets alertMessageLabel to text of message.
+     *
+     * @param message Message to be displayed in alertMessageLabel.
+     */
     public void setWelcomeScreenAlertMessageLabelText(String message) {
         alertMessageLabel.setText(message);
     }

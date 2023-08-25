@@ -13,6 +13,12 @@ import static at.nicoleperak.shared.RecurringTransactionOrder.Interval;
 
 public class RecurringTransactionOrderFactory {
 
+    /**
+     * Constructs a recurring transaction order based on user input from the dialog.
+     *
+     * @param controller The controller of the dialog gathering recurring transaction order information.
+     * @return A new RecurringTransactionOrder instance with the specified attributes.
+     */
     public static RecurringTransactionOrder buildRecurringTransactionOrder(RecurringTransactionDialogController controller) {
         LocalDate nextDate = controller.getNextDatePicker().getValue();
         LocalDate endDate = controller.getEndDatePicker().getValue();

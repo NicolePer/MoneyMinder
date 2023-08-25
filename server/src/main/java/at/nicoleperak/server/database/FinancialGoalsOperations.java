@@ -20,6 +20,13 @@ public class FinancialGoalsOperations {
     protected static final String FINANCIAL_GOAL_AMOUNT = "amount";
     protected static final String FINANCIAL_GOAL_FINANCIAL_ACCOUNT_ID = "financial_account_id";
 
+    /**
+     * Inserts a new financial goal into the database.
+     *
+     * @param goal               Data of the new goal.
+     * @param financialAccountId D of the financial account the goal should be added to.
+     * @throws ServerException If the goal could not be created.
+     */
     public static void insertFinancialGoal(FinancialGoal goal, Long financialAccountId) throws ServerException {
         String insert = "INSERT INTO " + FINANCIAL_GOAL_TABLE
                 + " (" + FINANCIAL_GOAL_AMOUNT + "," + FINANCIAL_GOAL_FINANCIAL_ACCOUNT_ID + ") VALUES(" +
@@ -35,6 +42,13 @@ public class FinancialGoalsOperations {
         }
     }
 
+    /**
+     * Gets the data of the financial goal of the given financial account.
+     *
+     * @param financialAccountId The ID of the financial account.
+     * @return The financial goal.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static FinancialGoal selectFinancialGoal(Long financialAccountId) throws ServerException {
         String select = "SELECT g." + FINANCIAL_GOAL_ID
                 + ", g." + FINANCIAL_GOAL_AMOUNT
@@ -70,6 +84,14 @@ public class FinancialGoalsOperations {
         }
     }
 
+
+    /**
+     * Gets the ID of the financial account that the given financial goal is associated with.
+     *
+     * @param goalId The ID of the goal.
+     * @return The ID of the financial account.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static Long selectFinancialAccountId(Long goalId) throws ServerException {
         String select = "SELECT " + FINANCIAL_GOAL_FINANCIAL_ACCOUNT_ID
                 + " FROM " + FINANCIAL_GOAL_TABLE
@@ -89,6 +111,14 @@ public class FinancialGoalsOperations {
         }
     }
 
+
+    /**
+     * Updates the data of an existing financial goal in the database.
+     *
+     * @param goal The new goal data.
+     * @param goalId The ID of the goal to be updated.
+     * @throws ServerException If the goal data could not be updated successfully.
+     */
     public static void updateFinancialGoal(FinancialGoal goal, Long goalId) throws ServerException {
         String update = "UPDATE " + FINANCIAL_GOAL_TABLE + " SET "
                 + FINANCIAL_GOAL_AMOUNT + " = ? "            // 1 AMOUNT
@@ -103,6 +133,12 @@ public class FinancialGoalsOperations {
         }
     }
 
+    /**
+     * Deletes a goal from the database.
+     *
+     * @param goalId The ID of the goal to be deleted.
+     * @throws ServerException If the deletion could not be executed successfully.
+     */
     public static void deleteFinancialGoal(Long goalId) throws ServerException {
         String delete = "DELETE FROM " + FINANCIAL_GOAL_TABLE +
                 " WHERE " + FINANCIAL_GOAL_ID + " = ?";

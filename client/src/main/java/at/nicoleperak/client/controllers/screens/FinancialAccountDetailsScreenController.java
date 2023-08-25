@@ -2,7 +2,6 @@ package at.nicoleperak.client.controllers.screens;
 
 import at.nicoleperak.client.ClientException;
 import at.nicoleperak.client.ServiceFunctions;
-import at.nicoleperak.client.Validation;
 import at.nicoleperak.client.controllers.controls.BarChartBoxController;
 import at.nicoleperak.client.controllers.controls.MonthlyGoalHeaderController;
 import at.nicoleperak.client.controllers.controls.MonthlyGoalInfoBoxController;
@@ -47,12 +46,11 @@ import java.util.ResourceBundle;
 import static at.nicoleperak.client.Client.*;
 import static at.nicoleperak.client.FXMLLocation.*;
 import static at.nicoleperak.client.Format.formatBalance;
-import static at.nicoleperak.client.LoadingUtils.loadCategories;
-import static at.nicoleperak.client.LoadingUtils.loadSelectedFinancialAccountDetails;
+import static at.nicoleperak.client.PopulationUtils.loadSelectedFinancialAccountDetails;
+import static at.nicoleperak.client.PopulationUtils.populateCategories;
 import static at.nicoleperak.client.Redirection.redirectToFinancialAccountsOverviewScreen;
 import static at.nicoleperak.client.ServiceFunctions.*;
-import static at.nicoleperak.client.Validation.assertDateIsInPast;
-import static at.nicoleperak.client.Validation.assertEmailIsValid;
+import static at.nicoleperak.client.Validation.*;
 import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
 import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderSuccessAlert;
 import static at.nicoleperak.client.controllers.dialogs.MoneyMinderConfirmationDialogController.userHasConfirmedActionWhenAskedForConfirmation;
@@ -141,7 +139,16 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
-
+    /**
+     * Upon initialization, stores the selected financial account,
+     * retrieves the details of the selected financial account,
+     * inserts other FXML control parts and sets and populates them.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or
+     *                  {@code null} if the location is not known.
+     * @param resources The resources used to localize the root object, or {@code null} if
+     *                  the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         selectedFinancialAccount = getSelectedFinancialAccount();
@@ -168,6 +175,10 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         showCreateTransactionDialog();
     }
 
+    /**
+     * Exports transactions to the computer of the user in the form of a CSV-File.
+     * Displays success message to the user after completion.
+     */
     @FXML
     void onDownloadIconClicked() {
         try {
@@ -178,22 +189,43 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Upon the user's selection of a Category in the category ComboBox, the selection is stored in the selectedCategory variable.
+     * The displayed transactions are filtered according to the selection.
+     */
     @FXML
     void onCategorySelected() {
         selectedCategory = categoryComboBox.getSelectionModel().getSelectedItem();
         filterAndSearchTransactions();
     }
 
+    /**
+     * Upon the user's selection of a CategoryType in the category type ComboBox,
+     * the category ComboBox is cleared and freshly populated with categories
+     * corresponding to the selected category type.
+     * Then the filters are re-applied to the transactions.
+     */
     @FXML
     void onTypeSelected() {
         categoryComboBox.getSelectionModel().clearSelection();
         selectedCategory = null;
-        CategoryList filteredList = loadCategories(transactionTypeComboBox.getSelectionModel().getSelectedItem());
+        CategoryList filteredList = populateCategories(transactionTypeComboBox.getSelectionModel().getSelectedItem());
         categoryObservableList.setAll(filteredList.getCategories());
         selectedType = transactionTypeComboBox.getValue();
         filterAndSearchTransactions();
     }
 
+    /**
+     * Upon selection of a date picker by the user,
+     * the user input is validated (no past dates allowed),
+     * the values from the date pickers are stored in the selectedDateFrom and selectedDateTo variables
+     * and the filters are applied to the displayed list of transactions.
+     *
+     * @param event A date picker is selected.
+     * @ImplNote If any of the date pickers is null (no date has been selected for them yet),
+     * the value stored in the variables is set to the earliest or latest date possible.
+     * This ensures that there is always a valid date range on which the transaction filter can be applied.
+     */
     @FXML
     void onDateSelected(ActionEvent event) {
         DatePicker datePicker = (DatePicker) event.getSource();
@@ -253,7 +285,10 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         deleteFinancialAccount();
     }
 
-
+    /**
+     * Applies filter and search query to the list of transactions from the selected financial account.
+     * Displays the results to the user.
+     */
     private void filterAndSearchTransactions() {
         List<Transaction> filteredTransactionList = filterTransactions();
         List<Transaction> resultList = searchTransactions(filteredTransactionList);
@@ -261,14 +296,19 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         showTransactions(resultList);
     }
 
-
+    /**
+     * Sets labels of the control to display information from the selected financial account.
+     */
     private void setLabels() {
         financialAccountTitleLabel.setText(selectedFinancialAccount.getTitle().toUpperCase());
         balanceLabel.setText(formatBalance(selectedFinancialAccount.getBalance()));
     }
 
+    /**
+     * Populates the category and category type ComboBoxes.
+     */
     private void setComboBoxes() {
-        CategoryList categoryList = loadCategories();
+        CategoryList categoryList = populateCategories();
         categoryObservableList.addAll(categoryList.getCategories());
         typeObservableList.addAll(categoryList.getCategories()
                 .stream()
@@ -278,14 +318,23 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         transactionTypeComboBox.setItems(typeObservableList);
     }
 
+    /**
+     * Sets PieChart into the analysis tab.
+     */
     private void setAnalysisTab() {
         analysisTab.setContent(getPieChartBox());
     }
 
+    /**
+     * Sets BarChart into the trends tab.
+     */
     private void setTrendsTab() {
         trendsTab.setContent(getBarChartBox());
     }
 
+    /**
+     * Inserts the navigation bar control into screenPane.
+     */
     private void insertNavigationBar() {
         try {
             FXMLLoader loader = NAVIGATION_BAR.getLoader();
@@ -296,6 +345,11 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Inserts a dynamic amount of transaction tiles to display a list of transactions to the user.
+     *
+     * @param transactions List of transactions to be displayed to the user.
+     */
     private void showTransactions(List<Transaction> transactions) {
         try {
             for (Transaction transaction : transactions) {
@@ -309,6 +363,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     }
 
+    /**
+     * Displays information about the monthly goal of the financial account to the user.
+     */
     private void showMonthlyGoal() {
         if (financialGoalIsNotSet()) {
             if (userIsOwner()) {
@@ -321,6 +378,10 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Displays a dynamic amount of collaborator box controls to the user
+     * based on the list of collaborators of the selected financial account.
+     */
     private void showCollaborators() {
         List<User> collaborators = selectedFinancialAccount.getCollaborators();
         if (!userIsOwner()) {
@@ -340,6 +401,10 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Displays a dynamic amount of recurring transaction box controls to the user
+     * based on the list of recurring transaction orders of the selected financial account.
+     */
     private void showRecurringTransactionOrders() {
         try {
             List<RecurringTransactionOrder> orders = selectedFinancialAccount.getRecurringTransactionOrders();
@@ -353,7 +418,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
-
+    /**
+     * Displays information about the selected financial account to the user.
+     */
     private void showInfo() {
         if (userIsOwner()) {
             editAccountButton.setVisible(true);
@@ -368,6 +435,10 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                         + " (" + selectedFinancialAccount.getOwner().getEmail() + ")");
     }
 
+    /**
+     * Shows the "Create Transaction" dialog to the user.
+     * Upon finish, creates the transaction.
+     */
     private void showCreateTransactionDialog() {
         try {
             FXMLLoader loader = TRANSACTION_FORM.getLoader();
@@ -383,6 +454,10 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Shows the "Edit Financial Account" dialog to the user.
+     * Upon finish, updates the financial account.
+     */
     private void showEditFinancialAccountDialog() {
         try {
             FXMLLoader loader = EDIT_FINANCIAL_ACCOUNT_FORM.getLoader();
@@ -399,6 +474,10 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Shows the "Set Monthly Goal" dialog to the user.
+     * Upon finish, creates the monthly goal.
+     */
     private void showSetMonthlyGoalDialog() {
         try {
             FXMLLoader loader = SET_MONTHLY_GOAL_FORM.getLoader();
@@ -414,6 +493,10 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Shows the "Create Recurring Transaction Order" dialog to the user.
+     * Upon finish, creates the recurring transaction order.
+     */
     private void showCreateRecurringTransactionOrderDialog() {
         try {
             FXMLLoader loader = RECURRING_TRANSACTION_FORM.getLoader();
@@ -429,15 +512,25 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Shows a FileChooser "Save" dialog to the user to choose a CSV File.
+     * Initializes the file name displayed in the chooser with a valid default.
+     *
+     * @return File chosen by the user.
+     */
     private File showFileChooserSaveDialog() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
-        fileChooser.setInitialFileName(Validation.convertToValidFileName(selectedFinancialAccount.getTitle().toLowerCase()) + "_transactions");
+        fileChooser.setInitialFileName(convertToValidFileName(selectedFinancialAccount.getTitle().toLowerCase()) + "_transactions");
         //https://stackoverflow.com/questions/74859461/java93422850-catransaction-synchronize-called-within-transaction-when-a
         return fileChooser.showSaveDialog(downloadIcon.getScene().getWindow());
     }
 
+    /**
+     * Takes user inputs from the collaboratorEmailTextField.
+     * Sends post-request to server to create new collaborator.
+     */
     private void addCollaborator() {
         try {
             collaboratorAlertMessageLabel.setText("");
@@ -448,6 +541,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Sends post-request to server to create a new transaction. Then reloads the screen.
+     */
     private void postTransaction(Transaction transaction) throws ClientException {
         post("financial_accounts/"
                         + selectedFinancialAccount.getId()
@@ -457,6 +553,13 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         reloadFinancialAccountDetailsScreen();
     }
 
+    /**
+     * Sends put-request to server to update a financial account.
+     * Then shows success alert to the user and reloads the screen.
+     *
+     * @param editedAccount Edited financial account to be saved.
+     * @throws ClientException If there is an issue regarding the server interaction.
+     */
     private void putEditedFinancialAccount(FinancialAccount editedAccount) throws ClientException {
         ServiceFunctions.put("financial-accounts/"
                         + selectedFinancialAccount.getId()
@@ -465,6 +568,13 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         reloadFinancialAccountDetailsScreen();
     }
 
+    /**
+     * Sends post-request to server to create a financial goal.
+     * Then shows success alert to the user and reloads the screen.
+     *
+     * @param goal FinancialGoal to be posted.
+     * @throws ClientException If there is an issue regarding the server interaction.
+     */
     private void postFinancialGoal(FinancialGoal goal) throws ClientException {
         post("financial_accounts/"
                         + selectedFinancialAccount.getId()
@@ -474,6 +584,13 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         reloadFinancialAccountDetailsScreen();
     }
 
+    /**
+     * Sends post-request to server to create a recurring transactions order.
+     * Then shows success alert to the user and reloads the screen.
+     *
+     * @param order RecurringTransactionsOrder to be posted.
+     * @throws ClientException If there is an issue regarding the server interaction.
+     */
     private void postRecurringTransactionsOrder(RecurringTransactionOrder order) throws ClientException {
         post("financial_accounts/"
                         + selectedFinancialAccount.getId()
@@ -485,6 +602,13 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         reloadFinancialAccountDetailsScreen();
     }
 
+    /**
+     * Sends post-request to server to create a collaborator.
+     * Then shows success alert to the user and reloads the screen.
+     *
+     * @param email Email of user to become collaborator.
+     * @throws ClientException If there is an issue regarding the server interaction.
+     */
     private void postCollaborator(String email) throws ClientException {
         assertEmailIsValid(email);
         post("financial_accounts/"
@@ -496,6 +620,12 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         reloadFinancialAccountDetailsScreen();
     }
 
+    /**
+     * Sends delete-request to server to remove the financial account,
+     * following the user's confirmation.
+     * Then displays success message to user and
+     * redirects the user to the financial accounts overview screen.
+     */
     private void deleteFinancialAccount() {
         if (userHasConfirmedActionWhenAskedForConfirmation(
                 "Are you sure you want to delete the financial account \"" + selectedFinancialAccount.getTitle() +
@@ -512,6 +642,14 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Exports transactions list of financial account to .CSV File on user's computer.
+     * Displays a FileChooserSaveDialog to the user.
+     * Then sets the order of the columns in the CSV File to be exported
+     * and writes all transactions into the file selected by the user.
+     *
+     * @throws Exception If there is an issue regarding the writing process of the CSV File.
+     */
     @SuppressWarnings("unchecked")
     private void writeTransactionsToCsv() throws Exception {
         File selectedFile = showFileChooserSaveDialog();
@@ -532,6 +670,16 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Takes one or several search terms from the user input in the searchField,
+     * splits the query into a list of search terms and
+     * searches for any match of any search term
+     * in the following attributes of each transaction in a list of transactions:
+     * description, note, transaction partner, and category. Returns the resulting list.
+     *
+     * @param filteredList List of filtered transactions to be searched.
+     * @return list of filtered and subsequently searched transactions.
+     */
     private List<Transaction> searchTransactions(List<Transaction> filteredList) {
         String query = searchField.getText();
         List<String> searchTerms = List.of(query.toLowerCase().split("[\\s.,+]+"));
@@ -548,6 +696,14 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         return resultList;
     }
 
+
+    /**
+     * Applies several filters to the list of transactions from the selected financial account.
+     * Filters by: selected CategoryType, selected Category, and the selected date range.
+     *
+     * @return a list of all resulting transactions from the selected financial account,
+     * after all filters have been applied
+     */
     private List<Transaction> filterTransactions() {
         return selectedFinancialAccount.getTransactions().stream()
                 .filter(transaction -> {
@@ -574,6 +730,11 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                 .toList();
     }
 
+    /**
+     * Loads the pieChartBox control.
+     *
+     * @return the loaded pieChartBox.
+     */
     private VBox getPieChartBox() {
         try {
             FXMLLoader loader = PIE_CHART.getLoader();
@@ -587,6 +748,11 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Loads the barChartBox control.
+     *
+     * @return the loaded barChartBox.
+     */
     private VBox getBarChartBox() {
         try {
             FXMLLoader loader = BAR_CHART.getLoader();
@@ -600,6 +766,11 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Loads the monthlyGoalVBox control.
+     *
+     * @return the loaded monthlyGoalVbox.
+     */
     private VBox getMonthlyGoalVBox(FinancialGoal goal) {
         try {
             monthlyGoalBox.getChildren().clear();
@@ -620,6 +791,11 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Loads the monthlyGoalHeader control.
+     *
+     * @return The loaded monthlyGoalHeader control.
+     */
     private GridPane getMonthlyGoalHeader(FinancialGoal goal) {
         double currentMonthsExpenses = goal.getCurrentMonthsExpenses().abs().doubleValue();
         double goalAmount = goal.getGoalAmount().doubleValue();
@@ -639,10 +815,20 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         }
     }
 
+    /**
+     * Checks if the logged-in user is the owner of the selected financial account.
+     *
+     * @return True, if the user is the owner.
+     */
     private boolean userIsOwner() {
         return selectedFinancialAccount.getOwner().getId().equals(getLoggedInUser().getId());
     }
 
+    /**
+     * Checks whether no monthly goal is set for the selected financial account.
+     *
+     * @return True, if no goal is set.
+     */
     private boolean financialGoalIsNotSet() {
         return selectedFinancialAccount.getFinancialGoal() == null;
     }

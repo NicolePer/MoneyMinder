@@ -17,6 +17,9 @@ import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertControll
 
 public class Redirection {
 
+    /**
+     * Redirects user to financial accounts overview screen.
+     */
     public static void redirectToFinancialAccountsOverviewScreen() {
         try {
             Stage stage = getStage();
@@ -28,6 +31,9 @@ public class Redirection {
         }
     }
 
+    /**
+     * Redirects user to financial account details screen.
+     */
     public static void redirectToFinancialAccountsDetailsScreen() {
         try {
             Stage stage = getStage();
@@ -39,6 +45,12 @@ public class Redirection {
         }
     }
 
+    /**
+     * Redirects user to welcome screen and displays message to user on welcome screen.
+     *
+     * @param successMessage    Message to be displayed on welcome screen.
+     * @param alertMessageLabel Label to display errorMessage if error occurs.
+     */
     public static void redirectToWelcomeScreen(String successMessage, Label alertMessageLabel) {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -51,6 +63,11 @@ public class Redirection {
         }
     }
 
+    /**
+     * Redirects user to welcome screen and displays message to user on welcome screen.
+     *
+     * @param successMessage Message to be displayed on welcome screen.
+     */
     public static void redirectToWelcomeScreen(String successMessage) {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -65,6 +82,9 @@ public class Redirection {
         }
     }
 
+    /**
+     * Redirects user to welcome screen.
+     */
     public static void redirectToWelcomeScreen() {
         try {
             Stage stage = getStage();
@@ -77,6 +97,11 @@ public class Redirection {
         }
     }
 
+    /**
+     * Centers the JavaFX Stage on the primary screen.
+     *
+     * @param stage The Stage to be centered.
+     */
     private static void centerStage(Stage stage) {
         Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
         stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);

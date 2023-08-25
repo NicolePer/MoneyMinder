@@ -19,7 +19,13 @@ public class CategoriesOperations {
     protected static final String CATEGORY_TITLE = "title";
     protected static final String CATEGORY_TYPE = "category_type";
 
-
+    /**
+     * Gets all categories of the given type that are stored in the database.
+     *
+     * @param categoryType The category type.
+     * @return List of categories.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static CategoryList selectCategoryList(Category.CategoryType categoryType) throws ServerException {
         ArrayList<Category> categories = new ArrayList<>();
         String select = "SELECT * FROM " + CATEGORY_TABLE
@@ -41,6 +47,12 @@ public class CategoriesOperations {
         }
     }
 
+    /**
+     * Gets all categories that are stored in the database.
+     *
+     * @return List of categories.
+     * @throws ServerException If the database could not be queried successfully.
+     */
     public static CategoryList selectCategoryList() throws ServerException {
         ArrayList<Category> categories = new ArrayList<>();
         String select = "SELECT * FROM " + CATEGORY_TABLE;

@@ -17,6 +17,13 @@ import static at.nicoleperak.server.endpoints.HttpMethod.POST;
 import static java.lang.Long.parseLong;
 
 public class PostTransactionsEndpoint implements Endpoint {
+
+    /**
+     * Checks if the given request was sent to {@code POST /financial-accounts/<accountId>/transactions}
+     *
+     * @param exchange The HTTP request.
+     * @return True if the request was sent to {@code POST /financial-accounts/<accountId>/transactions}. False in any other case.
+     */
     @Override
     public boolean canHandle(HttpExchange exchange) {
         HttpMethod requestMethod = getRequestMethod(exchange);
@@ -25,6 +32,13 @@ public class PostTransactionsEndpoint implements Endpoint {
                 && pathSegments.length == 3 && pathSegments[2].equals("transactions");
     }
 
+    /**
+     * Adds a new transaction to a financial account.
+     * Responds with status code {@code 201} in case the addition was successful.
+     *
+     * @param exchange The HTTP exchange.
+     * @throws ServerException If an error occurred during the creation.
+     */
     @Override
     public void handle(HttpExchange exchange) throws ServerException {
         Long financialAccountId = parseLong(getPathSegments(exchange)[1]);
@@ -32,6 +46,13 @@ public class PostTransactionsEndpoint implements Endpoint {
         setResponse(exchange, 201, "");
     }
 
+    /**
+     * Creates a new transaction for the given financial account.
+     *
+     * @param exchange           The HTTP request.
+     * @param financialAccountId ID of the financial account the transaction should be added to.
+     * @throws ServerException If an error occurred during the creation.
+     */
     private void createNewTransaction(HttpExchange exchange, Long financialAccountId) throws ServerException {
         User currentUser = authenticate(exchange);
         try {

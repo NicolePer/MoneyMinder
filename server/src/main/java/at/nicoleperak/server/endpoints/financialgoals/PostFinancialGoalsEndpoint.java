@@ -17,6 +17,13 @@ import static at.nicoleperak.server.endpoints.HttpMethod.POST;
 import static java.lang.Long.parseLong;
 
 public class PostFinancialGoalsEndpoint implements Endpoint {
+
+    /**
+     * Checks if the given request was sent to {@code POST /financial-accounts/<accountId>/financial-goals}
+     *
+     * @param exchange The HTTP request.
+     * @return True if the request was sent to {@code POST /financial-accounts/<accountId>/financial-goals}. False in any other case.
+     */
     @Override
     public boolean canHandle(HttpExchange exchange) {
         HttpMethod requestMethod = getRequestMethod(exchange);
@@ -25,6 +32,13 @@ public class PostFinancialGoalsEndpoint implements Endpoint {
                 && pathSegments.length == 3 && pathSegments[2].equals("financial-goals");
     }
 
+    /**
+     * Creates a new financial goal for a financial account.
+     * Responds with status code {@code 201} in case the creation was successful.
+     *
+     * @param exchange The HTTP exchange.
+     * @throws ServerException If an error occurred during the creation.
+     */
     @Override
     public void handle(HttpExchange exchange) throws ServerException {
         Long financialAccountId = parseLong(getPathSegments(exchange)[1]);
@@ -33,6 +47,12 @@ public class PostFinancialGoalsEndpoint implements Endpoint {
 
     }
 
+    /**
+     * Creates a new financial goal for the given financial account.
+     *
+     * @param exchange The HTTP request.
+     * @throws ServerException If an error occurred during the creation.
+     */
     private static void postFinancialGoal(HttpExchange exchange, Long financialAccountId) throws ServerException {
         try {
             User currentUser = authenticate(exchange);
