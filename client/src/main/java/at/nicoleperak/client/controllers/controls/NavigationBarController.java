@@ -42,13 +42,13 @@ public class NavigationBarController implements Initializable {
     @FXML
     private ImageView goBackIcon;
 
+
     private static void logout() {
         redirectToWelcomeScreen();
         setLoggedInUser(null);
         setUserCredentials(null);
     }
 
-    @SuppressWarnings("SameParameterValue")
     public static void logout(String successMessage) {
         redirectToWelcomeScreen(successMessage);
         setLoggedInUser(null);
@@ -72,12 +72,7 @@ public class NavigationBarController implements Initializable {
 
     @FXML
     void onHelpMenuItemClicked() {
-        try {
-            File file = new File((requireNonNull(getClass().getResource("/help/MoneyMinderUserGuide.pdf")).toURI()));
-            openFile(file);
-        } catch (Exception e) {
-            showMoneyMinderErrorAlert("User Guide could not be loaded");
-        }
+        openUserGuide();
     }
 
     @FXML
@@ -88,16 +83,6 @@ public class NavigationBarController implements Initializable {
     @FXML
     void onUserAccountSettingsMenuItemClicked() {
         showEditUserAccountDialog();
-    }
-
-    public void openFile(File file) {
-        if (Desktop.isDesktopSupported()) {
-            try {
-                Desktop.getDesktop().open(file);
-            } catch (IOException e) {
-                showMoneyMinderErrorAlert(e.getMessage());
-            }
-        }
     }
 
     private void showEditUserAccountDialog() {
@@ -125,6 +110,25 @@ public class NavigationBarController implements Initializable {
         User editedUser = new User(null, username, email, password);
         put("users/" + getLoggedInUser().getId(), jsonb.toJson(editedUser));
         logout("User account data successfully updated - please login again");
+    }
+
+    private void openUserGuide() {
+        try {
+            File file = new File((requireNonNull(getClass().getResource("/help/MoneyMinderUserGuide.pdf")).toURI()));
+            openFile(file);
+        } catch (Exception e) {
+            showMoneyMinderErrorAlert("User Guide could not be loaded");
+        }
+    }
+
+    private void openFile(File file) {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().open(file);
+            } catch (IOException e) {
+                showMoneyMinderErrorAlert(e.getMessage());
+            }
+        }
     }
 
     public HBox getNavigationBarBox() {
