@@ -32,36 +32,43 @@ import static java.util.Objects.requireNonNull;
 import static javafx.scene.control.ButtonType.FINISH;
 
 public class NavigationBarController implements Initializable {
-
     @FXML
     private HBox navigationBarBox;
-
     @FXML
     private Label userLabel;
-
     @FXML
     private ImageView goBackIcon;
 
-
-    private static void logout() {
-        redirectToWelcomeScreen();
+    /**
+     * Logs the user out of their user account.
+     * Sets the stored user data to null and
+     * redirects the user to the welcome screen where a message will be displayed.
+     *
+     * @param message Message to be displayed on welcome screen.
+     */
+    public static void logout(String message) {
+        redirectToWelcomeScreen(message);
         setLoggedInUser(null);
         setUserCredentials(null);
     }
 
-    public static void logout(String successMessage) {
-        redirectToWelcomeScreen(successMessage);
-        setLoggedInUser(null);
-        setUserCredentials(null);
-    }
-
-    private static void insertUserData(EditUserAccountDialogController controller) {
-        controller.getEmailTextField().setText(getLoggedInUser().getEmail());
-        controller.getUsernameTextField().setText(getLoggedInUser().getUsername());
-    }
-
+    /**
+     * Upon initialization, sets labels in the control.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or
+     *                  {@code null} if the location is not known.
+     * @param resources The resources used to localize the root object, or {@code null} if
+     *                  the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        setLabels();
+    }
+
+    /**
+     * Sets userLabel to the username of the logged-in user.
+     */
+    private void setLabels() {
         userLabel.setText(Client.getLoggedInUser().getUsername());
     }
 
@@ -85,6 +92,10 @@ public class NavigationBarController implements Initializable {
         showEditUserAccountDialog();
     }
 
+    /**
+     * Shows the "Edit User Account" dialog to the user.
+     * Upon finish, updates the user data.
+     */
     private void showEditUserAccountDialog() {
         try {
             FXMLLoader loader = EDIT_USER_ACCOUNT_FORM.getLoader();
@@ -96,14 +107,32 @@ public class NavigationBarController implements Initializable {
             controller.setDialog(dialog);
             Optional<ButtonType> result = dialog.showAndWait();
             if (result.isPresent() && result.get() == FINISH) {
-                putEditedUser(controller);
+                updateUser(controller);
             }
         } catch (IOException | ClientException e) {
             showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
-    private void putEditedUser(EditUserAccountDialogController controller) throws ClientException {
+    /**
+     * Inserts the logged-in user's data into the dialog.
+     *
+     * @param controller The FXML controller of the dialog the data is to be inserted into.
+     */
+    private void insertUserData(EditUserAccountDialogController controller) {
+        controller.getEmailTextField().setText(getLoggedInUser().getEmail());
+        controller.getUsernameTextField().setText(getLoggedInUser().getUsername());
+    }
+
+    /**
+     * Takes user inputs from dialog and creates new User object.
+     * Sends put-request to server. Then logs user out of account and redirects user to welcome screen.
+     * Directs user to login again with their updated user data.
+     *
+     * @param controller The FXML controller of the dialog that gathered the input from the user.
+     * @throws ClientException if there is an issue regarding the server interaction.
+     */
+    private void updateUser(EditUserAccountDialogController controller) throws ClientException {
         String password = controller.getPassword();
         String username = controller.getUsernameTextField().getText();
         String email = controller.getEmailTextField().getText();
@@ -112,15 +141,23 @@ public class NavigationBarController implements Initializable {
         logout("User account data successfully updated - please login again");
     }
 
+    /**
+     * Opens the MoneyMinder User Guide.
+     */
     private void openUserGuide() {
         try {
             File file = new File((requireNonNull(getClass().getResource("/help/MoneyMinderUserGuide.pdf")).toURI()));
             openFile(file);
         } catch (Exception e) {
-            showMoneyMinderErrorAlert("User Guide could not be loaded");
+            showMoneyMinderErrorAlert("User Guide could not be opened");
         }
     }
 
+    /**
+     * Opens the given file in current system's default application.
+     *
+     * @param file file to be opened
+     */
     private void openFile(File file) {
         if (Desktop.isDesktopSupported()) {
             try {
@@ -129,6 +166,17 @@ public class NavigationBarController implements Initializable {
                 showMoneyMinderErrorAlert(e.getMessage());
             }
         }
+    }
+
+    /**
+     * Logs the user out of their user account.
+     * Sets the stored user data to null and
+     * redirects the user to the welcome screen.
+     */
+    private void logout() {
+        redirectToWelcomeScreen();
+        setLoggedInUser(null);
+        setUserCredentials(null);
     }
 
     public HBox getNavigationBarBox() {

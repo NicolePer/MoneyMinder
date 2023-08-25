@@ -1,6 +1,6 @@
 package at.nicoleperak.client.factories;
 
-import at.nicoleperak.client.controllers.controls.TransactionDetailsTileController;
+import at.nicoleperak.client.controllers.controls.ExpandedTransactionTileController;
 import at.nicoleperak.shared.Transaction;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.VBox;
@@ -17,7 +17,7 @@ public class TransactionDetailsTileFactory {
 
     public static VBox buildTransactionDetailsTile(Transaction transaction, FXMLLoader loader, VBox transactionsPane) throws IOException {
         VBox transactionDetailsTile = loader.load();
-        TransactionDetailsTileController controller = loader.getController();
+        ExpandedTransactionTileController controller = loader.getController();
         controller
                 .getTransactionDateLabel()
                 .setText(transaction.getDate().format(ofLocalizedDate(MEDIUM).withLocale(US)).toUpperCase());

@@ -12,8 +12,7 @@ import java.io.IOException;
 
 import static at.nicoleperak.client.Client.getStage;
 import static at.nicoleperak.client.Client.loadScene;
-import static at.nicoleperak.client.FXMLLocation.FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN;
-import static at.nicoleperak.client.FXMLLocation.WELCOME_SCREEN;
+import static at.nicoleperak.client.FXMLLocation.*;
 import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
 
 public class Redirection {
@@ -22,6 +21,17 @@ public class Redirection {
         try {
             Stage stage = getStage();
             Scene scene = loadScene(FINANCIAL_ACCOUNTS_OVERVIEW_SCREEN);
+            stage.setScene(scene);
+            centerStage(stage);
+        } catch (IOException e) {
+            showMoneyMinderErrorAlert(e.getMessage());
+        }
+    }
+
+    public static void redirectToFinancialAccountsDetailsScreen() {
+        try {
+            Stage stage = getStage();
+            Scene scene = loadScene(FINANCIAL_ACCOUNT_DETAILS_SCREEN);
             stage.setScene(scene);
             centerStage(stage);
         } catch (IOException e) {

@@ -13,17 +13,12 @@ import static at.nicoleperak.client.controllers.dialogs.MoneyMinderConfirmationD
 import static at.nicoleperak.client.controllers.screens.FinancialAccountDetailsScreenController.reloadFinancialAccountDetailsScreen;
 
 public class CollaboratorBoxController {
-
     private User collaborator;
-
     private Long financialAccountId;
-
     @FXML
     private ImageView deleteCollaboratorIcon;
-
     @FXML
     private Label collaboratorEmailLabel;
-
     @FXML
     private Label collaboratorUserNameLabel;
 
@@ -32,14 +27,21 @@ public class CollaboratorBoxController {
         removeCollaborator();
     }
 
+    /**
+     * Sends delete-request to server to remove a collaborator from a financial account,
+     * following the user's confirmation.
+     * Then displays success message to user and reloads the screen.
+     */
     private void removeCollaborator() {
         if (userHasConfirmedActionWhenAskedForConfirmation(
                 "Are you sure you want to remove \"" + collaborator.getEmail() + "\" as a collaborator?")) {
             try {
-                delete("financial-accounts/" + financialAccountId + "/collaborators/" + collaborator.getId());
+                delete("financial-accounts/"
+                        + financialAccountId
+                        + "/collaborators/"
+                        + collaborator.getId());
                 showMoneyMinderSuccessAlert(collaborator.getEmail() + " removed as collaborator");
                 reloadFinancialAccountDetailsScreen();
-
             } catch (ClientException e) {
                 showMoneyMinderErrorAlert(e.getMessage());
             }

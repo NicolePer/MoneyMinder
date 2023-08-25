@@ -19,31 +19,61 @@ import static javafx.event.ActionEvent.ACTION;
 import static javafx.scene.control.ButtonType.FINISH;
 
 public class EditFinancialAccountDialogController implements Initializable {
-
     private FinancialAccount financialAccount;
-
     @FXML
     private Label alertMessageLabel;
-
     @FXML
     private DialogPane dialogPane;
-
     @FXML
     private TextField financialAccountDescriptionField;
-
     @FXML
     private TextField financialAccountTitleField;
-
     @FXML
     private ComboBox<User> ownerComboBox;
 
+    /**
+     * Upon initialization, engages event listeners and event filters for the dialog.
+     *
+     * @param location  The location used to resolve relative paths for the root object, or
+     *                  {@code null} if the location is not known.
+     * @param resources The resources used to localize the root object, or {@code null} if
+     *                  the root object was not localized.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        validateUserInputsOnFinish();
-        onOwnerComboBoxSelectionChanged();
+        engageEventFilters();
+        engageEventListeners();
     }
 
-    public void validateUserInputsOnFinish() {
+    /**
+     * Sets the financialAccount to be edited and inserts the details of the account into the dialog.
+     *
+     * @param financialAccount Financial account to be edited.
+     */
+    public void setFinancialAccount(FinancialAccount financialAccount) {
+        this.financialAccount = financialAccount;
+        insertFinancialAccount();
+    }
+
+    /**
+     * Engages a number of event filters on the dialog.
+     */
+    private void engageEventFilters() {
+        validateUserInputsOnFinish();
+    }
+
+    /**
+     * Engages a number of event listeners on the dialog.
+     */
+    private void engageEventListeners() {
+        listenForChangesOnOwnerComboBoxSelection();
+    }
+
+    /**
+     * Sets up an event filter that will be executed when the "Finish" button of the dialog is clicked.
+     * Checks whether the user inputs into the dialog are valid and informs the user in case they are not.
+     */
+    private void validateUserInputsOnFinish() {
         Button finish = (Button) dialogPane.lookupButton(FINISH);
         finish.addEventFilter(ACTION, f -> {
             String title = financialAccountTitleField.getText();
@@ -59,7 +89,11 @@ public class EditFinancialAccountDialogController implements Initializable {
         });
     }
 
-    public void onOwnerComboBoxSelectionChanged() {
+    /**
+     * Sets up an event listener on the selection of the ownerComboBox.
+     * Displays warning to user.
+     */
+    private void listenForChangesOnOwnerComboBoxSelection() {
         ownerComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.getId().equals(financialAccount.getOwner().getId())) {
                 showMoneyMinderWarningAlert(
@@ -74,6 +108,9 @@ public class EditFinancialAccountDialogController implements Initializable {
         });
     }
 
+    /**
+     * Inserts the details of a selected financial account into the dialog.
+     */
     private void insertFinancialAccount() {
         financialAccountDescriptionField.setText(financialAccount.getDescription());
         financialAccountTitleField.setText(financialAccount.getTitle());
@@ -102,8 +139,4 @@ public class EditFinancialAccountDialogController implements Initializable {
         return ownerComboBox;
     }
 
-    public void setFinancialAccount(FinancialAccount financialAccount) {
-        this.financialAccount = financialAccount;
-        insertFinancialAccount();
-    }
 }

@@ -6,7 +6,7 @@
 <?import javafx.scene.text.*?>
 <DialogPane fx:id="dialogPane" contentText="hello" expanded="true" stylesheets="@../css/dialog.css"
             xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="at.nicoleperak.client.controllers.dialogs.CreateTransactionDialogController">
+            fx:controller="at.nicoleperak.client.controllers.dialogs.TransactionDialogController">
    <content>
       <VBox alignment="CENTER">
          <HBox alignment="TOP_CENTER" spacing="80.0">

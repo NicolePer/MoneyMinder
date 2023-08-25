@@ -1,7 +1,7 @@
 package at.nicoleperak.client.controllers.controls;
 
 import at.nicoleperak.client.ClientException;
-import at.nicoleperak.client.controllers.dialogs.CreateTransactionDialogController;
+import at.nicoleperak.client.controllers.dialogs.TransactionDialogController;
 import at.nicoleperak.shared.Transaction;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static at.nicoleperak.client.Client.getDialog;
-import static at.nicoleperak.client.FXMLLocation.CREATE_TRANSACTION_FORM;
+import static at.nicoleperak.client.FXMLLocation.TRANSACTION_FORM;
 import static at.nicoleperak.client.FXMLLocation.TRANSACTION_TILE;
 import static at.nicoleperak.client.ServiceFunctions.*;
 import static at.nicoleperak.client.controllers.dialogs.MoneyMinderAlertController.showMoneyMinderErrorAlert;
@@ -28,50 +28,37 @@ import static at.nicoleperak.client.factories.TransactionFactory.buildTransactio
 import static at.nicoleperak.client.factories.TransactionTileFactory.buildTransactionTile;
 import static javafx.scene.control.ButtonType.FINISH;
 
-public class TransactionDetailsTileController {
-
+public class ExpandedTransactionTileController {
     private Transaction transaction;
     private VBox transactionsPane;
-
     @FXML
     private Label transactionAddedLabel;
-
     @FXML
     private Label transactionAmountLabel;
-
     @FXML
     private Label transactionCategoryLabel;
-
     @FXML
     private Label transactionDateLabel;
-
     @FXML
     private Label transactionDescriptionLabel;
-
     @FXML
     private Label transactionDescriptionLabel2;
-
     @FXML
     private Label transactionNoteLabel;
-
     @FXML
     private Label transactionPartnerLabel;
-
     @FXML
     private Label transactionPartnerLabel2;
-
     @FXML
     private Label transactionPartnerTitleLabel;
-
     @FXML
     private Label transactionTypeLabel;
-
     @FXML
     private VBox transactionDetailsTile;
 
     @FXML
     void onCloseDetailsButtonClicked() {
-        closeTransactionDetailsTile();
+        closeExpandedTransactionTile();
     }
 
     @FXML
@@ -86,10 +73,13 @@ public class TransactionDetailsTileController {
 
     @FXML
     void onTransactionOverviewTileClicked() {
-        closeTransactionDetailsTile();
+        closeExpandedTransactionTile();
     }
 
-    private void closeTransactionDetailsTile() {
+    /**
+     * Closes an expanded transaction tile by replacing the control with a (not expanded) transaction tile  control.
+     */
+    private void closeExpandedTransactionTile() {
         try {
             ObservableList<Node> transactionTileList = transactionsPane.getChildren();
             int tileIndex = transactionTileList.indexOf(transactionDetailsTile);
@@ -101,28 +91,44 @@ public class TransactionDetailsTileController {
         }
     }
 
+    /**
+     * Shows the "Edit Transaction" dialog to the user.
+     * Upon finish, updates the transaction.
+     */
     private void showEditTransactionDialog() {
         try {
-            FXMLLoader loader = CREATE_TRANSACTION_FORM.getLoader();
+            FXMLLoader loader = TRANSACTION_FORM.getLoader();
             DialogPane dialogPane = loader.load();
-            CreateTransactionDialogController controller = loader.getController();
+            TransactionDialogController controller = loader.getController();
             controller.setSelectedTransaction(transaction);
             Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
             if (result.isPresent() && result.get() == FINISH) {
-                Transaction editedTransaction = buildTransaction(controller, false);
-                putEditedTransaction(editedTransaction);
+                updateTransaction(controller);
             }
         } catch (IOException | ClientException e) {
             showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
-    private void putEditedTransaction(Transaction editedTransaction) throws ClientException {
+    /**
+     * Takes user inputs from dialog and creates new Transaction object.
+     * Sends put-request to server. Then shows success message to user and reloads the screen.
+     *
+     * @param controller The FXML controller of the dialog that gathered the input from the user.
+     * @throws ClientException If there is an issue regarding the server interaction.
+     */
+    private void updateTransaction(TransactionDialogController controller) throws ClientException {
+        Transaction editedTransaction = buildTransaction(controller, false);
         put("transactions/" + transaction.getId(), jsonb.toJson(editedTransaction));
         showMoneyMinderSuccessAlert("Changes saved");
         reloadFinancialAccountDetailsScreen();
     }
 
+    /**
+     * Sends delete-request to server to remove a transaction from a financial account,
+     * following the user's confirmation.
+     * Then displays success message to user and reloads the screen.
+     */
     private void removeTransaction() {
         if (userHasConfirmedActionWhenAskedForConfirmation(
                 "Are you sure you want to delete this transaction?")) {

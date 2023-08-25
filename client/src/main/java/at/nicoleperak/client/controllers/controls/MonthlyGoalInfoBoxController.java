@@ -24,18 +24,13 @@ import static at.nicoleperak.client.factories.FinancialGoalFactory.buildFinancia
 import static javafx.scene.control.ButtonType.FINISH;
 
 public class MonthlyGoalInfoBoxController {
-
     private FinancialGoal goal;
-
     @FXML
     private Label currentExpensesLabel;
-
     @FXML
     private ImageView deleteMonthlyGoalIcon;
-
     @FXML
     private ImageView editMonthlyGoalIcon;
-
     @FXML
     private Label goalLabel;
 
@@ -49,6 +44,11 @@ public class MonthlyGoalInfoBoxController {
         showSetFinancialGoalDialog();
     }
 
+    /**
+     * Sends delete-request to server to remove the monthly goal from a financial account,
+     * following the user's confirmation.
+     * Then displays success message to user and reloads the screen.
+     */
     private void removeMonthlyGoal() {
         if (userHasConfirmedActionWhenAskedForConfirmation(
                 "Are you sure you want to delete your monthly goal?")) {
@@ -56,14 +56,16 @@ public class MonthlyGoalInfoBoxController {
                 delete("financial-goals/" + goal.getId());
                 showMoneyMinderSuccessAlert("Monthly goal deleted");
                 reloadFinancialAccountDetailsScreen();
-
             } catch (ClientException e) {
                 showMoneyMinderErrorAlert(e.getMessage());
             }
         }
-
     }
 
+    /**
+     * Shows the "Set Monthly Goal" dialog to the user.
+     * Upon finish, updates the monthly goal.
+     */
     private void showSetFinancialGoalDialog() {
         try {
             FXMLLoader loader = SET_MONTHLY_GOAL_FORM.getLoader();
@@ -72,22 +74,25 @@ public class MonthlyGoalInfoBoxController {
             controller.setSelectedGoal(goal);
             Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
             if (result.isPresent() && result.get() == FINISH) {
-                FinancialGoal newGoal = buildFinancialGoal(controller);
-                putFinancialGoal(newGoal);
+                updateMonthlyGoal(controller);
             }
-        } catch (IOException e) {
+        } catch (IOException | ClientException e) {
             showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
-    private void putFinancialGoal(FinancialGoal newGoal) {
-        try {
-            put("financial-goals/" + goal.getId(), jsonb.toJson(newGoal));
-            showMoneyMinderSuccessAlert("Monthly goal successfully set to " + newGoal.getGoalAmount() + " €");
-            reloadFinancialAccountDetailsScreen();
-        } catch (ClientException e) {
-            showMoneyMinderErrorAlert(e.getMessage());
-        }
+    /**
+     * Takes user inputs from dialog and creates new FinancialGoal object.
+     * Sends put-request to server. Then shows success message to user and reloads the screen.
+     *
+     * @param controller The FXML controller of the dialog that gathered the input from the user.
+     * @throws ClientException If there is an issue regarding the server interaction.
+     */
+    private void updateMonthlyGoal(SetMonthlyGoalDialogController controller) throws ClientException {
+        FinancialGoal newGoal = buildFinancialGoal(controller);
+        put("financial-goals/" + goal.getId(), jsonb.toJson(newGoal));
+        showMoneyMinderSuccessAlert("Monthly goal successfully set to " + newGoal.getGoalAmount() + " €");
+        reloadFinancialAccountDetailsScreen();
     }
 
     public Label getCurrentExpensesLabel() {

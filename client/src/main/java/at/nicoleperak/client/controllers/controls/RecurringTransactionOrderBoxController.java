@@ -23,12 +23,9 @@ import static at.nicoleperak.client.factories.RecurringTransactionOrderFactory.b
 import static javafx.scene.control.ButtonType.FINISH;
 
 public class RecurringTransactionOrderBoxController {
-
     private RecurringTransactionOrder order;
-
     @FXML
     private Label orderDescriptionLabel;
-
     @FXML
     private Label orderIntervalLabel;
 
@@ -42,6 +39,11 @@ public class RecurringTransactionOrderBoxController {
         showEditRecurringTransactionOrderDialog();
     }
 
+    /**
+     * Sends delete-request to server to remove the recurring transaction order from a financial account,
+     * following the user's confirmation.
+     * Then displays success message to user and reloads the screen.
+     */
     private void removeRecurringTransactionOrder() {
         if (userHasConfirmedActionWhenAskedForConfirmation(
                 "Are you sure you want to delete this order?")) {
@@ -56,6 +58,10 @@ public class RecurringTransactionOrderBoxController {
         }
     }
 
+    /**
+     * Shows the "Edit Recurring Transaction" dialog to the user.
+     * Upon finish, updates the recurring transaction order.
+     */
     private void showEditRecurringTransactionOrderDialog() {
         try {
             FXMLLoader loader = RECURRING_TRANSACTION_FORM.getLoader();
@@ -64,22 +70,25 @@ public class RecurringTransactionOrderBoxController {
             controller.setSelectedRecurringTransaction(order);
             Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
             if (result.isPresent() && result.get() == FINISH) {
-                RecurringTransactionOrder editedOrder = buildRecurringTransactionOrder(controller);
-                putEditedRecurringTransactionOrder(editedOrder);
+                updateRecurringTransactionOrder(controller);
             }
-        } catch (IOException e) {
+        } catch (IOException | ClientException e) {
             showMoneyMinderErrorAlert(e.getMessage());
         }
     }
 
-    private void putEditedRecurringTransactionOrder(RecurringTransactionOrder editedOrder) {
-        try {
-            put("recurring-transaction-orders/" + order.getId(), jsonb.toJson(editedOrder));
-            showMoneyMinderSuccessAlert("Changes saved");
-            reloadFinancialAccountDetailsScreen();
-        } catch (ClientException e) {
-            showMoneyMinderErrorAlert(e.getMessage());
-        }
+    /**
+     * Takes user inputs from dialog and creates new RecurringTransactionOrder object.
+     * Sends put-request to server. Then shows success message to user and reloads the screen.
+     *
+     * @param controller The FXML controller of the dialog that gathered the input from the user.
+     * @throws ClientException If there is an issue regarding the server interaction.
+     */
+    private void updateRecurringTransactionOrder(RecurringTransactionDialogController controller) throws ClientException {
+        RecurringTransactionOrder editedOrder = buildRecurringTransactionOrder(controller);
+        put("recurring-transaction-orders/" + order.getId(), jsonb.toJson(editedOrder));
+        showMoneyMinderSuccessAlert("Changes saved");
+        reloadFinancialAccountDetailsScreen();
     }
 
     public Label getOrderDescriptionLabel() {

@@ -1,6 +1,6 @@
 package at.nicoleperak.client.factories;
 
-import at.nicoleperak.client.controllers.dialogs.CreateTransactionDialogController;
+import at.nicoleperak.client.controllers.dialogs.TransactionDialogController;
 import at.nicoleperak.shared.Category;
 import at.nicoleperak.shared.Transaction;
 
@@ -12,7 +12,7 @@ import static at.nicoleperak.client.Format.formatAmount;
 
 public class TransactionFactory {
 
-    public static Transaction buildTransaction(CreateTransactionDialogController controller, boolean addedAutomatically) {
+    public static Transaction buildTransaction(TransactionDialogController controller, boolean addedAutomatically) {
         LocalDate date = controller.getDatePicker().getValue();
         String transactionPartner = controller.getTransactionPartnerField().getText();
         String description = controller.getDescriptionField().getText();

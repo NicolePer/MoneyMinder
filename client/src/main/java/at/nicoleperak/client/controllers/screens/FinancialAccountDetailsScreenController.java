@@ -7,10 +7,10 @@ import at.nicoleperak.client.controllers.controls.BarChartBoxController;
 import at.nicoleperak.client.controllers.controls.MonthlyGoalHeaderController;
 import at.nicoleperak.client.controllers.controls.MonthlyGoalInfoBoxController;
 import at.nicoleperak.client.controllers.controls.PieChartBoxController;
-import at.nicoleperak.client.controllers.dialogs.CreateTransactionDialogController;
 import at.nicoleperak.client.controllers.dialogs.EditFinancialAccountDialogController;
 import at.nicoleperak.client.controllers.dialogs.RecurringTransactionDialogController;
 import at.nicoleperak.client.controllers.dialogs.SetMonthlyGoalDialogController;
+import at.nicoleperak.client.controllers.dialogs.TransactionDialogController;
 import at.nicoleperak.shared.*;
 import at.nicoleperak.shared.Category.CategoryType;
 import com.opencsv.CSVWriter;
@@ -79,79 +79,59 @@ public class FinancialAccountDetailsScreenController implements Initializable {
     private Category selectedCategory;
     private LocalDate selectedDateFrom;
     private LocalDate selectedDateTo;
-
     @FXML
     private VBox screenPane;
-
     @FXML
     private Tab analysisTab;
-
     @FXML
     private Label balanceLabel;
-
     @FXML
     private VBox recurringTransactionOrdersPane;
-
     @FXML
     private VBox headerVBox;
-
     @FXML
     private Button editAccountButton;
-
     @FXML
     private VBox collaboratorsPane;
-
     @FXML
     private Label financialAccountTitleLabel;
-
     @FXML
     private TextField collaboratorEmailTextField;
-
     @FXML
     private DatePicker dateFromDatePicker;
-
     @FXML
     private DatePicker dateToDatePicker;
-
     @FXML
     private Label collaboratorAlertMessageLabel;
-
     @FXML
     private VBox monthlyGoalBox;
-
     @FXML
     private Button deleteAccountButton;
-
     @FXML
     private Button setGoalButton;
-
     @FXML
     private ImageView downloadIcon;
-
     @FXML
     private TextField searchField;
-
     @FXML
     private Label financialAccountInfoOwnerLabel;
-
     @FXML
     private Label financialAccountInfoDescriptionLabel;
-
     @FXML
     private Label financialAccountInfoTitleLabel;
-
     @FXML
     private ComboBox<Category> categoryComboBox;
-
     @FXML
     private Tab trendsTab;
-
     @FXML
     private ComboBox<CategoryType> transactionTypeComboBox;
-
     @FXML
     private VBox transactionsPane;
 
+
+    /**
+     * Reloads the scene.
+     */
     public static void reloadFinancialAccountDetailsScreen() {
         try {
             Scene scene = loadScene(FINANCIAL_ACCOUNT_DETAILS_SCREEN);
@@ -160,6 +140,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
             showMoneyMinderErrorAlert(e.getMessage());
         }
     }
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -389,9 +370,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     private void showCreateTransactionDialog() {
         try {
-            FXMLLoader loader = CREATE_TRANSACTION_FORM.getLoader();
+            FXMLLoader loader = TRANSACTION_FORM.getLoader();
             DialogPane dialogPane = loader.load();
-            CreateTransactionDialogController controller = loader.getController();
+            TransactionDialogController controller = loader.getController();
             Optional<ButtonType> result = getDialog(dialogPane).showAndWait();
             if (result.isPresent() && result.get() == FINISH) {
                 Transaction transaction = buildTransaction(controller, false);

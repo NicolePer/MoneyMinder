@@ -18,6 +18,12 @@ public class MoneyMinderConfirmationDialogController {
     @FXML
     private Label requestTextLabel;
 
+    /**
+     * Asserts user has confirmed after a message has been displayed to the user.
+     *
+     * @param confirmationMessage Message to be displayed to the user and confirmed by the user.
+     * @return True if user has clicked on the "Yes" Button of the alert dialog. False in any other case.
+     */
     public static boolean userHasConfirmedActionWhenAskedForConfirmation(String confirmationMessage) {
         try {
             FXMLLoader loader = MONEYMINDER_CONFIRMATION_DIALOG.getLoader();

@@ -38,6 +38,10 @@ public class SetMonthlyGoalDialogController implements Initializable {
         return goalTextField;
     }
 
+    /**
+     * Sets up an event filter that will be executed when the "Finish" button of the dialog is clicked.
+     * Checks whether the user inputs into the dialog are valid and informs the user in case they are not.
+     */
     public void validateUserInputsOnFinish() {
         Button finish = (Button) dialogPane.lookupButton(FINISH);
         finish.addEventFilter(ACTION, f -> {
