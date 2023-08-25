@@ -67,7 +67,6 @@ import static java.time.LocalDate.MAX;
 import static java.time.LocalDate.MIN;
 import static java.util.Objects.requireNonNullElse;
 import static javafx.collections.FXCollections.observableArrayList;
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import static javafx.scene.control.ButtonType.FINISH;
 import static javafx.scene.input.KeyCode.ENTER;
 
@@ -481,7 +480,7 @@ public class FinancialAccountDetailsScreenController implements Initializable {
         ServiceFunctions.put("financial-accounts/"
                         + selectedFinancialAccount.getId()
                 , jsonb.toJson(editedAccount));
-        new Alert(INFORMATION, "Financial account successfully updated").showAndWait();
+        showMoneyMinderSuccessAlert("Changes saved");
         reloadFinancialAccountDetailsScreen();
     }
 
@@ -518,8 +517,9 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     private void deleteFinancialAccount() {
         if (userHasConfirmedActionWhenAskedForConfirmation(
-                "Are you sure you want to delete the financial account?" +
-                        "\nIt will be permanently deleted, even for other collaborators.")) {
+                "Are you sure you want to delete the financial account \"" + selectedFinancialAccount.getTitle() +
+                        "\"?\nThe entire financial account will be permanently removed, including transactions, recurring transactions, and monthly goals. " +
+                        "Collaborators' access is also revoked. This cannot be reverted.")) {
             try {
                 delete("financial-accounts/" + selectedFinancialAccount.getId());
                 showMoneyMinderSuccessAlert("Financial account \"" +
