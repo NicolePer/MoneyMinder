@@ -33,22 +33,6 @@ Multiple finance accounts can be created and shared with others, making it suita
 </p>
 <br/>
 <p align="center">
-    <img width="700" src="./res/img/screenshots/screenshot-fa-details-recurring.png" alt="Screenshot MoneyMinder Financial Account Details Recurring Transactions"/>
-</p>
-<br/>
-<p align="center">
-    <img width="700" src="./res/img/screenshots/screenshot-fa-details-info.png" alt="Screenshot MoneyMinder Financial Account Details Info"/>
-</p>
-<br/>
-<p align="center">
-    <img width="700" src="./res/img/screenshots/screenshot-fa-details-collaborators.png" alt="Screenshot MoneyMinder Financial Account Details Collaborators"/>
-</p>
-<br/>
-<p align="center">
-    <img width="700" src="./res/img/screenshots/screenshot-fa-details-monthly-goal.png" alt="Screenshot MoneyMinder Financial Account Details Monthly Goal"/>
-</p>
-<br/>
-<p align="center">
     <img width="300" src="./res/img/screenshots/screenshot-create-transaction-dialog.png" alt="Screenshot MoneyMinder Create Transaction Dialog"/>
 </p>
 <br/>
