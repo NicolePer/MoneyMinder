@@ -177,14 +177,12 @@ public class FinancialAccountDetailsScreenController implements Initializable {
 
     /**
      * Exports transactions to the computer of the user in the form of a CSV-File.
-     * Displays success message to the user after completion.
      */
     @FXML
     void onDownloadIconClicked() {
         try {
             writeTransactionsToCsv();
-            showMoneyMinderSuccessAlert("Transactions successfully exported to CSV-File.");
-        } catch (Exception e) {
+        } catch (ClientException e) {
             showMoneyMinderErrorAlert(e.getMessage());
         }
     }
@@ -647,11 +645,12 @@ public class FinancialAccountDetailsScreenController implements Initializable {
      * Displays a FileChooserSaveDialog to the user.
      * Then sets the order of the columns in the CSV File to be exported
      * and writes all transactions into the file selected by the user.
+     * Displays success message to the user after completion.
      *
-     * @throws Exception If there is an issue regarding the writing process of the CSV File.
+     * @throws ClientException If there is an issue regarding the writing process of the CSV File.
      */
     @SuppressWarnings("unchecked")
-    private void writeTransactionsToCsv() throws Exception {
+    private void writeTransactionsToCsv() throws ClientException {
         File selectedFile = showFileChooserSaveDialog();
         if (selectedFile != null) {
             List<Transaction> transactions = selectedFinancialAccount.getTransactions();
@@ -666,7 +665,10 @@ public class FinancialAccountDetailsScreenController implements Initializable {
                         .withSeparator(CSVWriter.DEFAULT_SEPARATOR)
                         .build();
                 sbc.write(transactions);
+            } catch (Exception e) {
+                throw new ClientException("Could not create CSV File.");
             }
+            showMoneyMinderSuccessAlert("Transactions successfully exported to CSV-File.");
         }
     }
 
